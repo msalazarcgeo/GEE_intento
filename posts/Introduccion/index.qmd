@@ -1,0 +1,187 @@
+---
+title: "Introduccion a Google Earth Engine"
+author: "J. Miguel Salazar"
+date: "2024-02-22"
+categories: [news, course, GEE]
+image: "Consola_GEE.png"
+execute: 
+  enabled: false
+---
+
+
+# Bienvenidos 
+
+Este blog lo utilizaremos como plataforma para poder hacer un curso de [Google Earth Engine](https://earthengine.google.com/) y este es el primer post de dicho blog. 
+
+
+## Introducción
+
+Google earth engine (GEE) es una servicio de procesamiento geoespacial en linea el cual tiene la capacidad de hacer procesamientos a gran escala. Esto nos ayuda a procesar grandes cantidades de datos geoespaciales (que muchos se encuentran dentro de GEE).  
+
+
+GEE nos permite usar catalogos públicos de imágenes satelitales y generar servicios interactivos (mapas). 
+
+
+GEE esta pensado para su uso usando el sitio  [https://code.earthengine.google.com/](https://code.earthengine.google.com/), para poder hacer uso del mismo es necesario darse de alta en el servicio a traves de una cuente de Google. 
+
+
+
+## Entendiendo GEE
+
+Vamos a utilizar como principal herramienta el editor de código de GEE. 
+
+![Consola de GEE](Consola_GEE.png)
+
+Dentro de esta consola se tiene las siguientes partes 
+
+* Code Editor: dentro de esta area se desarrolla el código en GEE usando JavaScript  
+
+![Editor código GEE](GEE_text_editor.png)
+
+* Console: Muestra la salidas que se piden dentro del código ejecutado. Si hay errores en el código ejecutado en esta sección se mostrarán los mensajes de error corespondientes.
+
+![Consola GEE](GEE_console.png)
+
+* Inspector: En esta parte se pueden inspeccionar los elementops dentro de los mapas generados. 
+
+![Inspector de elementos de  GEE](GEE_Inspector.png)
+
+* Task: El manejador de tareas nos sirve para monitoriar las distintas tareas solicitadas dentro de GEE como puede ser la descarga o subida de imágenes. 
+
+![Manejador de tareas GEE](GEE_Task_manager.png)
+
+* Scripts Esta parte funciona como un navegador de archivos para los scripts propios y otros a los cuales se tiene acceso como pueden ser los compartidos por otros usuarios.
+
+![Navegador Scripts ](GEE_scripts.png)
+
+* Docs: Aquí podemos encontrar muchos ejemplos distintos de como se utiliza GEE,    lo cuales son compartidos por los desarrolladores de la plataforma. 
+![Ejemplos de scripts en GEE](GEE_docs.png)
+
+* Assets: En esta sección se encuentran objetos que fueron subidos por el usuario para ayudar en la generación de mapas. Los distintos objetos pueden ser imágenes rasters u objetos geométricos lo cualess pueden estar dentro de un archivo '.shp'. 
+![Activos disponibles para su uso en GEE](GEE_assets.png)
+
+ 
+
+## Entendiendo un poco más
+
+El lenguaje de uso nativo de GEE es JavaScript, aunque se ha desarrollado una API (Application Programming Interface) para python esta también hace uso de scripts escritos en JavaScript.  Vamos a explicar los básicos en JavaScript y a partir de éstos se puede hacer una transición hacia códigos en Python de forma más sencilla. 
+
+
+Aunque se hace uso de JavaScript este no es un curso de JavaScript por tal motivo vamos a explicar las cosas necesarias para hacer cosas dentro de GEE.
+
+## Hola mundo
+
+Como es regular en los lenguajes de programación vamos hacer un script para imprimir hola mundo. 
+
+
+Dentro de la sección de editor de código escribimos lo siguiente:
+
+```JavaScript
+print('Hola Mundo')
+```
+para hacer la ejecución de todo nuestro script se oprime el boton 'Run'
+
+![Ejecutar el código RUN](run.png)
+
+
+En sección de la consola aparece la leyenda 'Hola Mundo'. Lo primero que podemos observar es el uso de la función 'print()'  nos permite imrpimir cadenas de caracteres. Esta función también nos permite imprimir distintos de estructuras de datos como son los metadatos de imágenes satelitáles o bien datos especificos como valores numéricos. 
+
+
+En JavaScripts en GEE tenemos distintos tipos de estructuras de datos como 'Image', 'Feature', 'Dictionary', 'List', 'Array', 'Date', 'Number' y 'String'. En GEE las principales estructuras son 'Image' y 'Feature', la estructura ['Image'](https://developers.google.com/earth-engine/apidocs/ee-image) es la estructura en donde se almacenan las imagenes, la imágenes pueden tener distintas bandas, como son la mayoría de las imágenes raster satelitales. La estructura ['Feature'](https://developers.google.com/earth-engine/apidocs/ee-feature) en GEE en el fondo es un GeoJSON, el cual es un objeto que debe de tener una propiedad 'Geometry', aunque esta puede ser 'Null', el uso común de la estructura 'Feature' nos sirve para asociar una propiedad a los objetos geométricos.
+
+
+Ahora vamos a obtener cosas en un mapa, en el editor de código se escribe el siguiente script. 
+
+```JavaScript
+var paises = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');
+//print(paises)
+var filtromexico  = ee.Filter.eq('country_na', 'Mexico');
+var paismexico = paises.filter(filtromexico)
+//print(paismexico)
+Map.addLayer(paismexico);
+Map.centerObject(paismexico, 4);
+//Map.setCenter(-99.221440, 19.291990,  4);
+```
+
+GEE nos permite tener acceso a un extenso [conjunto de datos](https://developers.google.com/earth-engine/datasets) en este caso vamos a utilizar la colección de datos 'USDOS/LSIB_SIMPLE/2017' la cual son los polígonos a gran escala de los paises de acuerdo al [departamento de estado de EUA](https://geonode.state.gov/layers/catalog:geonode:LSIB). [`ee.FeatureCollection`](https://developers.google.com/earth-engine/apidocs/ee-filter) es una estructura de datos que nos permite hacer el manejo de colecciones de `ee.Features` ('Features') de igual forma existe la estructura de datos 'ee.ImageCollection'. 
+
+Lo primero que vemos dentro del código es la forma para declarar variables dentro de JavaScript este usa la palabra `var` para decir que lo siguiente sera una variable. En la variable `paises` se encuentra la colleccion de los políogonos de paises. Al ser una coleccion vamos a quedarnos sólo con el país Mexico. En la variable filtromexico contiene un filtro el cual filtrara usando el campo 'country_na' a los elementos que cuyo campo tengan la cadena 'Mexico'. 
+
+En la variable `paismexico` tenemos el resultado de aaplicar el filtro 'filtromexico' en la colección paises. 
+
+Las siguentes dos lineas en el código añaden al mapa el polígono que se encuentra en la variable `paismexico` y pone el mapa centrado en la variable con un zoom de 4.
+
+En el código podemos observar la forma de evitar que se ejecuten ciertas lineas de código `//` nos sirve para hacer comentarios para poder explicar el código o bien para evitar que se ejecuten ciertas lineas. Esto es de particular relevancia cuando estamos experimentando o haciendo la limpieza del código. 
+
+
+  
+
+
+
+
+
+```JavaScript
+var worldcountries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');
+//print(worldcountries)
+var filterCountry = ee.Filter.eq('country_na', 'Mexico');
+//var filterCountry = ee.Filter.inList('country_na', ['Mexico', 'Guatemala']);
+var country = worldcountries.filter(filterCountry);
+//print(country.geometry())
+Map.addLayer(country);
+Map.centerObject(country, 4);
+    //Map.setCenter(-99.221440, 19.291990,  4);
+
+var collection  = ee.ImageCollection('COPERNICUS/S5P/OFFL/L3_NO2')
+  .select('NO2_column_number_density');
+print(collection.first())
+
+var filter18 = ee.Filter.date('2018-10-01', '2018-10-02');
+var filter19 = ee.Filter.date('2019-10-01', '2019-10-02');
+
+var no2_18  = collection.filter(filter18).mean().multiply(1e6).clip(country);
+var no2_19 = collection.filter(filter19).mean().multiply(1e6).clip(country);
+
+print('imagen 2018:',  no2_18);
+print('imagen 2019:',  no2_19);
+var vizParams = {
+  min: 0,
+  max: 200,
+  palette: ['black', 'purple', 'green', 'red']
+};
+
+
+/*
+Map.addLayer(no2_18, vizParams, 'no2_18');
+Map.addLayer(no2_19, vizParams, 'no2_19');
+*/
+
+//Split
+
+Map.addLayer(no2_18, vizParams, 'parte1');
+
+var Map2 = ui.Map();
+Map2.addLayer(no2_19, vizParams, 'parte2');
+
+var linker = ui.Map.Linker([ui.root.widgets().get(0), Map2]);
+
+var splitPanel = ui.SplitPanel({
+  firstPanel: linker.get(0),
+  secondPanel: linker.get(1),
+  orientation: 'horizontal',
+  wipe: true,
+  style: {stretch: 'both'}
+});
+// Set the SplitPanel as the only thing in root
+ui.root.widgets().reset([splitPanel]);
+// Center the SplitPanel on coordinates (10, 44) and set zoom level to 6
+//Map.setCenter(-99.221440, 19.291990,  4);
+linker.get(0).setCenter(-99.221440, 19.291990, 6);
+```
+
+
+
+
+
+
+
+

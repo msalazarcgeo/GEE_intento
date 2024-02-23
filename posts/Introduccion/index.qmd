@@ -114,6 +114,9 @@ Las siguentes dos lineas en el código añaden al mapa el polígono que se encue
 En el código podemos observar la forma de evitar que se ejecuten ciertas lineas de código `//` nos sirve para hacer comentarios para poder explicar el código o bien para evitar que se ejecuten ciertas lineas. Esto es de particular relevancia cuando estamos experimentando o haciendo la limpieza del código. 
 
 
+
+
+
   
 
 

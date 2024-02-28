@@ -15,3 +15,8 @@ title-block-banner: true
 
 El siguiente es un intendo de hacer el uso de quarto para hacer un blog donde se haran cosas para GEE y sirva parqa hac4er un curso del mismo. 
 
+
+## Pagina con los post 
+
+
+El link de la pagina [link](https://msalazarcgeo.github.io/GEE_intento/)

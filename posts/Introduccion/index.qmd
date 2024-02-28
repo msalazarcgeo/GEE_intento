@@ -115,11 +115,51 @@ En el código podemos observar la forma de evitar que se ejecuten ciertas lineas
 
 
 
+Vamos a añadir algunas lineas más de código 
 
+```JavaScript
+var worldcountries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');
+//print(worldcountries)
+var filterCountry = ee.Filter.eq('country_na', 'Mexico');
+//var filterCountry = ee.Filter.inList('country_na', ['Mexico', 'Guatemala']);
+var country = worldcountries.filter(filterCountry);
+//print(country.geometry())
+Map.addLayer(country, {palette: 'red'}, 'Paises', 0.5);
+Map.centerObject(country, 4);
+    //Map.setCenter(-99.221440, 19.291990,  4);
 
-  
+var collection  = ee.ImageCollection('COPERNICUS/S5P/OFFL/L3_NO2')
+  .select('NO2_column_number_density');
+print(collection.first())
 
+/// FILTROS PARA SELECIONAR LAS IMAGENES QUE SE DESEAN 
 
+var filter18 = ee.Filter.date('2018-10-01', '2018-10-02');
+var filter19 = ee.Filter.date('2019-10-01', '2019-10-02');
+
+var no2_18  = collection.filter(filter18).mean().multiply(1e6).clip(country);
+var no2_19 = collection.filter(filter19).mean().multiply(1e6).clip(country);
+
+print('imagen 2018:',  no2_18);
+print('imagen 2019:',  no2_19);
+var vizParams = {
+  min: 0,
+  max: 200,
+  palette: ['black', 'purple', 'green', 'red']
+};
+
+Map.addLayer(no2_18, vizParams, 'no2_18');
+Map.addLayer(no2_19, vizParams, 'no2_19');
+
+```
+Otro de los objetos importantes dentro de GEE son las colecciones de imágenes, en una collección de se encuentran las imágenes en donde todas comparten ciertas propiedades comunes como son su sistema de referencia, el algorithmo con el que se hizo, etc. 
+
+Tomar la colección de imagenes completa en general no es necesario, por lo general o se selecciona una o se obtiene sus agragados dependiendo de la banda. Las imagenes satelitales en general contienen muchas bandas de los distintos sensores o imagenes generadas a través de algoritmos usando los datos de sensores satelitales. Como no es necesario todas las bandas ni todas las imagenes es necesario tener la capacidad de poder seleccionar lo que es de nuestro interes, en GEE existen objetos que nos ayudan a seleccionar lo que es de nuestro interes, estos objetos son los filtros [`ee.Filter`] (https://developers.google.com/earth-engine/apidocs/ee-filter), estos filtros pueden filtrar campos en especifico. 
+
+En la siguiente linea se hacen dos objetos de tipo `ee.Filter` que filtran las imagenes de la coleccion de imagenes usando las fechas, en las siguentes lineas de código en las variables `no2_18` y `no2_19` se almacenan los resultados de las mismas como podemos observar en la consola se van a imprimir.
+
+Para poder hacer una visualización de las imágenes, es necesario dar un conjunto de parámetros al objeto donde esta nuestro mapa [`Map`](https://developers.google.com/earth-engine/apidocs/map-addlayer). En el caso anterior donde se muestra el poligono en el mapa no se añade ningun color pero en este se cambio a rojo y se añade el nombre de la capa. Para hacer la visualización de las imágenes es necesario conocer sus valores máximos y mínimos, adicionammente se le da un conjunto de colores para al añadirse al mapa estos se cuanticen. 
+ 
 
 
 
@@ -137,6 +177,8 @@ Map.centerObject(country, 4);
 var collection  = ee.ImageCollection('COPERNICUS/S5P/OFFL/L3_NO2')
   .select('NO2_column_number_density');
 print(collection.first())
+
+
 
 var filter18 = ee.Filter.date('2018-10-01', '2018-10-02');
 var filter19 = ee.Filter.date('2019-10-01', '2019-10-02');

@@ -114,7 +114,6 @@ Las siguentes dos lineas en el código añaden al mapa el polígono que se encue
 En el código podemos observar la forma de evitar que se ejecuten ciertas lineas de código `//` nos sirve para hacer comentarios para poder explicar el código o bien para evitar que se ejecuten ciertas lineas. Esto es de particular relevancia cuando estamos experimentando o haciendo la limpieza del código. 
 
 
-
 Vamos a añadir algunas lineas más de código 
 
 ```JavaScript
@@ -123,105 +122,43 @@ var worldcountries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');
 var filterCountry = ee.Filter.eq('country_na', 'Mexico');
 //var filterCountry = ee.Filter.inList('country_na', ['Mexico', 'Guatemala']);
 var country = worldcountries.filter(filterCountry);
-//print(country.geometry())
-Map.addLayer(country, {palette: 'red'}, 'Paises', 0.5);
+
+Map.addLayer(country, {color: 'yellow'}, 'Paises');
 Map.centerObject(country, 4);
-    //Map.setCenter(-99.221440, 19.291990,  4);
+
 
 var collection  = ee.ImageCollection('COPERNICUS/S5P/OFFL/L3_NO2')
   .select('NO2_column_number_density');
-print(collection.first())
+//print(collection.first())
 
 /// FILTROS PARA SELECIONAR LAS IMAGENES QUE SE DESEAN 
 
-var filter18 = ee.Filter.date('2018-10-01', '2018-10-02');
+
 var filter19 = ee.Filter.date('2019-10-01', '2019-10-02');
 
-var no2_18  = collection.filter(filter18).mean().multiply(1e6).clip(country);
+
 var no2_19 = collection.filter(filter19).mean().multiply(1e6).clip(country);
 
-print('imagen 2018:',  no2_18);
-print('imagen 2019:',  no2_19);
+//print('imagen 2019:',  no2_19);
 var vizParams = {
   min: 0,
   max: 200,
   palette: ['black', 'purple', 'green', 'red']
 };
 
-Map.addLayer(no2_18, vizParams, 'no2_18');
+
 Map.addLayer(no2_19, vizParams, 'no2_19');
-
 ```
-Otro de los objetos importantes dentro de GEE son las colecciones de imágenes, en una collección de se encuentran las imágenes en donde todas comparten ciertas propiedades comunes como son su sistema de referencia, el algorithmo con el que se hizo, etc. 
+Otro de los objetos importantes dentro de GEE son las colecciones de imágenes, en una collección de se encuentran las imágenes en donde todas comparten ciertas propiedades comunes como son su sistema de referencia, el algoritmo con el que se hizo, etc. 
 
-Tomar la colección de imagenes completa en general no es necesario, por lo general o se selecciona una o se obtiene sus agragados dependiendo de la banda. Las imagenes satelitales en general contienen muchas bandas de los distintos sensores o imagenes generadas a través de algoritmos usando los datos de sensores satelitales. Como no es necesario todas las bandas ni todas las imagenes es necesario tener la capacidad de poder seleccionar lo que es de nuestro interes, en GEE existen objetos que nos ayudan a seleccionar lo que es de nuestro interes, estos objetos son los filtros [`ee.Filter`] (https://developers.google.com/earth-engine/apidocs/ee-filter), estos filtros pueden filtrar campos en especifico. 
+Tomar la colección de imagenes completa en general no es necesario, por lo general o se selecciona una o se obtiene sus agregados dependiendo de la banda. Las imágenes satelitales en general contienen muchas bandas de los distintos sensores o imágenes generadas a través de algoritmos usando los datos de sensores satelitales. Como no es necesario hacer uso de todas las bandas, ni todas las imágenes es necesario tener la capacidad de seleccionar lo que consideremos de nuestro interes. En GEE existen objetos que nos ayudan a seleccionar, estos objetos son los filtros [`ee.Filter`] (https://developers.google.com/earth-engine/apidocs/ee-filter), estos filtros pueden filtrar campos en especifico. 
 
-En la siguiente linea se hacen dos objetos de tipo `ee.Filter` que filtran las imagenes de la coleccion de imagenes usando las fechas, en las siguentes lineas de código en las variables `no2_18` y `no2_19` se almacenan los resultados de las mismas como podemos observar en la consola se van a imprimir.
+En la siguiente linea se hace un objeto de tipo `ee.Filter` que filtra las imágenes de la coleccion de imágenes usando las fechas, en las siguentes lineas de código en la variable `no2_19` se almacenan los resultados de usar el filtro `filter19` y obtener el promedio de todas las imágenes, se multiplica por el escalar $1\times10^6$ y se toman solo el area que concide con el poligono en la variable `country`. Sólo para entender se imprime en la consola y observar que lo que obtenemos es realmente una imagen.
 
-Para poder hacer una visualización de las imágenes, es necesario dar un conjunto de parámetros al objeto donde esta nuestro mapa [`Map`](https://developers.google.com/earth-engine/apidocs/map-addlayer). En el caso anterior donde se muestra el poligono en el mapa no se añade ningun color pero en este se cambio a rojo y se añade el nombre de la capa. Para hacer la visualización de las imágenes es necesario conocer sus valores máximos y mínimos, adicionammente se le da un conjunto de colores para al añadirse al mapa estos se cuanticen. 
+Para poder hacer una visualización de las imágenes, es necesario dar un conjunto de parámetros al objeto donde esta nuestro mapa [`Map`](https://developers.google.com/earth-engine/apidocs/map-addlayer). En el caso anterior donde se muestra el polígono en el mapa no se añade ningún color, pero en este caso se cambio a amarillo y se añade el nombre de la capa. Para hacer la visualización de la imagenen es necesario conocer sus valores máximos y mínimos, adicionammente se le da un conjunto de colores para colorear la imagen, estos colores nos muestren una diferencia entre los valores de la imagen y al usar el color amarillo de fondo se observa con mayor claridad los lugares donde la imagen no tiene datos.  
  
 
 
-
-```JavaScript
-var worldcountries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');
-//print(worldcountries)
-var filterCountry = ee.Filter.eq('country_na', 'Mexico');
-//var filterCountry = ee.Filter.inList('country_na', ['Mexico', 'Guatemala']);
-var country = worldcountries.filter(filterCountry);
-//print(country.geometry())
-Map.addLayer(country);
-Map.centerObject(country, 4);
-    //Map.setCenter(-99.221440, 19.291990,  4);
-
-var collection  = ee.ImageCollection('COPERNICUS/S5P/OFFL/L3_NO2')
-  .select('NO2_column_number_density');
-print(collection.first())
-
-
-
-var filter18 = ee.Filter.date('2018-10-01', '2018-10-02');
-var filter19 = ee.Filter.date('2019-10-01', '2019-10-02');
-
-var no2_18  = collection.filter(filter18).mean().multiply(1e6).clip(country);
-var no2_19 = collection.filter(filter19).mean().multiply(1e6).clip(country);
-
-print('imagen 2018:',  no2_18);
-print('imagen 2019:',  no2_19);
-var vizParams = {
-  min: 0,
-  max: 200,
-  palette: ['black', 'purple', 'green', 'red']
-};
-
-
-/*
-Map.addLayer(no2_18, vizParams, 'no2_18');
-Map.addLayer(no2_19, vizParams, 'no2_19');
-*/
-
-//Split
-
-Map.addLayer(no2_18, vizParams, 'parte1');
-
-var Map2 = ui.Map();
-Map2.addLayer(no2_19, vizParams, 'parte2');
-
-var linker = ui.Map.Linker([ui.root.widgets().get(0), Map2]);
-
-var splitPanel = ui.SplitPanel({
-  firstPanel: linker.get(0),
-  secondPanel: linker.get(1),
-  orientation: 'horizontal',
-  wipe: true,
-  style: {stretch: 'both'}
-});
-// Set the SplitPanel as the only thing in root
-ui.root.widgets().reset([splitPanel]);
-// Center the SplitPanel on coordinates (10, 44) and set zoom level to 6
-//Map.setCenter(-99.221440, 19.291990,  4);
-linker.get(0).setCenter(-99.221440, 19.291990, 6);
-```
 
 
 

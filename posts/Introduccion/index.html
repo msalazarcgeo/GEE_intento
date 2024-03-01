@@ -352,7 +352,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Tomar la colección de imagenes completa en general no es necesario, por lo general o se selecciona una o se obtiene sus agregados dependiendo de la banda. Las imágenes satelitales en general contienen muchas bandas de los distintos sensores o imágenes generadas a través de algoritmos usando los datos de sensores satelitales. Como no es necesario hacer uso de todas las bandas, ni todas las imágenes es necesario tener la capacidad de seleccionar lo que consideremos de nuestro interes. En GEE existen objetos que nos ayudan a seleccionar, estos objetos son los filtros [<code>ee.Filter</code>] (https://developers.google.com/earth-engine/apidocs/ee-filter), estos filtros pueden filtrar campos en especifico.</p>
 <p>En la siguiente linea se hace un objeto de tipo <code>ee.Filter</code> que filtra las imágenes de la coleccion de imágenes usando las fechas, en las siguentes lineas de código en la variable <code>no2_19</code> se almacenan los resultados de usar el filtro <code>filter19</code> y obtener el promedio de todas las imágenes, se multiplica por el escalar <span class="math inline">\(1\times10^6\)</span> y se toman solo el area que concide con el poligono en la variable <code>country</code>. Sólo para entender se imprime en la consola y observar que lo que obtenemos es realmente una imagen.</p>
 <p>Para poder hacer una visualización de las imágenes, es necesario dar un conjunto de parámetros al objeto donde esta nuestro mapa <a href="https://developers.google.com/earth-engine/apidocs/map-addlayer"><code>Map</code></a>. En el caso anterior donde se muestra el polígono en el mapa no se añade ningún color, pero en este caso se cambio a amarillo y se añade el nombre de la capa. Para hacer la visualización de la imagenen es necesario conocer sus valores máximos y mínimos, adicionammente se le da un conjunto de colores para colorear la imagen, estos colores nos muestren una diferencia entre los valores de la imagen y al usar el color amarillo de fondo se observa con mayor claridad los lugares donde la imagen no tiene datos.</p>
-<p>El resultado</p>
+<p>El resultado lo vamos a poder ver en el mapa</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="mexico_imagen.png" class="img-fluid figure-img"></p>
+<p></p><figcaption class="figure-caption"><span class="math inline">\(NO_2\)</span> en la republica mexicana en un día</figcaption><p></p>
+</figure>
+</div>
 
 
 </section>

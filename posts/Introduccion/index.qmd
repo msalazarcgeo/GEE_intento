@@ -107,12 +107,15 @@ GEE nos permite tener acceso a un extenso [conjunto de datos](https://developers
 
 Lo primero que vemos dentro del código es la forma para declarar variables dentro de JavaScript este usa la palabra `var` para decir que lo siguiente sera una variable. En la variable `paises` se encuentra la colleccion de los políogonos de paises. Al ser una coleccion vamos a quedarnos sólo con el país Mexico. En la variable filtromexico contiene un filtro el cual filtrara usando el campo 'country_na' a los elementos que cuyo campo tengan la cadena 'Mexico'. 
 
-En la variable `paismexico` tenemos el resultado de aaplicar el filtro 'filtromexico' en la colección paises. 
+En la variable `paismexico` tenemos el resultado de aplicar el filtro 'filtromexico' en la colección paises. 
 
 Las siguentes dos lineas en el código añaden al mapa el polígono que se encuentra en la variable `paismexico` y pone el mapa centrado en la variable con un zoom de 4.
 
-En el código podemos observar la forma de evitar que se ejecuten ciertas lineas de código `//` nos sirve para hacer comentarios para poder explicar el código o bien para evitar que se ejecuten ciertas lineas. Esto es de particular relevancia cuando estamos experimentando o haciendo la limpieza del código. 
+En el código podemos observar la forma de evitar que se ejecuten ciertas lineas de código `//` nos sirve para hacer comentarios para poder explicar el código o bien para evitar que se ejecuten ciertas lineas. Esto es de particular relevancia cuando estamos experimentando o haciendo la limpieza del código.
 
+Podemos ejecutar el código que acabamos de crear presionando el boton 'run', una vez ejecutado podemos ver en el mapa de México
+
+![Mostramos México](mexico_poligon.png)
 
 Vamos a añadir algunas lineas más de código 
 
@@ -156,6 +159,10 @@ Tomar la colección de imagenes completa en general no es necesario, por lo gene
 En la siguiente linea se hace un objeto de tipo `ee.Filter` que filtra las imágenes de la coleccion de imágenes usando las fechas, en las siguentes lineas de código en la variable `no2_19` se almacenan los resultados de usar el filtro `filter19` y obtener el promedio de todas las imágenes, se multiplica por el escalar $1\times10^6$ y se toman solo el area que concide con el poligono en la variable `country`. Sólo para entender se imprime en la consola y observar que lo que obtenemos es realmente una imagen.
 
 Para poder hacer una visualización de las imágenes, es necesario dar un conjunto de parámetros al objeto donde esta nuestro mapa [`Map`](https://developers.google.com/earth-engine/apidocs/map-addlayer). En el caso anterior donde se muestra el polígono en el mapa no se añade ningún color, pero en este caso se cambio a amarillo y se añade el nombre de la capa. Para hacer la visualización de la imagenen es necesario conocer sus valores máximos y mínimos, adicionammente se le da un conjunto de colores para colorear la imagen, estos colores nos muestren una diferencia entre los valores de la imagen y al usar el color amarillo de fondo se observa con mayor claridad los lugares donde la imagen no tiene datos.  
+
+El resultado lo vamos a poder ver en el mapa 
+
+![$NO_2$ en la republica mexicana en un día](mexico_imagen.png)
  
 
 

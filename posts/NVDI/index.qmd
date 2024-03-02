@@ -1,0 +1,65 @@
+---
+title: "NDVI"
+author: "J. Miguel Salazar"
+date: "2024-02-04"
+categories: [news, course, GEE]
+
+execute: 
+  enabled: false
+---
+
+Vamos a calcular un indice muy utilizado para hacer un calculo de vegentación este es llamado *Normalized Difference Vegetation Index* (NDVI). Para tal motivo vamos a utilizar el 
+
+
+```JavaScript
+var worldcountries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');
+var country = worldcountries.filter(ee.Filter.eq('country_na', 'Mexico'));
+
+```
+
+```{JavaScript}
+var S2_SR = ee.ImageCollection('COPERNICUS/S2_SR')
+  .filterBounds(country)
+  .filterDate('2018-01-01', '2019-01-01');
+
+```
+
+
+
+```JavaScript
+var worldcountries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');
+
+var country = worldcountries.filter(ee.Filter.eq('country_na', 'Mexico'));
+var S2_SR = ee.ImageCollection('COPERNICUS/S2_SR')
+  .filterBounds(country)
+  .filterDate('2018-01-01', '2019-01-01');
+
+var nirBand = 'B8';
+var redBand = 'B4';
+
+print(S2_SR.first());
+var ndvi_fi = S2_SR.first().normalizedDifference([nirBand, redBand]).rename('NVDI');
+
+
+print(ndvi_fi);
+
+
+
+var NDVIpalette = ['FFFFFF', 'CE7E45', 'DF923D', 'F1B555', 'FCD163',
+'99B718', '74A901', '66A000', '529400', '3E8601', '207401', '056201',
+'004C00', '023B01', '012E01', '011D01', '011301'];
+Map.addLayer(country);
+//Map.addLayer(ndvi_fi, {palette: NDVIpalette}, 'NVDI de Sentinel');
+
+var addNDVI = function(image) {
+  var ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  return image.addBands(ndvi);
+};
+///////
+
+var S2_NDVI = S2_SR.map(addNDVI);
+Map.addLayer(S2_NDVI.select('NDVI'), {palette: NDVIpalette}, 'NVDI de Sentinel');
+
+
+
+```

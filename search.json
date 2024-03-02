@@ -4,7 +4,7 @@
     "href": "index.html",
     "title": "GEE_intento",
     "section": "",
-    "text": "Introducción a Google Earth Engine\n\n\n\n\n\n\n\nnews\n\n\ncourse\n\n\nGEE\n\n\n\n\n\n\n\n\n\n\n\nFeb 22, 2024\n\n\nJ. Miguel Salazar\n\n\n\n\n\n\n  \n\n\n\n\nPost With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nFeb 22, 2024\n\n\nHarlow Malloc\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nFeb 19, 2024\n\n\nTristan O’Malley\n\n\n\n\n\n\nNo matching items"
+    "text": "Introducción a Google Earth Engine\n\n\n\n\n\n\n\nnews\n\n\ncourse\n\n\nGEE\n\n\n\n\n\n\n\n\n\n\n\nFeb 22, 2024\n\n\nJ. Miguel Salazar\n\n\n\n\n\n\n  \n\n\n\n\nPost With Code\n\n\n\n\n\n\n\nnews\n\n\ncode\n\n\nanalysis\n\n\n\n\n\n\n\n\n\n\n\nFeb 22, 2024\n\n\nHarlow Malloc\n\n\n\n\n\n\n  \n\n\n\n\nWelcome To My Blog\n\n\n\n\n\n\n\nnews\n\n\n\n\n\n\n\n\n\n\n\nFeb 19, 2024\n\n\nTristan O’Malley\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNDVI\n\n\n\n\n\n\n\nnews\n\n\ncourse\n\n\nGEE\n\n\n\n\n\n\n\n\n\n\n\nFeb 4, 2024\n\n\nJ. Miguel Salazar\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "about.html",
@@ -26,6 +26,13 @@
     "title": "Post With Code",
     "section": "",
     "text": "This is a post with executable code."
+  },
+  {
+    "objectID": "posts/NVDI/index.html",
+    "href": "posts/NVDI/index.html",
+    "title": "NDVI",
+    "section": "",
+    "text": "var worldcountries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');\nvar country = worldcountries.filter(ee.Filter.eq('country_na', 'Mexico'));\nvar S2_SR = ee.ImageCollection('COPERNICUS/S2_SR')\n  .filterBounds(country)\n  .filterDate('2018-01-01', '2019-01-01');\n\nvar worldcountries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');\n\nvar country = worldcountries.filter(ee.Filter.eq('country_na', 'Mexico'));\nvar S2_SR = ee.ImageCollection('COPERNICUS/S2_SR')\n  .filterBounds(country)\n  .filterDate('2018-01-01', '2019-01-01');\n\nvar nirBand = 'B8';\nvar redBand = 'B4';\n\nprint(S2_SR.first());\nvar ndvi_fi = S2_SR.first().normalizedDifference([nirBand, redBand]).rename('NVDI');\n\n\nprint(ndvi_fi);\n\n\n\nvar NDVIpalette = ['FFFFFF', 'CE7E45', 'DF923D', 'F1B555', 'FCD163',\n'99B718', '74A901', '66A000', '529400', '3E8601', '207401', '056201',\n'004C00', '023B01', '012E01', '011D01', '011301'];\nMap.addLayer(country);\n//Map.addLayer(ndvi_fi, {palette: NDVIpalette}, 'NVDI de Sentinel');\n\nvar addNDVI = function(image) {\n  var ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI');\n  return image.addBands(ndvi);\n};\n///////\n\nvar S2_NDVI = S2_SR.map(addNDVI);\nMap.addLayer(S2_NDVI.select('NDVI'), {palette: NDVIpalette}, 'NVDI de Sentinel');"
   },
   {
     "objectID": "posts/welcome/index.html",

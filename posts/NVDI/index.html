@@ -206,6 +206,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
+<section id="cálculo-de-ndvi" class="level1">
+<h1>Cálculo de NDVI</h1>
 <p>Vamos a calcular un índice muy utilizado para hacer un cálculo de vegentación este es llamado <em>Normalized Difference Vegetation Index</em> (NDVI). Para tal motivo vamos a utilizar el conjunto de imágenes satelitales proporcionado por la <a href="https://www.esa.int/">agencia espacial europea</a>. Un cierto conjunto de imágenes del programa copernicus y de las misiones <a href="https://developers.google.com/earth-engine/datasets/catalog/sentinel">Sentinel</a> esta disponible en GEE.</p>
 <p>Vamos a concentrarnos en las imágenes que toquen a mexico por tal motivo tomamos el polígono de México como lo hicimos en <a href="../../posts/Introduccion/index.html">la introducción a GEE</a></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> worldcountries <span class="op">=</span> ee<span class="op">.</span><span class="fu">FeatureCollection</span>(<span class="st">'USDOS/LSIB_SIMPLE/2017'</span>)<span class="op">;</span></span>
@@ -268,6 +270,7 @@ Map.addLayer(ndvi_fi, {palette: NDVIpalette}, 'NVDI de Sentinel');
 <span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

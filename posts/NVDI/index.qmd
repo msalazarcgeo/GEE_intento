@@ -59,12 +59,12 @@ var NDVIpalette = ['FFFFFF', 'CE7E45', 'DF923D', 'F1B555', 'FCD163',
 Map.addLayer(country);
 Map.addLayer(ndvi_fi, {palette: NDVIpalette}, 'NVDI de Sentinel');
 ```
-Como podemos ver en la imagen @fig-NDVI_1 tenemos una pequeña parte del territorio con el calculo de **NDVI**, esto es debido a que la primera imagen de la colleccion no cubre todo el territorio de la Republica Mexicana, por tal motivo es necesario obtener el NDVI a todo el conjunto de imágenes en la collección. 
+Como podemos ver en la imagen @fig-NDVI_1 tenemos una pequeña parte del territorio con el calculo de **NDVI**, esto es debido a que la primera imagen de la colleccion no cubre todo el territorio de la República Mexicana, por tal motivo es necesario obtener el NDVI a todo el conjunto de imágenes en la collección que ya filtramos. 
 
 ![NDVI una parte de México ](NDVI_1.png){#fig-NDVI_1}
 
 
-Para hacer esto lo que se tiene que hacer es aher lo mismo para todas las imágenes dentro de la colección. En GEE lo hacemos mediante funciones, las funciones deben de tener como parámetro los elementos de la colección ya sea de `Feature` o de `Image` y hacer lo necesario dentro de la función.  En este caso a cada imagen utiliza la función `normalizeDifference` a las bandas `B4` y `B8`  función y aplicar esta función a cada elemento de la colección 
+Para hacer esto lo que se hace  lo mismo para todas las imágenes dentro de la colección. En GEE lo hacemos mediante funciones, las funciones deben de tener como parámetro los elementos de la colección ya sea de `Feature` o de `Image` y hacer lo necesario dentro de la función.  En este caso a cada imagen utiliza la función `normalizeDifference` a las bandas `B4` y `B8`  función y aplicar esta función a cada elemento de la colección 
 
 Para declarar la función se hace usando la siguiente estructura 
 
@@ -87,13 +87,13 @@ var addNDVI = function(image) {
 };
 ```
 
-En la variable `addNDVI`se encuentra la función ahora vamos aplicar la función a los elementos de la colección. 
+En la variable `addNDVI`se encuentra la función y vamos aplicar la función a los elementos de la colección. Para esto la clase 'ImageCollection' tiene un método implementado '.map'. 
 
 ```JavaScript
 var S2_NDVI = S2_SR.map(addNDVI);
 
 ```
-Y usando los mismos parámetros  de visualización desplegamos las imagenes en nuestro mapa 
+Y usando los mismos parámetros de visualización desplegamos las imágenes en nuestro mapa 
 
 ```JavaScript
 var S2_NDVI = S2_SR.map(addNDVI);
@@ -103,10 +103,13 @@ Y el resultado lo podemos ver en la imagen
 
 ![NDVI Republica mMxicana](NDVI_2.png)
 
-Se tiene que hacer que se vea bien 
+Se recomienda intentar las siguientes mejoras como ejercicio. 
 
+Cosas para que se vea bien.
+
+* Mostrar sólo el pais.
 * Esta borroso
-* Mostrar sólo el pais. 
+ 
 
 
 

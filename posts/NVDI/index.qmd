@@ -1,29 +1,59 @@
 ---
 title: "NDVI"
 author: "J. Miguel Salazar"
-date: "2024-02-04"
+date: "2024-03-04"
 categories: [news, course, GEE]
 
 execute: 
   enabled: false
 ---
+# Cálculo de NDVI
 
-Vamos a calcular un indice muy utilizado para hacer un calculo de vegentación este es llamado *Normalized Difference Vegetation Index* (NDVI). Para tal motivo vamos a utilizar el 
+En este Post se calcula el **NDVI** usando las imágenes de **Sentinel**. 
 
 
+Vamos a calcular un índice muy utilizado para hacer un cálculo de vegentación este es llamado *Normalized Difference Vegetation Index* (NDVI). Para tal motivo vamos a utilizar el conjunto de imágenes satelitales proporcionado por la [agencia espacial europea ](https://www.esa.int/). Un cierto conjunto de imágenes del programa copernicus y de las misiones [Sentinel](https://developers.google.com/earth-engine/datasets/catalog/sentinel) esta disponible en GEE.
+
+Vamos a concentrarnos en las imágenes que toquen a mexico por tal motivo tomamos el polígono de México como lo hicimos en [la introducción a GEE](../Introduccion/index.qmd)
 ```JavaScript
 var worldcountries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');
 var country = worldcountries.filter(ee.Filter.eq('country_na', 'Mexico'));
 
 ```
+En este caso vamos a tomar la colección [`COPERNICUS/S2_SR`](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR) en general en el [catalogo de GEE](https://developers.google.com/earth-engine/datasets) en la sección de cada colección podemos ver una descripción general, un pequeño ejemplo y las bandas de cada imagen. 
+
+En las siguientes lineas de código se selecciona la colección y se filtra a las imágenes que toquen al polygono que esta en la variable `country` y se filtra en un rango de fechas. 
 
 ```{JavaScript}
 var S2_SR = ee.ImageCollection('COPERNICUS/S2_SR')
   .filterBounds(country)
   .filterDate('2018-01-01', '2019-01-01');
-
 ```
 
+
+Para obtener el **NDVI** vamos a usar las bandas `B4` y `B8` 
+
+```{JavaScript}
+var nirBand = 'B8';
+var redBand = 'B4';
+
+print(S2_SR.first());
+var ndvi_fi = S2_SR.first().normalizedDifference([nirBand, redBand]).rename('NVDI');
+```
+
+```{JavaScript}
+print(S2_SR.first());
+var ndvi_fi = S2_SR.first().normalizedDifference([nirBand, redBand]).rename('NVDI');
+print(ndvi_fi);
+
+
+var NDVIpalette = ['FFFFFF', 'CE7E45', 'DF923D', 'F1B555', 'FCD163',
+'99B718', '74A901', '66A000', '529400', '3E8601', '207401', '056201',
+'004C00', '023B01', '012E01', '011D01', '011301'];
+Map.addLayer(country);
+Map.addLayer(ndvi_fi, {palette: NDVIpalette}, 'NVDI de Sentinel');
+
+```
 
 
 ```JavaScript
@@ -52,7 +82,7 @@ Map.addLayer(country);
 //Map.addLayer(ndvi_fi, {palette: NDVIpalette}, 'NVDI de Sentinel');
 
 var addNDVI = function(image) {
-  var ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  var ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI').clip(country);
   return image.addBands(ndvi);
 };
 ///////

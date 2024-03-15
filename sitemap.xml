@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/post-with-code/index.html</loc>
-    <lastmod>2024-03-06T19:12:54.978Z</lastmod>
-  </url>
-  <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Introduccion/index.html</loc>
-    <lastmod>2024-03-06T19:12:55.378Z</lastmod>
-  </url>
-  <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/welcome/index.html</loc>
-    <lastmod>2024-03-06T19:12:55.650Z</lastmod>
-  </url>
-  <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/NVDI/index.html</loc>
-    <lastmod>2024-03-06T19:12:56.030Z</lastmod>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/index.html</loc>
+    <lastmod>2024-03-15T00:17:41.221Z</lastmod>
   </url>
   <url>
     <loc>https://msalazarcgeo.github.io/GEE_intento/about.html</loc>
-    <lastmod>2024-03-06T19:12:56.326Z</lastmod>
+    <lastmod>2024-03-15T00:17:41.469Z</lastmod>
   </url>
   <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/index.html</loc>
-    <lastmod>2024-03-06T19:12:56.638Z</lastmod>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Introduccion/index.html</loc>
+    <lastmod>2024-03-15T00:17:41.841Z</lastmod>
+  </url>
+  <url>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/post-with-code/index.html</loc>
+    <lastmod>2024-03-15T00:17:42.077Z</lastmod>
+  </url>
+  <url>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/NVDI/index.html</loc>
+    <lastmod>2024-03-15T00:17:42.397Z</lastmod>
+  </url>
+  <url>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/welcome/index.html</loc>
+    <lastmod>2024-03-15T00:17:42.609Z</lastmod>
   </url>
 </urlset>

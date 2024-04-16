@@ -7,6 +7,7 @@ Image: "complete_RM_NDVI_2.png"
 execute: 
   enabled: false
 ---
+# Cálculo de NDVI
 
 Vamos a calcular un índice muy utilizado para hacer el cálculo de la  vegentación en los suelos este es llamado [*Normalized Difference Vegetation Index* (NDVI)](https://en.wikipedia.org/wiki/Normalized_difference_vegetation_index). Para tal motivo vamos a utilizar el conjunto de imágenes satelitales proporcionado por la agencia espacial europea. Un cierto conjunto de imágenes del programa copernicus y de las misiones Sentinel esta disponible en GEE.
 
@@ -21,6 +22,9 @@ donde $NIR$ es la banda que corresponde a la frecuencia cercana al infra rojo (N
 Vamos a concentrarnos en las imágenes que toquen a mexico por tal motivo tomamos el polígono de México como lo hicimos en la [introducción a GEE](../Introduccion/index.qmd)
 
 
+Vamos a calcular un índice muy utilizado para hacer un cálculo de vegentación este es llamado *Normalized Difference Vegetation Index* (NDVI). Para tal motivo vamos a utilizar el conjunto de imágenes satelitales proporcionado por la [agencia espacial europea ](https://www.esa.int/). Un cierto conjunto de imágenes del programa copernicus y de las misiones [Sentinel](https://developers.google.com/earth-engine/datasets/catalog/sentinel) esta disponible en GEE.
+
+Vamos a concentrarnos en las imágenes que toquen a mexico por tal motivo tomamos el polígono de México como lo hicimos en [la introducción a GEE](../Introduccion/index.qmd)
 ```JavaScript
 var worldcountries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');
 var country = worldcountries.filter(ee.Filter.eq('country_na', 'Mexico'));
@@ -140,7 +144,7 @@ Map.addLayer(country);
 //Map.addLayer(ndvi_fi, {palette: NDVIpalette}, 'NVDI de Sentinel');
 
 var addNDVI = function(image) {
-  var ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  var ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI').clip(country);
   return image.addBands(ndvi);
 };
 ///////

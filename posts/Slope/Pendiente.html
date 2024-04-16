@@ -311,7 +311,7 @@ Table&nbsp;1: Valores pendiente y su clasificación.
 <span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> filter_vpoor<span class="op">=</span> <span class="kw">function</span>(image){</span>
 <span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> image<span class="op">.</span><span class="fu">updateMask</span>(image<span class="op">.</span><span class="fu">gt</span>(<span class="fl">44.6</span>)<span class="op">.</span><span class="fu">and</span>(image<span class="op">.</span><span class="fu">lte</span>(<span class="dv">90</span>)))<span class="op">.</span><span class="fu">rename</span>(<span class="st">'vpoor'</span>)<span class="op">;</span></span>
 <span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>A continuacion vamos a definir loos parámetros de distintas visualizaciones que podriamos hacer. Aunque no se utilizan todas en el scrip final.</p>
+<p>A continuacion vamos a definir los parámetros de distintas visualizaciones que podriamos hacer. Aunque no se utilizan todas en el scrip final.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> elevationVis <span class="op">=</span> {</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">min</span><span class="op">:</span> <span class="fl">0.0</span><span class="op">,</span></span>
@@ -389,6 +389,7 @@ Table&nbsp;1: Valores pendiente y su clasificación.
 <span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  <span class="co">//print(Map.layers())</span></span>
 <span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  <span class="co">//Map.add(select);</span></span>
 <span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>El scrip completo se puede ejecutar desde GEE en el siguiente <a href="https://code.earthengine.google.com/2e96aa2ac12e89283a07aeae4a403b68">link</a></p>
 
 
 </section>

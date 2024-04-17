@@ -206,14 +206,10 @@ Map.add(select);
 Y nos queda de la siguiente forma:
 
 
-![Pendiente en mexico](./Slope_mexico.png)
+![Pendiente en mexico](./slope_quad.png)
 
 
-Se puede mejorar la visualización recortando las imágenes solo la region determinada por el poligono del país. Pero eso lo dejamos como ejercicio al lector. 
-
-
-
-
+Se puede mejorar la visualización recortando las imágenes a sólo la región determinada por el polígono del país. Pero eso lo dejamos como ejercicio al lector. 
 
 El scrip completo se puede ejecutar desde GEE en el siguiente [link](https://code.earthengine.google.com/2e96aa2ac12e89283a07aeae4a403b68)
 

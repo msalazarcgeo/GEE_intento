@@ -3,7 +3,7 @@ title: "Pendiente"
 author: "J. Miguel Salazar"
 date: "2024-03-14"
 categories: [news, course, GEE, Slope]
-Image: "complete_RM_NDVI_2.png"
+Image: "Slope_mexico.png"
 execute: 
   enabled: false
 ---
@@ -67,15 +67,15 @@ var slope_wrap = function(image){
 
 Esta función toma una imagen y calcula la pendiente en dicha imagen, despues se queda con las partes de la imagen que se encuentran dentro de la geometría de `country` y cambia el nombre de la banda. 
 
-Aplicamos la función a nuestra colección de imágenes i se almacena en la variable `slope_country_in`
+Aplicamos la función a nuestra colección de imágenes y se almacena en la variable `slope_country_in`.
 
 ```JavaScript
 var slope_country_in= dataset.filterBounds(country).select('DEM').map(slope_wrap);
 ```
 
-Aquí se hace notar que para antes de aplicar la función 'slope_wrap', lo que se hace es tomar las imágenes que tocan a la geometría de `country` (polígono) y seleccionar la banda `DEM`. Esto evita hacer cálculos inecesarios y en ciertas ocasiones puede disminuir los tiempos de cómputo para obtener el resultado final.  
+Aquí se hace notar, que antes de aplicar la función 'slope_wrap', lo que se hace es tomar las imágenes que tocan a la geometría de `country` (polígono) y seleccionar la banda `DEM`. Esto evita hacer cálculos inecesarios y en ciertas ocasiones puede disminuir los tiempos de cómputo para obtener el resultado final.  
 
-Una vez obtenido la imagen de las pendientes, entonces podemos filtrarlas 
+Una vez obtenido la imagen de las pendientes, entonces podemos filtrarlas usando los valores de la pendiente. Creamos un filtor por cada tipo de pendiente.  
 
 ```JavaScript
 var filter_vgood= function(image){
@@ -100,7 +100,7 @@ var filter_vpoor= function(image){
 
 ```
 
-A continuacion vamos a definir loos parámetros de distintas visualizaciones que podriamos hacer. Aunque no se utilizan todas en el scrip final.  
+A continuacion vamos a definir los parámetros de distintas visualizaciones que podriamos hacer. Aunque no se utilizan todas en el scrip final.  
 ```JavaScript
 
 var elevationVis = {
@@ -147,49 +147,65 @@ var slopeVpoor = {
 
 ```
 
+Vamos hacer una función para que haga todo cada vez que lo necesitemos, la función usa como parametro el string del nombre del pais que deseamos visualizar. Se obtiene el poligono del pais y se filtran las imagenes para solo tener las imagenes que se encuentran dentro del la regiön de interes. Se almacenan dentro de de la variable `slope_country_in`. 
+
+Utilizando la coleccion de imagenes filtradan se enmascaran los pixeles de las imágenes usando los filtros antes definidos y se almacenan en las variables `slope_good_mask_in`, `slope_vgood_mask_in`, `slope_poor_mask_in`y `slope_vpoor_mask_in`. Se hacen las respectivas capas para cada una de las direfentes tipos de pendienter las cuales usan las escalas de colores que se definieron con anterioridad. Estas capas junto con una capa del poligono del país seleccionado se añaden al mapa y se centran en el poligono del pais selecionado haciendo un sum de $5$. 
+
+
 
 ```JavaScript 
-var fun_get_layers= function(name_country){
-  ///print('Pais:',country_in_f.get('country_na'));
-
-  /*
-  var country_in_f= worldcountries.filter(ee.Filter.eq('country_na',  name_country))
-  
-  var slope_country_in= dataset.filterBounds(country_in_f).select('DEM').map(slope_wrap);
+function redraw(name_country){
+  print('Pais:',name_country);
+  // se seleccionan el pais y las imagenes dentro del pais
+  country = worldcountries.filter(ee.Filter.eq('country_na',  name_country));
+  var slope_country_in= dataset.filterBounds(country).select('DEM').map(slope_wrap);
+  /// se enmascaran los pixeles de las imagenes con los distintos tipos de pendientes
   var slope_good_mask_in = slope_country_in.map(filter_good);
   var slope_vgood_mask_in = slope_country_in.map(filter_vgood);
   var slope_poor_mask_in = slope_country_in.map(filter_poor);
   var slope_vpoor_mask_in = slope_country_in.map(filter_vpoor);
-  //Map.clear();
-  Map.layers().reset();
-  lay_pais = ui.Map.Layer(country_in_f, {color:'gray', opacity:0.8}, 'Country')
+  /// se definen las capas
+  lay_pais = ui.Map.Layer(country,{color:'gray', opacity:0.8}, 'Pais');
   lay_vgood = ui.Map.Layer( slope_vgood_mask_in, slopeVgood, 'Very Good slope' );
   lay_good = ui.Map.Layer( slope_good_mask_in, slopegood, 'Good slope' );
   lay_poor = ui.Map.Layer( slope_poor_mask_in, slopepoor, 'Poor slope' );
-  lay_vpoor = ui.Map.Layer( slope_vpoor_mask_in, slopeVpoor , 'Very Poor slope' );
+  lay_vpoor = ui.Map.Layer( slope_vpoor_mask_in, slopeVpoor , 'Very Poor slope' );  
+  //// añade capas al mapa interactivo
+  Map.centerObject(country, 5);
+  Map.layers().reset();
   Map.layers().set(0, lay_pais);
   Map.layers().set(1, lay_vgood);
   Map.layers().set(2, lay_good);
   Map.layers().set(3, lay_poor);
   Map.layers().set(4, lay_vpoor);
-  */
-  /*print(slope_vgood_mask_in.first())
-  Map.addLayer(slope_country_in,{color:'gray', opacity:0.8}, 'Pais', false )
-  Map.addLayer( slope_vgood_mask_in, slopeVgood, 'Very Good slope' );
-  Map.addLayer( slope_good_mask_in, slopegood, 'Good slope' );
-  Map.addLayer( slope_poor_mask_in, slopepoor, 'Poor slope' );
-  Map.addLayer( slope_vpoor_mask_in, slopeVpoor , 'Very Poor slope' );
-  Map.centerObject(country_in_f, 5);
-  */
-  //print(Map.layers())
-  //Map.add(select);
-};
+    
+}
 
 ```
 
+Ya hicimos todo pero os falta hacer a el mapa interactivo, para esto vamos a obtener la lista de paises que se desean seleccionar, en este caso vamos a utilizar la lista completa de paises disponibles. 
 
+```JavaScript
+var names = worldcountries.aggregate_array('country_na').sort();
+```
+Lo que pedimos es que a partir del conjunto de datos `worldcountries` agregue de forma ordenada los datos que se encuentra en el campo `country_na`. 
 
+Vamos a añadir un boton para seleccionar el pais usando [`ui.Select`](https://developers.google.com/earth-engine/apidocs/ui-select) donde las cosas a seleccionar son la lista de paises las cuales al ser seleccionados lo pasaran como parámetro a la función `redraw`. Activando la ejecuciön de la funcion, generando las capas de las pendientes y la capa del pais, las cuales se añaden al mapa. Todo se realiza dentro de la funciön `redraw`.
 
+```JavaScript
+var select = ui.Select({items: names.getInfo(), onChange: redraw });
+select.setPlaceholder('Select country'); 
+```
+
+Solo nos falta agregar el boton al mapa. Esto se realiza en la siguiente linea de codigo donde al mapa se le añade el objeto `select`el cual contiene el boton. 
+
+```JavaScript
+Map.add(select);
+```
+
+Se puede mejorar la visualización recortando las imágenes solo la region determinada por el poligono del país. Pero eso lo dejamos como ejercicio al lector. 
+
+El scrip completo se puede ejecutar desde GEE en el siguiente [link](https://code.earthengine.google.com/2e96aa2ac12e89283a07aeae4a403b68)
 
 
 

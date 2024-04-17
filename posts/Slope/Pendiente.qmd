@@ -3,7 +3,7 @@ title: "Pendiente"
 author: "J. Miguel Salazar"
 date: "2024-03-14"
 categories: [news, course, GEE, Slope]
-Image: "Slope_mexico.png"
+Image: "./Slope_mexico.png"
 execute: 
   enabled: false
 ---
@@ -203,7 +203,17 @@ Solo nos falta agregar el boton al mapa. Esto se realiza en la siguiente linea d
 Map.add(select);
 ```
 
+Y nos queda de la siguiente forma:
+
+
+![Pendiente en mexico](./Slope_mexico.png)
+
+
 Se puede mejorar la visualización recortando las imágenes solo la region determinada por el poligono del país. Pero eso lo dejamos como ejercicio al lector. 
+
+
+
+
 
 El scrip completo se puede ejecutar desde GEE en el siguiente [link](https://code.earthengine.google.com/2e96aa2ac12e89283a07aeae4a403b68)
 

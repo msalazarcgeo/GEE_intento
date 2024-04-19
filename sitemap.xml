@@ -2,30 +2,22 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://msalazarcgeo.github.io/GEE_intento/index.html</loc>
-    <lastmod>2024-03-11T15:00:58.223Z</lastmod>
-  </url>
-  <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Slope/Pendiente.html</loc>
-    <lastmod>2024-04-17T20:23:41.959Z</lastmod>
-  </url>
-  <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/welcome/index.html</loc>
-    <lastmod>2024-02-28T17:58:16.399Z</lastmod>
-  </url>
-  <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/post-with-code/index.html</loc>
-    <lastmod>2024-02-28T17:58:16.399Z</lastmod>
-  </url>
-  <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Introduccion/index.html</loc>
-    <lastmod>2024-03-04T14:55:27.977Z</lastmod>
-  </url>
-  <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/NVDI/index.html</loc>
-    <lastmod>2024-04-16T19:49:14.508Z</lastmod>
+    <lastmod>2024-04-19T18:15:32.494Z</lastmod>
   </url>
   <url>
     <loc>https://msalazarcgeo.github.io/GEE_intento/about.html</loc>
-    <lastmod>2024-02-28T17:58:16.387Z</lastmod>
+    <lastmod>2024-04-19T18:15:32.762Z</lastmod>
+  </url>
+  <url>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Introduccion/index.html</loc>
+    <lastmod>2024-04-19T18:15:33.162Z</lastmod>
+  </url>
+  <url>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/NVDI/index.html</loc>
+    <lastmod>2024-04-19T18:15:33.530Z</lastmod>
+  </url>
+  <url>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Slope/Pendiente.html</loc>
+    <lastmod>2024-04-19T18:15:33.910Z</lastmod>
   </url>
 </urlset>

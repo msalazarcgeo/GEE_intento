@@ -211,7 +211,9 @@ Y nos queda de la siguiente forma:
 
 Se puede mejorar la visualización recortando las imágenes a sólo la región determinada por el polígono del país. Pero eso lo dejamos como ejercicio al lector. 
 
-El scrip completo se puede ejecutar desde GEE en el siguiente [link](https://code.earthengine.google.com/2e96aa2ac12e89283a07aeae4a403b68)
+El scrip completo se puede ejecutar desde GEE en el siguiente [link](https://code.earthengine.google.com/0632902a415ec35065db09fd1a04ecc1) y para ver sólo el resultado lo podemos hacer atravez de este [link](https://msalazar-cgeo.users.earthengine.app/view/pendiente) 
+
+
 
 
 

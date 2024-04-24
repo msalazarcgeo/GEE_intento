@@ -1,0 +1,12 @@
+---
+title: "Hacer modelos en GEE"
+format: html
+---
+
+
+
+# Modelos en GEE
+
+Google earth engine es una herramienta muy útil pero una problemática puede ser hacer analísis fuera de la plataforma y querer visualizar los analisis dentro de esta. 
+
+En este sentido vamos a usar la plataforma GEE para exportar modelos y poder hacer la visualización de los resultados en GEE. 

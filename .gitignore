@@ -1,3 +1,5 @@
 /.quarto/**
 /_site/
 .quarto/idx/posts/post-with-code/index.qmd.json
+
+/.quarto/

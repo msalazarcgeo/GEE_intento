@@ -7,10 +7,42 @@ format: html
 
 # Modelos en GEE
 
-Google earth engine es una herramienta muy útil pero una problemática puede ser hacer analísis fuera de la plataforma y querer visualizar los analisis dentro de esta. 
+Google Earth Engine (GEE) es una herramienta muy útil, dentro de la cuál se pueden generar modelos matemáticos para las distintas problemáticas que se deseen visualizar dentro de GEE. Sin embargo, el desarrollo no se debe limitar al uso exclusivo de GEE pues esto nos restringiría al uso de otras herramientas desarrolladas por distintos individuos o grupos de trabajo. Bajo esta primicia, en este pequeño tutorial vamos a mostrar como se podemos exportar un modelo creado en otras plataformas y poder exportarlo a GEE. 
 
 En este sentido vamos a usar la plataforma GEE para exportar modelos y poder hacer la visualización de los resultados en GEE. 
 
-## Subir imagenes a GEE 
 
-Para subir imagenes a GEE vamos a 
+
+
+# Bases 
+
+Un modelo implica en términos muy simples implica poder describir como se comporta algo en lo cual estamos interesados y encontrar las causas que lo explican. Hay muchos tipos de modelos desde los  muy complejos hasta los modelos muy simple, pero una forma de ver los es simplemente como funciones,  
+
+$$
+y =  f(x_1, x_2, \dots , x_n )
+$$
+
+Donde $\{ x_i \}$ normalmente los llamamos variables explicativas  y a $y$ la variable descriptiva. Y $f $ es nuestro modelo, un modelo simple puede ser la combinación lineal de los elementos
+
+$$
+f(x_1, x_2, \dots , x_n ) = \alpha_1 x_1 + \alpha_2 x_2 + \dots  + \alpha_n x_n 
+$$
+
+o complejo  
+
+$$
+f(x_1, x_2, \dots , x_n ) = \alpha_{1,1}  x_1 + \alpha_{1,2}  x_1^2 + \dots + \alpha_{1 ,{\psi(x_1)}}  x_1^{\psi(x_1)}  + \dots 
++ \alpha_{n ,{\psi(x_n)}} x_n ^{\psi(x_n)}   
+$$
+
+donde $\psi(x_n)$ es una función que determina hasta que potencia se eleva a la variable $x_i$. 
+
+En estos casos determinar un modelo implicaría encontrar la variables ($\{ x_i \}$) que se consideran que mejor explican a la variable $y$ y encontrar $\psi(x_i)$. Haciendo uso de los datos propios de cada problemática ajustar el modelo implica poder encontrar las $\{\alpha_{i,j}\}$. 
+
+
+GEE tiene herramientas para poder hacer modelos sin embargo, los modelos dentro de GEE puede que no se ajusten a las problemáticas que se desean analizar. Por tal motivo, podemos obtener un modelo fuera de GEE y si se tiene una expresión como las anteriores es posible generar las predicciones dentro de GEE para su visualización. 
+
+
+
+
+

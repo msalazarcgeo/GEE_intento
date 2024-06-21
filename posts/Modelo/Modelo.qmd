@@ -42,15 +42,41 @@ En estos casos determinar un modelo implicaría encontrar la variables ($\{ x_i 
 
 GEE tiene herramientas para poder hacer modelos sin embargo, los modelos dentro de GEE puede que no se ajusten a las problemáticas que se desean analizar o no se tienen las herramientas disponibles para generar modelos más complejos dentro de GEE. Por tal motivo, podemos obtener un modelo fuera de GEE y si se tiene una expresión como las descritas anteriormente es posible generar las predicciones dentro de GEE para su visualización.
 
-En este ejemplo vamos a obtener el contaminante *particle matter* de menos de $2.5 \mu$ (**PM 2.5**) para la zona metropolitana del valle de México. Para tal motivo vamos a utilizar los datos que se encuentran dentro de GEE, en este caso vamos a utilizar la colección de imágenes **'MODIS/006/MCD19A2_GRANULES'** la cual contiene 
 
 
+En este ejemplo vamos a obtener el contaminante *particle matter* de menos de $2.5 \mu$ (**PM 2.5**) para la zona metropolitana del valle de México. Para tal motivo vamos a utilizar los datos que se encuentran dentro de GEE, en este caso vamos a utilizar la colección de imágenes **'MODIS/006/MCD19A2_GRANULES'** la cual contiene el resultado de algoritmo *Multi-Angle Implementation of Atmospheric Correction* (MAIAC), la banda que vamos a utilizar es la bande de  *Aerosol Optical Depth at 047 micron* esta banda es el espesor óptico de 047 micras. Esta banda ha sido utilizada para obtener el contaminante $PM_{2.5}$ el conlleva a altos riesgos de la salud al tener una exposicióin prolongada. 
+
+
+## Colección de Imágenes
+
+Para hacer uso de la colección de imágenes se hace usando la siguiente linea
 ```JavaScript
-var 
+var AOD_MODIS_fix =  ee.ImageCollection("MODIS/006/MCD19A2_GRANULES");
+```
 
+La collección de imágenes contiene todas las imágenes disponibles, muchas de las cuales no vamos a utilizar, para esto los objetos 'ee.ImageCollection' tienen metodos que nos ayudan a poder filtrar las imagenes dentro de la colección de imágenes. 
+
+La siguiente linea de código nos filtra la colección sólo con las imágenes que se tomaron del '2005-01-01' al '2015-01-01'. 
+```JavaScript
+var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES").filterDate('2005-01-01', '2015-01-01') 
+```
+La siguiente linea filtra las imágenes que contienen al punto  cercano a CentroGeo (-99.221411, 19.29183) 
+```JavaScript
+var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES").filterBounds(ee.Geometry.Point(-99.221411, 19.29183))
+```
+
+Estas las podemos combinar para que funcionen como pipeline es decir podemos filtrar primero por fecha y después por los que intersectan al punto
+```JavaScript
+var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES")
+.filterDate('2005-01-01', '2015-01-01') 
+.filterBounds(ee.Geometry.Point(-99.221411, 19.29183))
 ```
 
 
 
 
+## Subir datos a GEE
+
+En la pestaña 'Assets' dentro del Editor de código de GEE (panel superior izquierdo) podemos añadir elementos para hacer uso de los mismos en este caso 
+![Panel de Activos (assets) ](./GEE_assets.png)
 

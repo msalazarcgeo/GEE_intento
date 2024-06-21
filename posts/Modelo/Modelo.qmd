@@ -54,7 +54,7 @@ Para hacer uso de la colección de imágenes se hace usando la siguiente linea
 var AOD_MODIS_fix =  ee.ImageCollection("MODIS/006/MCD19A2_GRANULES");
 ```
 
-La collección de imágenes contiene todas las imágenes disponibles, muchas de las cuales no vamos a utilizar, para esto los objetos 'ee.ImageCollection' tienen metodos que nos ayudan a poder filtrar las imagenes dentro de la colección de imágenes. 
+La collección de imágenes contiene las imágenes disponibles del conjunto de datos, lo que normalmente son muchas imágenes disponibles, dentro de las cuales la mayoria no vamos a utilizar, para esto los objetos 'ee.ImageCollection' tienen métodos que nos ayudan a poder filtrar las imágenes dentro de la colección de imágenes. 
 
 La siguiente linea de código nos filtra la colección sólo con las imágenes que se tomaron del '2005-01-01' al '2015-01-01'. 
 ```JavaScript
@@ -64,19 +64,50 @@ La siguiente linea filtra las imágenes que contienen al punto  cercano a Centro
 ```JavaScript
 var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES").filterBounds(ee.Geometry.Point(-99.221411, 19.29183))
 ```
+Estas las podemos combinar para que funcionen como pipeline es decir podemos filtrar primero por fecha y después por los que intersectan al punto dentro de la misma ejecución como se muestra a continuación
 
-Estas las podemos combinar para que funcionen como pipeline es decir podemos filtrar primero por fecha y después por los que intersectan al punto
 ```JavaScript
 var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES")
 .filterDate('2005-01-01', '2015-01-01') 
-.filterBounds(ee.Geometry.Point(-99.221411, 19.29183))
+.filterBounds(ee.Geometry.Point(-99.221411, 19.29183));
+```
+
+Este tipo de acciones las podemos implementar también 
+
+## Subir datos a GEE
+
+En la pestaña 'Assets' dentro del Editor de código de GEE (panel superior izquierdo) podemos añadir elementos para hacer uso de los mismos como se muestra en la imagen 
+
+![Panel de Activos (assets) ](./GEE_assets.png). 
+
+Los elementos que podemos añadir a GEE son imágenes (.tif, tiff), tablas en archivos shape (.shp, .shx, .dbf, .prj o .zip) o archivos csv (.csv). También podemos agregar colecciones de imágenes o folders que contengan este tipo de archivos. Los elementos que subimos a GEE se almacenan en proyectos en la nube de Google, esto hace que esten accesibles desde GEE cada vez que sea necesario. Al estar dentro de la nube de Google las politicas de acceso a los mismos son las de la Nube de Google y también son accesibles desde las API de Google cloud como [CLI](https://cloud.google.com/cli?hl=en). 
+
+
+Para hacer uso de estos elementos denro del editor de código de GEE se pueden insertar haciendo uso de la interfaz gráfica como se muestra en la imagen @fig:ins_elem. Los elementos añadidos se insertaran al inicio de nuestro código como un preámbulo llamado `Imports` , se pueden editar los nombres para que los nombres de las variables donde se almacenan sean de acuerdo a las politicas del desarrollador. 
+
+
+![insertar elementos ](./Insert_asset.png){#fig:ins_elem} 
+
+
+Si se desea compartir los elementos que se encuentran en el preámbulo `Imports` se hace click en el boton azul a lado de `Imports` esto abrira una ventana la cual contendra todos los elementos que se encuentran dentro de el preambulo `Imports`.  Los elementos también pueden ser añadidos al código simplemente copiando y pegando. Se puede eliminar los elementos importados usando un boton de basura que se encuentra en el margen izquierdo cuando se pasa a lado del elemento insertado. 
+
+![copiar elementos ](./Copiar_elemento.png){#fig:cop_elem} 
+
+## Usar formulas en imagenes
+
+### Multiplicar elementos 
+
+### Combinación lineal 
+
+## Despliegue en mapa 
+
+
+
+```JavaScript
+var image = ee.Image("projects/gee-education/assets/Vialidades_AMM");
+
 ```
 
 
 
-
-## Subir datos a GEE
-
-En la pestaña 'Assets' dentro del Editor de código de GEE (panel superior izquierdo) podemos añadir elementos para hacer uso de los mismos en este caso 
-![Panel de Activos (assets) ](./GEE_assets.png)
 

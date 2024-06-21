@@ -40,7 +40,15 @@ donde $\psi(x_n)$ es una función que determina hasta que potencia se eleva a la
 En estos casos determinar un modelo implicaría encontrar la variables ($\{ x_i \}$) que se consideran que mejor explican a la variable $y$ y encontrar $\psi(x_i)$. Haciendo uso de los datos propios de cada problemática ajustar el modelo implica poder encontrar las $\{\alpha_{i,j}\}$. 
 
 
-GEE tiene herramientas para poder hacer modelos sin embargo, los modelos dentro de GEE puede que no se ajusten a las problemáticas que se desean analizar. Por tal motivo, podemos obtener un modelo fuera de GEE y si se tiene una expresión como las anteriores es posible generar las predicciones dentro de GEE para su visualización. 
+GEE tiene herramientas para poder hacer modelos sin embargo, los modelos dentro de GEE puede que no se ajusten a las problemáticas que se desean analizar o no se tienen las herramientas disponibles para generar modelos más complejos dentro de GEE. Por tal motivo, podemos obtener un modelo fuera de GEE y si se tiene una expresión como las descritas anteriormente es posible generar las predicciones dentro de GEE para su visualización.
+
+En este ejemplo vamos a obtener el contaminante *particle matter* de menos de $2.5 \mu$ (**PM 2.5**) para la zona metropolitana del valle de México. Para tal motivo vamos a utilizar los datos que se encuentran dentro de GEE, en este caso vamos a utilizar la colección de imágenes **'MODIS/006/MCD19A2_GRANULES'** la cual contiene 
+
+
+```JavaScript
+var 
+
+```
 
 
 

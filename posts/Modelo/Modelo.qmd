@@ -111,7 +111,24 @@ var image = ee.Image("projects/gee-education/assets/Vialidades_AMM");
 ## Explicación del Modelo 
 
 
-Nuestro modelo es una modificación a un modelo utilizado dpor Just, esta modificación utiliza los datos meteorológicos para hacer las estimaciones y modifica 
+Nuestro modelo es una modificación al modelo utilizado por Just, haciendo uso de una fuente de información distinta de los datos meteorológicos para hacer las estimaciones, la nueva fuente de datos son los datos de [reánalisis meteorológicos](https://climate.copernicus.eu/climate-reanalysis) del ["European Centre for Medium-Range Weather Forecasts"](https://www.ecmwf.int/en/about) los cuales se encuentran disponibles dentro de GEE en el [catalogo de datos](https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_HOURLY). Para importar estos datos lo hacemos a traves de el siguiente script y al igual que con la colección de MODIS la filtramos por fecha, seleccionamos las bandas que vamos a utilizar y las partes de las imágenes que se encuentren dentro del  "bounding box" del poligono de la zona metropolitana. 
+
+
+
+```JavaScript
+var land_eras_day_f = ee.ImageCollection("ECMWF/ERA5_LAND/HOURLY").filter(
+            ee.Filter.date(startdate, enddate)
+        ).select([
+            'dewpoint_temperature_2m',
+            'total_evaporation',
+            'temperature_2m',
+            'total_precipitation_hourly',
+            'total_precipitation'
+        ]).filterBounds(ZMVT_bb);
+
+
+```
+
 
 
 ## Usar formulas en imagenes

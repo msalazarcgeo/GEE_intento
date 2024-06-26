@@ -43,8 +43,17 @@ En estos casos determinar un modelo implicaría encontrar la variables ($\{ x_i 
 GEE tiene herramientas para poder hacer modelos sin embargo, los modelos dentro de GEE puede que no se ajusten a las problemáticas que se desean analizar o no se tienen las herramientas disponibles para generar modelos más complejos dentro de GEE. Por tal motivo, podemos obtener un modelo fuera de GEE y si se tiene una expresión como las descritas anteriormente es posible generar las predicciones dentro de GEE para su visualización.
 
 
+En este ejemplo vamos a obtener el contaminante *particle matter* de menos de $2.5 \mu$ (**PM 2.5**) para la zona metropolitana del valle de México. Para tal motivo vamos a utilizar los datos que se encuentran dentro de GEE, en este caso vamos a utilizar la colección de imágenes **'MODIS/006/MCD19A2_GRANULES'** la cual contiene el resultado de algoritmo *Multi-Angle Implementation of Atmospheric Correction* (MAIAC), la banda que vamos a utilizar es la bande de  *Aerosol Optical Depth at 047 micron* esta banda es el espesor óptico de 047 micras. Esta banda ha sido utilizada para obtener el contaminante $PM_{10}$ el conlleva altos riesgos de la salud al tener una exposición prolongada.
 
-En este ejemplo vamos a obtener el contaminante *particle matter* de menos de $2.5 \mu$ (**PM 2.5**) para la zona metropolitana del valle de México. Para tal motivo vamos a utilizar los datos que se encuentran dentro de GEE, en este caso vamos a utilizar la colección de imágenes **'MODIS/006/MCD19A2_GRANULES'** la cual contiene el resultado de algoritmo *Multi-Angle Implementation of Atmospheric Correction* (MAIAC), la banda que vamos a utilizar es la bande de  *Aerosol Optical Depth at 047 micron* esta banda es el espesor óptico de 047 micras. Esta banda ha sido utilizada para obtener el contaminante $PM_{2.5}$ el conlleva a altos riesgos de la salud al tener una exposicióin prolongada. 
+El modelo fue entrenado y para cada día se obtuvieron los valores 
+
+$$
+PM^{10}_{ij} =  (\alpha + u_j) + (\beta + v_j)AOD_{ij}+ \beta_2 \text{temperature}_{ij} + \beta_3 \text{relative humidity}_{ij} + 
+$$
+$$ 
+\beta_4 PBLH_{ij} + \beta_5 \sqrt{\text{precipitation}_{ij}} + \beta_6 \text{Street density}_{i} + \varepsilon
+$$
+
 
 
 ## Colección de Imágenes
@@ -64,7 +73,7 @@ La siguiente linea filtra las imágenes que contienen al punto  cercano a Centro
 ```JavaScript
 var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES").filterBounds(ee.Geometry.Point(-99.221411, 19.29183))
 ```
-Estas las podemos combinar para que funcionen como pipeline es decir podemos filtrar primero por fecha y después por los que intersectan al punto dentro de la misma ejecución como se muestra a continuación
+Estas las podemos combinar para aplicar las distintas acciones de forma concatenadas, es decir podemos filtrar primero por fecha y después al resultado filtrar las imágenes que intersectan al punto dentro de la misma ejecución, como se muestra a continuación
 
 ```JavaScript
 var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES")
@@ -72,11 +81,11 @@ var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES")
 .filterBounds(ee.Geometry.Point(-99.221411, 19.29183));
 ```
 
-Este tipo de acciones las podemos implementar también 
+Este tipo de acciones las podemos implementar no solo con filtrados sino con distintas acciones disponibles en GEE. 
 
 ## Subir datos a GEE
 
-En la pestaña 'Assets' dentro del Editor de código de GEE (panel superior izquierdo) podemos añadir elementos para hacer uso de los mismos como se muestra en la imagen 
+En la pestaña 'Assets' dentro del editor de código de GEE (panel superior izquierdo) podemos añadir elementos para hacer uso de los mismos como se muestra en la imagen 
 
 ![Panel de Activos (assets) ](./GEE_assets.png). 
 
@@ -93,7 +102,22 @@ Si se desea compartir los elementos que se encuentran en el preámbulo `Imports`
 
 ![copiar elementos ](./Copiar_elemento.png){#fig:cop_elem} 
 
+Para añadirlo de forma directa al código es a través de insertar el nombre del elemento y declararlo como lo que se desea en el caso de imagen se utiliza `ee.Image()` para una tabla se hace con `ee.FeatureCollection()` y si es un conjunto de imágenes con `ee.ImageCollection()`. El código a continuación se muestra como importamos la agregación de las vialidades extraidas de OpenStreet map ((OSM)[https://www.openstreetmap.org/]) y subida a GEE en el elemento "projects/gee-education/assets/Vialidades_AMM". 
+
+```JavaScript
+var image = ee.Image("projects/gee-education/assets/Vialidades_AMM");
+```
+
+## Explicación del Modelo 
+
+
+Nuestro modelo es una modificación a un modelo utilizado dpor Just, esta modificación utiliza los datos meteorológicos para hacer las estimaciones y modifica 
+
+
 ## Usar formulas en imagenes
+
+
+
 
 ### Multiplicar elementos 
 
@@ -103,10 +127,8 @@ Si se desea compartir los elementos que se encuentran en el preámbulo `Imports`
 
 
 
-```JavaScript
-var image = ee.Image("projects/gee-education/assets/Vialidades_AMM");
 
-```
+
 
 
 

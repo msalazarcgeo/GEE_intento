@@ -12,8 +12,6 @@ Google Earth Engine (GEE) es una herramienta muy útil, dentro de la cuál se pu
 En este sentido vamos a usar la plataforma GEE para exportar modelos y poder hacer la visualización de los resultados en GEE. 
 
 
-
-
 # Bases 
 
 Un modelo implica en términos muy simples implica poder describir como se comporta algo en lo cual estamos interesados y encontrar las causas que lo explican. Hay muchos tipos de modelos desde los  muy complejos hasta los modelos muy simple, pero una forma de ver los es simplemente como funciones,  
@@ -22,18 +20,18 @@ $$
 y =  f(x_1, x_2, \dots , x_n )
 $$
 
-Donde $\{ x_i \}$ normalmente los llamamos variables explicativas  y a $y$ la variable descriptiva. Y $f $ es nuestro modelo, un modelo simple puede ser la combinación lineal de los elementos
+Donde $\{ x_i \}$ normalmente los llamamos variables explicativas  y a $y$ la variable descriptiva. Y $f$ es nuestro modelo, un modelo simple puede ser la combinación lineal de los elementos
 
 $$
 f(x_1, x_2, \dots , x_n ) = \alpha_1 x_1 + \alpha_2 x_2 + \dots  + \alpha_n x_n 
-$$
+$${#eq-simple}
 
 o complejo  
 
 $$
 f(x_1, x_2, \dots , x_n ) = \alpha_{1,1}  x_1 + \alpha_{1,2}  x_1^2 + \dots + \alpha_{1 ,{\psi(x_1)}}  x_1^{\psi(x_1)}  + \dots 
-+ \alpha_{n ,{\psi(x_n)}} x_n ^{\psi(x_n)}   
-$$
++ \alpha_{n ,{\psi(x_n)}} x_n ^{\psi(x_n)} 
+$${#eq-compleja}
 
 donde $\psi(x_n)$ es una función que determina hasta que potencia se eleva a la variable $x_i$. 
 
@@ -42,23 +40,31 @@ En estos casos determinar un modelo implicaría encontrar la variables ($\{ x_i 
 
 GEE tiene herramientas para poder hacer modelos sin embargo, los modelos dentro de GEE puede que no se ajusten a las problemáticas que se desean analizar o no se tienen las herramientas disponibles para generar modelos más complejos dentro de GEE. Por tal motivo, podemos obtener un modelo fuera de GEE y si se tiene una expresión como las descritas anteriormente es posible generar las predicciones dentro de GEE para su visualización.
 
+En este ejemplo vamos a obtener el contaminante *particle matter* de menos de $2.5 \mu$ (**PM 2.5**) para la zona metropolitana del valle de México. Para tal motivo vamos a utilizar los datos que se encuentran dentro de GEE, en este caso vamos a utilizar la colección de imágenes **'MODIS/006/MCD19A2_GRANULES'** la cual contiene el resultado de algoritmo *Multi-Angle Implementation of Atmospheric Correction* (MAIAC), la banda que vamos a utilizar es la *Aerosol Optical Depth at 047 micron* esta banda es el espesor óptico de $0.47\mu m$ . Dicha banda ha sido utilizada para obtener los contaminantes $PM_{10}$ y $PM_{2.5}$ los cuales con lleva altos riesgos de la salud al tener una exposición prolongada.
 
-En este ejemplo vamos a obtener el contaminante *particle matter* de menos de $2.5 \mu$ (**PM 2.5**) para la zona metropolitana del valle de México. Para tal motivo vamos a utilizar los datos que se encuentran dentro de GEE, en este caso vamos a utilizar la colección de imágenes **'MODIS/006/MCD19A2_GRANULES'** la cual contiene el resultado de algoritmo *Multi-Angle Implementation of Atmospheric Correction* (MAIAC), la banda que vamos a utilizar es la bande de  *Aerosol Optical Depth at 047 micron* esta banda es el espesor óptico de 047 micras. Esta banda ha sido utilizada para obtener el contaminante $PM_{10}$ el conlleva altos riesgos de la salud al tener una exposición prolongada.
-
-El modelo fue entrenado y para cada día se obtuvieron los valores 
+El modelo fue entrenado y para cada día se obtuvieron los valores de los coeficientes para el modelo, de forma similar a la presentada en @eq-compleja
 
 $$
-PM^{10}_{ij} =  (\alpha + u_j) + (\beta + v_j)AOD_{ij}+ \beta_2 \text{temperature}_{ij} + \beta_3 \text{relative humidity}_{ij} + 
+PM^{2.5}_{ij} =  \alpha  + \beta AOD_{ij}+ \beta_2 \text{temperature}_{ij} + \beta_3 \text{relative humidity}_{ij} + 
 $$
 $$ 
 \beta_4 PBLH_{ij} + \beta_5 \sqrt{\text{precipitation}_{ij}} + \beta_6 \text{Street density}_{i} + \varepsilon
 $$
 
+donde $\beta_2, \beta_3, \beta_4, \beta_5, \beta_6$ son coeficientes que se determinan en todo el año. Mientras que $\beta$ y $\alpha$ se determinan de forma diaria. Por simplicidad, los coefficientes se ponen dentro de una tabla, la cual es añadida a través de los a **Assets**. La cual tiene la siguiente forma.
 
+| Intercept | Optical_Depth_047_z | temperature_2m_z |relative_humidity_z | total_precipitation_sqrt_z | PBLH_z |vialidades_z |date | system:index |
+|--------|--------|--------|--------|--------|--------|--------|--------|
+| 3.9526 | 0.4266 | 0.2033| -0.3986 | -0.1151 | -0.2979| 0.0128 | 2004-01-01 | 1072915200 |
+|1.1116 | 0.2307 | 0.2033 | -0.3986 | -0.1151 | -0.2979 | 0.01281 | 2004-01-02 | 1073001600 |
+
+
+Esta tabla se sube usando la pestaña **Assets**, se resalta en particular la columna 'system:index', esta es la fecha en ['Unix time'](https://en.wikipedia.org/wiki/Unix_time), es importante, pues dentro de GEE nos sirve para poder usar el filtro de fechas (`.filterDate`). Para poder hacer uso de los 
 
 ## Colección de Imágenes
 
 Para hacer uso de la colección de imágenes se hace usando la siguiente linea
+
 ```JavaScript
 var AOD_MODIS_fix =  ee.ImageCollection("MODIS/006/MCD19A2_GRANULES");
 ```
@@ -66,13 +72,17 @@ var AOD_MODIS_fix =  ee.ImageCollection("MODIS/006/MCD19A2_GRANULES");
 La collección de imágenes contiene las imágenes disponibles del conjunto de datos, lo que normalmente son muchas imágenes disponibles, dentro de las cuales la mayoria no vamos a utilizar, para esto los objetos 'ee.ImageCollection' tienen métodos que nos ayudan a poder filtrar las imágenes dentro de la colección de imágenes. 
 
 La siguiente linea de código nos filtra la colección sólo con las imágenes que se tomaron del '2005-01-01' al '2015-01-01'. 
+
 ```JavaScript
 var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES").filterDate('2005-01-01', '2015-01-01') 
 ```
-La siguiente linea filtra las imágenes que contienen al punto  cercano a CentroGeo (-99.221411, 19.29183) 
+
+La siguiente linea filtra las imágenes que contienen al punto cercano a CentroGeo (-99.221411, 19.29183) 
+
 ```JavaScript
 var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES").filterBounds(ee.Geometry.Point(-99.221411, 19.29183))
 ```
+
 Estas las podemos combinar para aplicar las distintas acciones de forma concatenadas, es decir podemos filtrar primero por fecha y después al resultado filtrar las imágenes que intersectan al punto dentro de la misma ejecución, como se muestra a continuación
 
 ```JavaScript
@@ -85,7 +95,7 @@ Este tipo de acciones las podemos implementar no solo con filtrados sino con dis
 
 ## Subir datos a GEE
 
-En la pestaña 'Assets' dentro del editor de código de GEE (panel superior izquierdo) podemos añadir elementos para hacer uso de los mismos como se muestra en la imagen 
+En la pestaña 'Assets' dentro del editor de código de GEE (panel superior izquierdo) podemos añadir elementos para hacer uso de los mismos como se muestra en la imagen.
 
 ![Panel de Activos (assets) ](./GEE_assets.png). 
 
@@ -102,17 +112,16 @@ Si se desea compartir los elementos que se encuentran en el preámbulo `Imports`
 
 ![copiar elementos ](./Copiar_elemento.png){#fig:cop_elem} 
 
-Para añadirlo de forma directa al código es a través de insertar el nombre del elemento y declararlo como lo que se desea en el caso de imagen se utiliza `ee.Image()` para una tabla se hace con `ee.FeatureCollection()` y si es un conjunto de imágenes con `ee.ImageCollection()`. El código a continuación se muestra como importamos la agregación de las vialidades extraidas de OpenStreet map ((OSM)[https://www.openstreetmap.org/]) y subida a GEE en el elemento "projects/gee-education/assets/Vialidades_AMM". 
+Para añadirlo de forma directa al código, se hace a través de insertar el nombre del elemento y declararlo como el objeto que es. En el caso de una imagen se utiliza `ee.Image()`, para una tabla se hace con `ee.FeatureCollection()`, y si es un conjunto de imágenes se declara con `ee.ImageCollection()`. El código a continuación se muestra como importamos el raster con la agregación de las vialidades extraidas de OpenStreet map ([OSM](https://www.openstreetmap.org/)) y subida a GEE en el elemento "projects/gee-education/assets/Vialidades_ZMVM" el cual se encuentra dentro de los assets del que escribe este tutorial. 
 
 ```JavaScript
-var image = ee.Image("projects/gee-education/assets/Vialidades_AMM");
+var image = ee.Image("projects/gee-education/assets/Vialidades_ZMVM");
 ```
 
 ## Explicación del Modelo 
 
 
-Nuestro modelo es una modificación al modelo utilizado por Just, haciendo uso de una fuente de información distinta de los datos meteorológicos para hacer las estimaciones, la nueva fuente de datos son los datos de [reánalisis meteorológicos](https://climate.copernicus.eu/climate-reanalysis) del ["European Centre for Medium-Range Weather Forecasts"](https://www.ecmwf.int/en/about) los cuales se encuentran disponibles dentro de GEE en el [catalogo de datos](https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_HOURLY). Para importar estos datos lo hacemos a traves de el siguiente script y al igual que con la colección de MODIS la filtramos por fecha, seleccionamos las bandas que vamos a utilizar y las partes de las imágenes que se encuentren dentro del  "bounding box" del poligono de la zona metropolitana. 
-
+Nuestro modelo, es una modificación al modelo utilizado por Just, haciendo uso de una fuente de información distinta de los datos meteorológicos para hacer las estimaciones, la fuente de datos  a utilizar son los datos de [reánalisis meteorológicos](https://climate.copernicus.eu/climate-reanalysis) del ["European Centre for Medium-Range Weather Forecasts"](https://www.ecmwf.int/en/about) los cuales se encuentran disponibles dentro de GEE en el [catalogo de datos](https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_HOURLY). Para importar estos datos lo hacemos a traves de el siguiente script y al igual que con la colección de MODIS la filtramos por fecha, seleccionamos las bandas que vamos a utilizar y las partes de las imágenes que se encuentren dentro del "bounding box" del polígono de la zona metropolitana el cccual se encuentra en la variable `ZMVT_bb`. 
 
 
 ```JavaScript
@@ -125,13 +134,12 @@ var land_eras_day_f = ee.ImageCollection("ECMWF/ERA5_LAND/HOURLY").filter(
             'total_precipitation_hourly',
             'total_precipitation'
         ]).filterBounds(ZMVT_bb);
-
-
 ```
 
 
 
 ## Usar formulas en imagenes
+
 
 
 

@@ -38,28 +38,10 @@ donde $\psi(x_n)$ es una función que determina hasta que potencia se eleva a la
 En estos casos determinar un modelo implicaría encontrar la variables ($\{ x_i \}$) que se consideran que mejor explican a la variable $y$ y encontrar $\psi(x_i)$. Haciendo uso de los datos propios de cada problemática ajustar el modelo implica poder encontrar las $\{\alpha_{i,j}\}$. 
 
 
-GEE tiene herramientas para poder hacer modelos sin embargo, los modelos dentro de GEE puede que no se ajusten a las problemáticas que se desean analizar o no se tienen las herramientas disponibles para generar modelos más complejos dentro de GEE. Por tal motivo, podemos obtener un modelo fuera de GEE y si se tiene una expresión como las descritas anteriormente es posible generar las predicciones dentro de GEE para su visualización.
+GEE tiene herramientas para poder hacer modelos sin embargo, los modelos dentro de GEE puede que no se ajusten a las problemáticas que se desean analizar, o no se tienen las herramientas disponibles para generar modelos complejos dentro de GEE. Por tal motivo, podemos obtener un modelo fuera de GEE y si se tiene una expresión como las descritas anteriormente es posible generar las predicciones dentro de GEE para su visualización.
 
 En este ejemplo vamos a obtener el contaminante *particle matter* de menos de $2.5 \mu$ (**PM 2.5**) para la zona metropolitana del valle de México. Para tal motivo vamos a utilizar los datos que se encuentran dentro de GEE, en este caso vamos a utilizar la colección de imágenes **'MODIS/006/MCD19A2_GRANULES'** la cual contiene el resultado de algoritmo *Multi-Angle Implementation of Atmospheric Correction* (MAIAC), la banda que vamos a utilizar es la *Aerosol Optical Depth at 047 micron* esta banda es el espesor óptico de $0.47\mu m$ . Dicha banda ha sido utilizada para obtener los contaminantes $PM_{10}$ y $PM_{2.5}$ los cuales con lleva altos riesgos de la salud al tener una exposición prolongada.
 
-El modelo fue entrenado y para cada día se obtuvieron los valores de los coeficientes para el modelo, de forma similar a la presentada en @eq-compleja
-
-$$
-PM^{2.5}_{ij} =  \alpha  + \beta AOD_{ij}+ \beta_2 \text{temperature}_{ij} + \beta_3 \text{relative humidity}_{ij} + 
-$$
-$$ 
-\beta_4 PBLH_{ij} + \beta_5 \sqrt{\text{precipitation}_{ij}} + \beta_6 \text{Street density}_{i} + \varepsilon
-$$
-
-donde $\beta_2, \beta_3, \beta_4, \beta_5, \beta_6$ son coeficientes que se determinan en todo el año. Mientras que $\beta$ y $\alpha$ se determinan de forma diaria. Por simplicidad, los coefficientes se ponen dentro de una tabla, la cual es añadida a través de los a **Assets**. La cual tiene la siguiente forma.
-
-| Intercept | Optical_Depth_047_z | temperature_2m_z |relative_humidity_z | total_precipitation_sqrt_z | PBLH_z |vialidades_z |date | system:index |
-|--------|--------|--------|--------|--------|--------|--------|--------|
-| 3.9526 | 0.4266 | 0.2033| -0.3986 | -0.1151 | -0.2979| 0.0128 | 2004-01-01 | 1072915200 |
-|1.1116 | 0.2307 | 0.2033 | -0.3986 | -0.1151 | -0.2979 | 0.01281 | 2004-01-02 | 1073001600 |
-
-
-Esta tabla se sube usando la pestaña **Assets**, se resalta en particular la columna 'system:index', esta es la fecha en ['Unix time'](https://en.wikipedia.org/wiki/Unix_time), es importante, pues dentro de GEE nos sirve para poder usar el filtro de fechas (`.filterDate`). Para poder hacer uso de los 
 
 ## Colección de Imágenes
 
@@ -121,10 +103,11 @@ var image = ee.Image("projects/gee-education/assets/Vialidades_ZMVM");
 ## Explicación del Modelo 
 
 
-Nuestro modelo, es una modificación al modelo utilizado por Just, haciendo uso de una fuente de información distinta de los datos meteorológicos para hacer las estimaciones, la fuente de datos  a utilizar son los datos de [reánalisis meteorológicos](https://climate.copernicus.eu/climate-reanalysis) del ["European Centre for Medium-Range Weather Forecasts"](https://www.ecmwf.int/en/about) los cuales se encuentran disponibles dentro de GEE en el [catalogo de datos](https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_HOURLY). Para importar estos datos lo hacemos a traves de el siguiente script y al igual que con la colección de MODIS la filtramos por fecha, seleccionamos las bandas que vamos a utilizar y las partes de las imágenes que se encuentren dentro del "bounding box" del polígono de la zona metropolitana el cccual se encuentra en la variable `ZMVT_bb`. 
+Nuestro modelo, es una modificación al modelo utilizado por Just, haciendo uso de una fuente de información distinta de los datos meteorológicos para hacer las estimaciones, la fuente de datos a utilizar son los datos de [reánalisis meteorológicos](https://climate.copernicus.eu/climate-reanalysis) del ["European Centre for Medium-Range Weather Forecasts"](https://www.ecmwf.int/en/about) los cuales se encuentran disponibles dentro de GEE en el [catálogo de datos](https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_HOURLY). Para importar estos datos lo hacemos a traves de el siguiente código y al igual que con la colección de MODIS la filtramos por fecha, seleccionamos las bandas que vamos a utilizar y las partes de las imágenes que se encuentren dentro del "bounding box" del polígono de la zona metropolitana el cual se encuentra en la variable `ZMVT_bb`. 
 
 
 ```JavaScript
+
 var land_eras_day_f = ee.ImageCollection("ECMWF/ERA5_LAND/HOURLY").filter(
             ee.Filter.date(startdate, enddate)
         ).select([
@@ -136,9 +119,79 @@ var land_eras_day_f = ee.ImageCollection("ECMWF/ERA5_LAND/HOURLY").filter(
         ]).filterBounds(ZMVT_bb);
 ```
 
+De este conjunto de datos 
 
 
-## Usar formulas en imagenes
+
+El modelo fue entrenado con los datos de forma anual y para cada día se obtuvieron los valores de los coeficientes para el modelo, de forma similar a la presentada en @eq-compleja. 
+
+$$
+PM^{2.5}_{ij} =  \alpha  + \beta AOD_{ij}+ \beta_2 \text{temperature}_{ij} + \beta_3 \text{relative humidity}_{ij} + 
+$$
+$$ 
+\beta_4 PBLH_{ij} + \beta_5 \sqrt{\text{precipitation}_{ij}} + \beta_6 \text{Street density}_{i} + \varepsilon
+$$
+
+donde $\beta_2, \beta_3, \beta_4, \beta_5, \beta_6$ son coeficientes que se determinan en el modelo todo el año. Mientras que $\beta$ y $\alpha$ se determinan de forma diaria. Por simplicidad, los coefficientes se ponen dentro de una tabla, la cual es añadida a través de los **Assets**. La cual tiene la siguiente forma.
+
+| Intercept | Optical_Depth_047_z | temperature_2m_z |relative_humidity_z | total_precipitation_sqrt_z | PBLH_z |vialidades_z |date | system:index |
+|--------|--------|--------|--------|--------|--------|--------|--------|
+| 3.9526 | 0.4266 | 0.2033| -0.3986 | -0.1151  | 0.0128 | 2004-01-01 | 1072915200 |
+|1.1116 | 0.2307 | 0.2033 | -0.3986 | -0.1151  | 0.0128 | 2004-01-02 | 1073001600 |
+
+
+Esta tabla se sube usando la pestaña **Assets**, se resalta en particular la columna 'system:index', esta es la fecha en ['Unix time'](https://en.wikipedia.org/wiki/Unix_time), es importante pues dentro de GEE nos sirve para poder usar el filtro de fechas (`.filterDate`) si el dato no se encuentra en este formato los filtros especificos de fechas no se pueden utilizar.
+
+
+
+
+
+
+## Usar fórmulas en imágenes
+
+
+Dentro de 
+
+```JavaScript
+var relat_humed = function(image){
+  /*
+  actual_water_press = 611.21 * math.exp((17.502 * td) / (240.97 + td))
+  max_water_press = 611.21 * math.exp((17.502 * t) / (240.97 + t))
+  
+  HR=(actual_water_press/ max_water_press)*100
+  */
+  
+  var lambda_i = 240.97;
+  var beta_i = 17.502; ///17.1; //17.625;
+  var coef= 611.21;// reference level water vapor pressure at 273.15 K
+  var dew_point =  image.select('dewpoint_temperature_2m');
+  var temp_2m =  image.select('temperature_2m');
+  var prec_total = image.select('total_precipitation');
+  var e_up  =  dew_point
+                  .multiply(beta_i);
+  var e_dow =   dew_point
+                  .add(lambda_i);
+  var e = ((e_up.divide(e_dow)).exp()).multiply(coef);
+  var e_s_up  =  temp_2m
+                  .multiply(beta_i);
+  var e_s_dow =   temp_2m
+                  .add(lambda_i);
+  var e_s   = ((e_s_up.divide(e_s_dow)).exp()).multiply(coef);
+  var rel_hum = (e.divide(e_s)).multiply(100);
+  
+  rel_hum = rel_hum .select(['dewpoint_temperature_2m']).rename(['relative_humidity']);
+  rel_hum = rel_hum
+        .addBands(temp_2m)
+        .addBands(dew_point)
+        .addBands(prec_total)
+        .set({'system:time_start':image.get('system:time_start')})
+        ;
+return rel_hum;
+};
+
+```
+
+
 
 
 

@@ -130,7 +130,7 @@ PM^{2.5}_{ij} =  \alpha  + \beta AOD_{ij}+ \beta_2 \text{temperature}_{ij} + \be
 $$
 $$ 
 \beta_4 PBLH_{ij} + \beta_5 \sqrt{\text{precipitation}_{ij}} + \beta_6 \text{Street density}_{i} + \varepsilon
-$$
+$${#eq-modelo}
 
 donde $\beta_2, \beta_3, \beta_4, \beta_5, \beta_6$ son coeficientes que se determinan en el modelo todo el año. Mientras que $\beta$ y $\alpha$ se determinan de forma diaria. Por simplicidad, los coefficientes se ponen dentro de una tabla, la cual es añadida a través de los **Assets**. La cual tiene la siguiente forma.
 
@@ -144,13 +144,12 @@ Esta tabla se sube usando la pestaña **Assets**, se resalta en particular la co
 
 
 
+### Calcular para toda la colección 
 
+Las variables a usar dentro de nuestro modelo en @eq-modelo son $AOD_{ij}$ $AOD$ es el espesor óptico de MODIS para el día $j$ en la celda $i$, $\text{precipitation}_{ij}$ es la precipitación  y $\text{temperature}_{ij}$ la temperatura a $2$ metros para el día $j$ en la celda $i$ las cuales se obtienen de la coleccion de reánalisis meteorológicos.  $PBLH_{ij}$ es la altura de la capa límite de mezcla. Y $\text{Street density}_{i}$ la densidad de calles en la celda $i$. Todas la variables anteriores las podemos extraer directamente de las colecciones de imágenes que se encuentran en los datos de GEE o bien colecciones que añadimos nosotros como es el caso de $PBLH$, pues esta no se encuentra directamente en GEE y es necesario descargar y añadir como colección de imágenes a GEE. 
 
+Nos falta la variable  $ \text{relative humidity}_{ij}$ la cual es la humedad relativa en el día $j$ en la celda $i$, pero esta puede ser obtenida usando la temperatura y el punto de rocio. 
 
-## Usar fórmulas en imágenes
-
-
-Dentro de 
 
 ```JavaScript
 var relat_humed = function(image){
@@ -190,7 +189,7 @@ return rel_hum;
 };
 
 ```
-
+## Usar fórmulas en imágenes
 
 
 

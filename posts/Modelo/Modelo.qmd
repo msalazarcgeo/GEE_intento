@@ -73,7 +73,7 @@ var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES")
 .filterBounds(ee.Geometry.Point(-99.221411, 19.29183));
 ```
 
-Este tipo de acciones las podemos implementar no solo con filtrados sino con distintas acciones disponibles en GEE. 
+Este tipo de acciones las podemos implementar no sólo con filtrados sino con distintas acciones disponibles en GEE. 
 
 ## Subir datos a GEE
 
@@ -90,11 +90,11 @@ Para hacer uso de estos elementos denro del editor de código de GEE se pueden i
 ![insertar elementos ](./Insert_asset.png){#fig:ins_elem} 
 
 
-Si se desea compartir los elementos que se encuentran en el preámbulo `Imports` se hace click en el boton azul a lado de `Imports` esto abrira una ventana la cual contendra todos los elementos que se encuentran dentro de el preambulo `Imports`.  Los elementos también pueden ser añadidos al código simplemente copiando y pegando. Se puede eliminar los elementos importados usando un boton de basura que se encuentra en el margen izquierdo cuando se pasa a lado del elemento insertado. 
+Si se desea compartir los elementos que se encuentran en el preámbulo `Imports` se hace click en el boton azul a lado de `Imports` esto abrira una ventana la cual contendra todos los elementos que se encuentran dentro de el preámbulo `Imports`.  Los elementos también pueden ser añadidos al código simplemente copiando y pegando. Se puede eliminar los elementos importados usando un boton de basura que se encuentra en el margen izquierdo cuando se pasa a lado del elemento insertado. 
 
 ![copiar elementos ](./Copiar_elemento.png){#fig:cop_elem} 
 
-Para añadirlo de forma directa al código, se hace a través de insertar el nombre del elemento y declararlo como el objeto que es. En el caso de una imagen se utiliza `ee.Image()`, para una tabla se hace con `ee.FeatureCollection()`, y si es un conjunto de imágenes se declara con `ee.ImageCollection()`. El código a continuación se muestra como importamos el raster con la agregación de las vialidades extraidas de OpenStreet map ([OSM](https://www.openstreetmap.org/)) y subida a GEE en el elemento "projects/gee-education/assets/Vialidades_ZMVM" el cual se encuentra dentro de los assets del que escribe este tutorial. 
+Para añadirlo de forma directa al código, se hace a través de insertar el nombre del elemento y declararlo como el objeto que es. En el caso de una imagen se utiliza `ee.Image()`, para una tabla se hace con `ee.FeatureCollection()`, para el caso de un objeto geometrico dentro de un archivo .shp se hace como si fuese un tabla con `ee.FeatureCollection()`, y si es un conjunto de imágenes se declara con `ee.ImageCollection()`. El código a continuación se muestra como importamos el raster con la agregación de las vialidades extraidas de OpenStreet map ([OSM](https://www.openstreetmap.org/)) y subida a GEE en el elemento "projects/gee-education/assets/Vialidades_ZMVM" el cual se encuentra dentro de los assets del que escribe este tutorial. 
 
 ```JavaScript
 var image = ee.Image("projects/gee-education/assets/Vialidades_ZMVM");
@@ -105,6 +105,7 @@ var image = ee.Image("projects/gee-education/assets/Vialidades_ZMVM");
 
 Nuestro modelo, es una modificación al modelo utilizado por Just, haciendo uso de una fuente de información distinta de los datos meteorológicos para hacer las estimaciones, la fuente de datos a utilizar son los datos de [reánalisis meteorológicos](https://climate.copernicus.eu/climate-reanalysis) del ["European Centre for Medium-Range Weather Forecasts"](https://www.ecmwf.int/en/about) los cuales se encuentran disponibles dentro de GEE en el [catálogo de datos](https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_HOURLY). Para importar estos datos lo hacemos a traves de el siguiente código y al igual que con la colección de MODIS la filtramos por fecha, seleccionamos las bandas que vamos a utilizar y las partes de las imágenes que se encuentren dentro del "bounding box" del polígono de la zona metropolitana el cual se encuentra en la variable `ZMVT_bb`. 
 
+Para obtener el bounding box de 
 
 ```JavaScript
 
@@ -140,7 +141,12 @@ donde $\beta_2, \beta_3, \beta_4, \beta_5, \beta_6$ son coeficientes que se dete
 |1.1116 | 0.2307 | 0.2033 | -0.3986 | -0.1151  | 0.0128 | 2004-01-02 | 1073001600 |
 
 
+
+
+::: {.callout-note}
 Esta tabla se sube usando la pestaña **Assets**, se resalta en particular la columna 'system:index', esta es la fecha en ['Unix time'](https://en.wikipedia.org/wiki/Unix_time), es importante pues dentro de GEE nos sirve para poder usar el filtro de fechas (`.filterDate`) si el dato no se encuentra en este formato los filtros especificos de fechas no se pueden utilizar.
+:::
+
 
 
 

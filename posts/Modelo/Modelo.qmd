@@ -31,7 +31,7 @@ o complejo
 $$
 f(x_1, x_2, \dots , x_n ) = \alpha_{1,1}  x_1 + \alpha_{1,2}  x_1^2 + \dots + \alpha_{1 ,{\psi(x_1)}}  x_1^{\psi(x_1)}  + \dots 
 + \alpha_{n ,{\psi(x_n)}} x_n ^{\psi(x_n)} 
-$${#eq-compleja}
+$$ {#eq-compleja}
 
 donde $\psi(x_n)$ es una función que determina hasta que potencia se eleva a la variable $x_i$. 
 
@@ -131,7 +131,7 @@ PM^{2.5}_{ij} =  \alpha  + \beta AOD_{ij}+ \beta_2 \text{temperature}_{ij} + \be
 $$
 $$ 
 \beta_4 PBLH_{ij} + \beta_5 \sqrt{\text{precipitation}_{ij}} + \beta_6 \text{Street density}_{i} + \varepsilon
-$${#eq-modelo}
+$$ {#eq-modelo}
 
 donde $\beta_2, \beta_3, \beta_4, \beta_5, \beta_6$ son coeficientes que se determinan en el modelo todo el año. Mientras que $\beta$ y $\alpha$ se determinan de forma diaria. Por simplicidad, los coefficientes se ponen dentro de una tabla, la cual es añadida a través de los **Assets**. La cual tiene la siguiente forma.
 
@@ -152,10 +152,15 @@ Esta tabla se sube usando la pestaña **Assets**, se resalta en particular la co
 
 ### Calcular para toda la colección 
 
-Las variables a usar dentro de nuestro modelo en @eq-modelo son $AOD_{ij}$ $AOD$ es el espesor óptico de MODIS para el día $j$ en la celda $i$, $\text{precipitation}_{ij}$ es la precipitación  y $\text{temperature}_{ij}$ la temperatura a $2$ metros para el día $j$ en la celda $i$ las cuales se obtienen de la coleccion de reánalisis meteorológicos.  $PBLH_{ij}$ es la altura de la capa límite de mezcla. Y $\text{Street density}_{i}$ la densidad de calles en la celda $i$. Todas la variables anteriores las podemos extraer directamente de las colecciones de imágenes que se encuentran en los datos de GEE o bien colecciones que añadimos nosotros como es el caso de $PBLH$, pues esta no se encuentra directamente en GEE y es necesario descargar y añadir como colección de imágenes a GEE. 
+Las variables a usar dentro de nuestro modelo en @eq-modelo son $AOD_{ij}$  es el espesor óptico de MODIS para el día $j$ en la celda $i$, $\text{precipitation}_{ij}$ es la precipitación  y $\text{temperature}_{ij}$ la temperatura a $2$ metros para el día $j$ en la celda $i$ las cuales se obtienen de la coleccion de reánalisis meteorológicos.  $PBLH_{ij}$ es la altura de la capa límite de mezcla. Y $\text{Street density}_{i}$ la densidad de calles en la celda $i$. Todas la variables anteriores las podemos extraer directamente de las colecciones de imágenes que se encuentran en los datos de GEE o bien colecciones que añadimos nosotros como es el caso de $PBLH$, pues esta no se encuentra directamente en GEE y es necesario descargar y añadir como colección de imágenes a GEE. 
 
-Nos falta la variable  $ \text{relative humidity}_{ij}$ la cual es la humedad relativa en el día $j$ en la celda $i$, pero esta puede ser obtenida usando la temperatura y el punto de rocio. 
+Nos falta la variable  $ \text{relative humidity}_{ij}$ la cual es la humedad relativa en el día $j$ en la celda $i$, pero esta puede ser obtenida usando la temperatura y el punto de rocío. 
 
+ $$
+ \frac{\exp{(\frac{17.625*TD}{243.04+TD})}}{\exp(\frac{17.625*Temp}{243.04+Temp})} \cdot 100
+ $$
+ 
+ Donde $Temp$ es la temperatura y $TD$ es el punto de rocio. Podemos obtener un raster de la humedad relativa aplicando usando las bandas que seleccionamos de la colección de imágenes de los datos de reanálisis con la siguiente función:
 
 ```JavaScript
 var relat_humed = function(image){
@@ -166,9 +171,9 @@ var relat_humed = function(image){
   HR=(actual_water_press/ max_water_press)*100
   */
   
-  var lambda_i = 240.97;
-  var beta_i = 17.502; ///17.1; //17.625;
-  var coef= 611.21;// reference level water vapor pressure at 273.15 K
+  var lambda_i = 243.04;
+  var beta_i = 17.625; ///17.1; //17.625;
+  
   var dew_point =  image.select('dewpoint_temperature_2m');
   var temp_2m =  image.select('temperature_2m');
   var prec_total = image.select('total_precipitation');
@@ -176,12 +181,12 @@ var relat_humed = function(image){
                   .multiply(beta_i);
   var e_dow =   dew_point
                   .add(lambda_i);
-  var e = ((e_up.divide(e_dow)).exp()).multiply(coef);
+  var e = ((e_up.divide(e_dow)).exp());
   var e_s_up  =  temp_2m
                   .multiply(beta_i);
   var e_s_dow =   temp_2m
                   .add(lambda_i);
-  var e_s   = ((e_s_up.divide(e_s_dow)).exp()).multiply(coef);
+  var e_s   = ((e_s_up.divide(e_s_dow)).exp());
   var rel_hum = (e.divide(e_s)).multiply(100);
   
   rel_hum = rel_hum .select(['dewpoint_temperature_2m']).rename(['relative_humidity']);
@@ -195,15 +200,184 @@ return rel_hum;
 };
 
 ```
-## Usar fórmulas en imágenes
+
+Para aplicar la función a las imágenes diarias se "mapea" la funcion a todas los elementos de la colección. 
 
 
+```JavaScript
+var land_eras_day_f = ee.ImageCollection("ECMWF/ERA5_LAND/HOURLY").filter(
+            ee.Filter.date(startdate, enddate)
+        ).select([
+            'dewpoint_temperature_2m',
+            'total_evaporation',
+            'temperature_2m',
+            'total_precipitation_hourly',
+            'total_precipitation'
+        ]).filterBounds(ZMVT_bb);
+
+land_eras_day_f = land_eras_day_f.map(relat_humed );
+```
+
+
+## Escalas
+
+
+Una problemática que nos podemos encontrar es que en algunas ocasiones al ajustar el modelo en **R** puede ser necesario escalar las variables usando **z-scores** para que el modelo converja. Si es necesario hacer esto entonces es necsario saber como se escalaron las variables y poder subir estos valores dentro de GEE usando una tabla. Si se escala con la funcción `scale` en **R** entonces nos interesan los valores "scale" y "center" donde "scale" es la desviación estandar y "center" es el promedio.
+ 
+$$
+v_{escalada} = \frac{v- \mu(v)}{\sigma(v)} 
+$$
+
+$\mu(v)$ es el promedio de los valores de la variable $v$, $\sigma(v)$ es la desviación estandar de los valores de la variable $v$ y $v_{escalada}$ es la variable escalada.
+
+
+Si fue necesario escalar las variables para obtener la convergencia del modelo entonces podemos escalar los valores dentre de GEE si tenemos $\mu(v)$ y $\sigma(v)$. Por simplesa subimos una tabla la cual contiene dichos valores de forma anual. 
+
+
+
+|Variable|center|scale|year|
+|-------|------|------|-----|
+|PM25_z |29.48|10.95|2004|
+|Optical_Depth_047_z|249.99|149.17|2004|
+|temperature_2m_z|292.50|5.26|2004|
+|relative_humidity_z|90.55|3.76|2004|
+|total_precipitation_sqrt_z|0.02|0.01|2004|
+|PBLH_z|450.12|176.57|2004|
+|vialidades_z|1421.67|1855.65|2004|
+|PM25_z|30.32|13.84|2005|
+|Optical_Depth_047_z|266.90|151.62|2005|
+|temperature_2m_z|293.15|5.34|2005|
+|relative_humidity_z|88.98|5.56|2005|
+|total_precipitation_sqrt_z|0.02|0.02|2005|
+|PBLH_z|496.19|216.17|2005|
+|vialidades_z|1421.67|1855.65|2005|
+
+
+
+```JavaScript
+scale_values = ee.FeatureCollection("projects/gee-education/assets/coeff_zm/escala_variables_zmvt");
+var all_scale_day = scale_values.filter(ee.Filter.eq('year', selected_day.get('year')));
+var optical_scale_dic = ee.Dictionary({
+  'center': all_scale_day.filter(ee.Filter.eq('1', 'Optical_Depth_047_z')).first().get('center'),
+  'scale':all_scale_day.filter(ee.Filter.eq('1', 'Optical_Depth_047_z')).first().get('scale')
+
+});
+var PBLH_scale_dic = ee.Dictionary({
+  'center': all_scale_day.filter(ee.Filter.eq('1', 'PBLH_z')).first().get('center'),
+  'scale':all_scale_day.filter(ee.Filter.eq('1', 'PBLH_z')).first().get('scale')
+});
+var PM25_scale_dic = ee.Dictionary({
+  'center': all_scale_day.filter(ee.Filter.eq('1', 'PM10_z')).first().get('center'),
+  'scale':all_scale_day.filter(ee.Filter.eq('1', 'PM10_z')).first().get('scale')
+});
+var precipitation_scale_dic = ee.Dictionary({
+  'center': all_scale_day.filter(ee.Filter.eq('1', 'total_precipitation_sqrt_z')).first().get('center'),
+  'scale':all_scale_day.filter(ee.Filter.eq('1', 'total_precipitation_sqrt_z')).first().get('scale')
+});
+var RH_scale_dic = ee.Dictionary({
+  'center': all_scale_day.filter(ee.Filter.eq('1', 'relative_humidity_z')).first().get('center'),
+  'scale':all_scale_day.filter(ee.Filter.eq('1', 'relative_humidity_z')).first().get('scale')
+});
+var Temp_scale_dic = ee.Dictionary({
+  'center': all_scale_day.filter(ee.Filter.eq('1', 'temperature_2m_z')).first().get('center'),
+  'scale':all_scale_day.filter(ee.Filter.eq('1', 'temperature_2m_z')).first().get('scale')
+});
+var vialidades_scale_dic = ee.Dictionary({
+  'center': all_scale_day.filter(ee.Filter.eq('1', 'vialidades_z')).first().get('center'),
+  'scale':all_scale_day.filter(ee.Filter.eq('1', 'vialidades_z')).first().get('scale')
+});
+```
+
+```JavaScript
+
+var z_scale_land = function(image){
+  var temp_2m = image.select('temperature_2m');
+  temp_2m= temp_2m.expression(
+      '(x - mean_x) / sd_x', {
+        'x':temp_2m ,
+        'mean_x': Temp_scale_dic.getNumber('center'),
+        'sd_x': Temp_scale_dic.getNumber('scale')
+      }
+    ).rename('temperature_2m_z');
+    
+  var rh = image.select('relative_humidity');
+  rh= rh.expression(
+      '(x - mean_x) / sd_x', {
+        'x':rh ,
+        'mean_x': RH_scale_dic.getNumber('center'),
+        'sd_x': RH_scale_dic.getNumber('scale')
+      }
+    ).rename('relative_humidity_z') ;
+    
+  var total_prec = image.select('total_precipitation');
+  total_prec= total_prec.expression(
+      '(x - mean_x) / sd_x', {
+        'x':total_prec ,
+        'mean_x': precipitation_scale_dic.getNumber('center'),
+        'sd_x': precipitation_scale_dic.getNumber('scale')
+      }
+    ).rename('total_precipitation_sqrt_z') ;
+  return temp_2m
+  .addBands(rh)
+  .addBands(total_prec)
+  .set({'system:time_start':image.get('system:time_start')});
+};
+
+
+var optical_scale = optical_original.expression(
+      '(x - mean_x) / sd_x', {
+        'x': optical_original,
+        'mean_x': optical_scale_dic.getNumber('center'),
+        'sd_x': optical_scale_dic.getNumber('scale')
+      }
+    ).rename('Optical_Depth_047_z');
+```
 
 
 
 
 ### Multiplicar elementos 
 
+```JavaScript
+PBLH_day_s = PBLH_day_s.multiply(coeff_day.getNumber('PBLH_z')); 
+optical_scale = optical_scale.multiply(coeff_day.getNumber('Optical_Depth_047_z'));
+
+var hum_image  = day_land_eras_image_s.select('relative_humidity_z').multiply(coeff_day.getNumber('relative_humidity_z'));
+var tem_image  = day_land_eras_image_s.select('temperature_2m_z').multiply(coeff_day.getNumber('temperature_2m_z'));
+var prec_image = day_land_eras_image_s.select('total_precipitation_sqrt_z').multiply(coeff_day.getNumber('total_precipitation_sqrt_z'));
+
+print('aqui');
+vialidades_s = vialidades_s.multiply(coeff_day.getNumber('vialidades_z'));
+
+
+
+var image_interc = ee.Image(coeff_day.getNumber('XIntercept')).clip(ZMVT_bb);
+
+
+var day_pm= ee.Image().expression(
+  'opt + pblh + viali + rh + temp + prec_sqr + Intercept',
+  {
+    'opt' :optical_scale, 
+    'pblh' :PBLH_day_s, 
+    'viali' :vialidades_s, 
+    'Intercept': image_interc,
+    'rh':  hum_image,
+    'temp':tem_image,
+    'prec_sqr':prec_image
+     
+  }
+  ).rename('PM_scale');
+
+
+var day_pm_re = ee.Image().expression(
+  'y*sd_x + mean_x',
+  {
+    'y': day_pm,
+    'mean_x': PM25_scale_dic.getNumber('center'),
+    'sd_x': PM25_scale_dic.getNumber('scale')
+  }
+);
+```
 ### Combinación lineal 
 
 ## Despliegue en mapa 

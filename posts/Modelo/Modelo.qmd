@@ -51,12 +51,12 @@ Para hacer uso de la colección de imágenes se hace usando la siguiente linea
 var AOD_MODIS_fix =  ee.ImageCollection("MODIS/006/MCD19A2_GRANULES");
 ```
 
-La collección de imágenes contiene las imágenes disponibles del conjunto de datos, lo que normalmente son muchas imágenes disponibles, dentro de las cuales la mayoria no vamos a utilizar, para esto los objetos 'ee.ImageCollection' tienen métodos que nos ayudan a poder filtrar las imágenes dentro de la colección de imágenes. 
+La collección de imágenes contiene las imágenes disponibles del conjunto de datos, lo que normalmente son muchas imágenes disponibles, dentro de las cuales la mayoría no vamos a utilizar, para esto los objetos 'ee.ImageCollection' tienen métodos que nos ayudan a poder filtrar las imágenes dentro de la colección de imágenes. 
 
-La siguiente linea de código nos filtra la colección sólo con las imágenes que se tomaron del '2005-01-01' al '2015-01-01'. 
+La siguiente linea de código nos filtra la colección sólo con las imágenes que se tomaron del '2005-01-01' al '2016-01-01'. 
 
 ```JavaScript
-var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES").filterDate('2005-01-01', '2015-01-01') 
+var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES").filterDate('2005-01-01', '2016-01-01') 
 ```
 
 La siguiente linea filtra las imágenes que contienen al punto cercano a CentroGeo (-99.221411, 19.29183) 
@@ -65,11 +65,11 @@ La siguiente linea filtra las imágenes que contienen al punto cercano a CentroG
 var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES").filterBounds(ee.Geometry.Point(-99.221411, 19.29183))
 ```
 
-Estas las podemos combinar para aplicar las distintas acciones de forma concatenadas, es decir podemos filtrar primero por fecha y después al resultado filtrar las imágenes que intersectan al punto dentro de la misma ejecución, como se muestra a continuación
+Estas las podemos combinar para aplicar las distintas acciones de forma concatenada, es decir, podemos filtrar primero por fecha y después al resultado filtrar las imágenes que intersectan al punto dentro de la misma ejecución, como se muestra a continuación
 
 ```JavaScript
 var AOD_MODIS_fix = ee.ImageCollection("MODIS/006/MCD19A2_GRANULES")
-.filterDate('2005-01-01', '2015-01-01') 
+.filterDate('2005-01-01', '2016-01-01') 
 .filterBounds(ee.Geometry.Point(-99.221411, 19.29183));
 ```
 
@@ -81,10 +81,10 @@ En la pestaña 'Assets' dentro del editor de código de GEE (panel superior izqu
 
 ![Panel de Activos (assets) ](./GEE_assets.png). 
 
-Los elementos que podemos añadir a GEE son imágenes (.tif, tiff), tablas en archivos shape (.shp, .shx, .dbf, .prj o .zip) o archivos csv (.csv). También podemos agregar colecciones de imágenes o folders que contengan este tipo de archivos. Los elementos que subimos a GEE se almacenan en proyectos en la nube de Google, esto hace que esten accesibles desde GEE cada vez que sea necesario. Al estar dentro de la nube de Google las politicas de acceso a los mismos son las de la Nube de Google y también son accesibles desde las API de Google cloud como [CLI](https://cloud.google.com/cli?hl=en). 
+Los elementos que podemos añadir a GEE son imágenes (.tif, tiff), tablas en archivos shape (.shp, .shx, .dbf, .prj o .zip) o archivos csv (.csv). También podemos agregar colecciones de imágenes o folders que contengan este tipo de archivos. Los elementos que subimos a GEE se almacenan en proyectos en la nube de Google, esto hace que esten accesibles desde GEE cada vez que sea necesario. Al estar dentro de la nube de Google las políticas de acceso a los mismos son las de la Nube de Google y también son accesibles desde las API de Google cloud como [CLI](https://cloud.google.com/cli?hl=en). 
 
 
-Para hacer uso de estos elementos denro del editor de código de GEE se pueden insertar haciendo uso de la interfaz gráfica como se muestra en la imagen @fig:ins_elem. Los elementos añadidos se insertaran al inicio de nuestro código como un preámbulo llamado `Imports` , se pueden editar los nombres para que los nombres de las variables donde se almacenan sean de acuerdo a las politicas del desarrollador. 
+Para hacer uso de estos elementos denro del editor de código de GEE se pueden insertar haciendo uso de la interfaz gráfica como se muestra en la imagen @fig:ins_elem. Los elementos añadidos se insertaran al inicio de nuestro código como un preámbulo llamado `Imports`, se pueden editar los nombres para que los nombres de las variables donde se almacenan sean de acuerdo a las políticas del desarrollador. 
 
 
 ![insertar elementos ](./Insert_asset.png){#fig:ins_elem} 
@@ -94,21 +94,17 @@ Si se desea compartir los elementos que se encuentran en el preámbulo `Imports`
 
 ![copiar elementos ](./Copiar_elemento.png){#fig:cop_elem} 
 
-Para añadirlo de forma directa al código, se hace a través de insertar el nombre del elemento y declararlo como el objeto que es. En el caso de una imagen se utiliza `ee.Image()`, para una tabla se hace con `ee.FeatureCollection()`, para el caso de un objeto geometrico dentro de un archivo .shp se hace como si fuese un tabla con `ee.FeatureCollection()`, y si es un conjunto de imágenes se declara con `ee.ImageCollection()`. El código a continuación se muestra como importamos el raster con la agregación de las vialidades extraidas de OpenStreet map ([OSM](https://www.openstreetmap.org/)) y subida a GEE en el elemento "projects/gee-education/assets/Vialidades_ZMVM" el cual se encuentra dentro de los assets del que escribe este tutorial. 
+Para añadirlo de forma directa al código, se hace a través de insertar el nombre del elemento y declararlo como el objeto que es. En el caso de una imagen se utiliza `ee.Image()`, para una tabla se hace con `ee.FeatureCollection()`, para el caso de un objeto geométrico dentro de un archivo .shp se hace como si fuese un tabla con `ee.FeatureCollection()`, y si es un conjunto de imágenes se declara con `ee.ImageCollection()`. El código a continuación se muestra como importamos el raster con la agregación de las vialidades extraidas de OpenStreet map ([OSM](https://www.openstreetmap.org/)) y subida a GEE en el elemento "raster_agregados_vialidades" el cual se tendra que añadir dentro de los assets. 
 
 ```JavaScript
-var image = ee.Image("projects/gee-education/assets/Vialidades_ZMVM");
+var image = ee.Image("raster_agregados_vialidades");
 ```
 
 ## Explicación del Modelo 
 
-
-Nuestro modelo, es una modificación al modelo utilizado por Just, haciendo uso de una fuente de información distinta de los datos meteorológicos para hacer las estimaciones, la fuente de datos a utilizar son los datos de [reánalisis meteorológicos](https://climate.copernicus.eu/climate-reanalysis) del ["European Centre for Medium-Range Weather Forecasts"](https://www.ecmwf.int/en/about) los cuales se encuentran disponibles dentro de GEE en el [catálogo de datos](https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_HOURLY). Para importar estos datos lo hacemos a traves de el siguiente código y al igual que con la colección de MODIS la filtramos por fecha, seleccionamos las bandas que vamos a utilizar y las partes de las imágenes que se encuentren dentro del "bounding box" del polígono de la zona metropolitana el cual se encuentra en la variable `ZMVT_bb`. 
-
-Para obtener el bounding box de 
+Nuestro modelo, es una modificación al modelo utilizado por Just, haciendo uso de una fuente de información distinta de los datos meteorológicos para hacer las estimaciones, la fuente de datos a utilizar son los datos de [reánalisis meteorológicos](https://climate.copernicus.eu/climate-reanalysis) del ["European Centre for Medium-Range Weather Forecasts"](https://www.ecmwf.int/en/about) los cuales se encuentran disponibles dentro de GEE en el [catálogo de datos](https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_HOURLY). Para importar estos datos lo hacemos a traves de el siguiente código y al igual que con la colección de MODIS la filtramos por fecha, seleccionamos las bandas que vamos a utilizar y las partes de las imágenes que se encuentren dentro del "bounding box" del polígono de la zona metropolitana el cual se encuentra en la variable `ZMVM_bb`. 
 
 ```JavaScript
-
 var land_eras_day_f = ee.ImageCollection("ECMWF/ERA5_LAND/HOURLY").filter(
             ee.Filter.date(startdate, enddate)
         ).select([
@@ -117,12 +113,42 @@ var land_eras_day_f = ee.ImageCollection("ECMWF/ERA5_LAND/HOURLY").filter(
             'temperature_2m',
             'total_precipitation_hourly',
             'total_precipitation'
-        ]).filterBounds(ZMVT_bb);
+        ]).filterBounds(ZMVM_bb);
 ```
 
-De este conjunto de datos 
+
+Para obtener el bounding box del polígono de la Zona Metropolitana del Valle de México (ZMVM) se hace de la siguiente forma:  
+
+```JavaScript 
+var ZMVM_tabla = ee.FeatureCollection("Poligono_archivo_shape_ZMVM");
+var ZMVM_bb = ZMVM_tabla.geometry().bounds();
+```
+donde "Poligono_archivo_shape_ZMVM" es un elemento que se deberá añadir en los assets que contenga al polígono de la ZMVM. El polígono se encuentrá dentro de un archivo `.shp`, para poder hacer uso de este elemento geométrico se hace usando `.geometry()` el cual extrae lo que se encuentra dentro del campo `geometry` de una tabla, en nuestro caso el polígono de la ZMVM. Después tomamos el cuadrado delimitador o "bounding box" usando `.bounds()` el cual es un método de los objetos geométricos en GEE. 
+
+De este conjunto de datos seleccionamos los que se encuentran en determinadas fechas y filtramos los elementos las imágenes que se intersecten con `ZMVM_bb`. 
 
 
+## Todos igual 
+
+Por simpleza vamos a remuestrar todos los datos para que estos esten similar a los datos de MODIS. 
+
+Para tal proposito definimos una función, 
+
+
+```JavaScript
+
+var modisProj = AOD_MODIS.first().projection();
+ 
+var resample_coll = function(image){
+  return image.reproject(modisProj);
+};
+
+```
+
+
+
+
+# Entrenamiento fuera de GEE.
 
 El modelo fue entrenado con los datos de forma anual y para cada día se obtuvieron los valores de los coeficientes para el modelo, de forma similar a la presentada en @eq-compleja. 
 
@@ -133,34 +159,43 @@ $$
 \beta_4 PBLH_{ij} + \beta_5 \sqrt{\text{precipitation}_{ij}} + \beta_6 \text{Street density}_{i} + \varepsilon
 $$ {#eq-modelo}
 
-donde $\beta_2, \beta_3, \beta_4, \beta_5, \beta_6$ son coeficientes que se determinan en el modelo todo el año. Mientras que $\beta$ y $\alpha$ se determinan de forma diaria. Por simplicidad, los coefficientes se ponen dentro de una tabla, la cual es añadida a través de los **Assets**. La cual tiene la siguiente forma.
+donde $\beta_2, \beta_3, \beta_4, \beta_5, \beta_6$ son coeficientes que se determinan en el modelo todo el año. Mientras que $\beta$ y $\alpha$ se determinan de forma diaria. 
+
+
+## Coeficientes
+
+Por simplicidad, los coefficientes se ponen dentro de una tabla, la cual es añadida a través de los **Assets**. La cual tiene la siguiente forma:
 
 | Intercept | Optical_Depth_047_z | temperature_2m_z |relative_humidity_z | total_precipitation_sqrt_z | PBLH_z |vialidades_z |date | system:index |
 |--------|--------|--------|--------|--------|--------|--------|--------|
 | 3.9526 | 0.4266 | 0.2033| -0.3986 | -0.1151  | 0.0128 | 2004-01-01 | 1072915200 |
 |1.1116 | 0.2307 | 0.2033 | -0.3986 | -0.1151  | 0.0128 | 2004-01-02 | 1073001600 |
 
-
+sólo mostramos los primeros elementos pero la tabla deberá contener todos los días en donde es posible obtener el modelo. 
 
 
 ::: {.callout-note}
 Esta tabla se sube usando la pestaña **Assets**, se resalta en particular la columna 'system:index', esta es la fecha en ['Unix time'](https://en.wikipedia.org/wiki/Unix_time), es importante pues dentro de GEE nos sirve para poder usar el filtro de fechas (`.filterDate`) si el dato no se encuentra en este formato los filtros especificos de fechas no se pueden utilizar.
 :::
 
+Las variables a usar dentro de nuestro modelo en @eq-modelo son $AOD_{ij}$ es el espesor óptico de MODIS para el día $j$ en la celda $i$, $\text{precipitation}_{ij}$ es la precipitación  y $\text{temperature}_{ij}$ la temperatura a $2$ metros para el día $j$ en la celda $i$ las cuales se obtienen de la coleccion de reánalisis meteorológicos.  $PBLH_{ij}$ es la altura de la capa límite de mezcla. Y $\text{Street density}_{i}$ la densidad de calles en la celda $i$. 
+
+Todas la variables anteriores las podemos extraer directamente de las colecciones de imágenes que se encuentran en los datos de GEE o bien colecciones que añadimos nosotros como es el caso de $PBLH$, pues esta no se encuentra directamente en GEE, es necesario descargar y añadir como colección de imágenes a GEE. 
+
+```
+var PBLH_ZMVT = ee.ImageCollection("PBLH_data")
+```
+
+## Calcular para toda la colección 
 
 
-
-### Calcular para toda la colección 
-
-Las variables a usar dentro de nuestro modelo en @eq-modelo son $AOD_{ij}$  es el espesor óptico de MODIS para el día $j$ en la celda $i$, $\text{precipitation}_{ij}$ es la precipitación  y $\text{temperature}_{ij}$ la temperatura a $2$ metros para el día $j$ en la celda $i$ las cuales se obtienen de la coleccion de reánalisis meteorológicos.  $PBLH_{ij}$ es la altura de la capa límite de mezcla. Y $\text{Street density}_{i}$ la densidad de calles en la celda $i$. Todas la variables anteriores las podemos extraer directamente de las colecciones de imágenes que se encuentran en los datos de GEE o bien colecciones que añadimos nosotros como es el caso de $PBLH$, pues esta no se encuentra directamente en GEE y es necesario descargar y añadir como colección de imágenes a GEE. 
-
-Nos falta la variable  $ \text{relative humidity}_{ij}$ la cual es la humedad relativa en el día $j$ en la celda $i$, pero esta puede ser obtenida usando la temperatura y el punto de rocío. 
+Nos falta la variable  $\text{relative humidity}_{ij}$ la cual es la humedad relativa en el día $j$ en la celda $i$, pero esta puede ser obtenida usando la temperatura y el punto de rocío. 
 
  $$
  \frac{\exp{(\frac{17.625*TD}{243.04+TD})}}{\exp(\frac{17.625*Temp}{243.04+Temp})} \cdot 100
  $$
  
- Donde $Temp$ es la temperatura y $TD$ es el punto de rocio. Podemos obtener un raster de la humedad relativa aplicando usando las bandas que seleccionamos de la colección de imágenes de los datos de reanálisis con la siguiente función:
+ Donde $Temp$ es la temperatura y $TD$ es el punto de rocío. Podemos obtener un raster de la humedad relativa aplicando usando las bandas que seleccionamos de la colección de imágenes de los datos de reanálisis con la siguiente función:
 
 ```JavaScript
 var relat_humed = function(image){
@@ -201,28 +236,20 @@ return rel_hum;
 
 ```
 
-Para aplicar la función a las imágenes diarias se "mapea" la funcion a todas los elementos de la colección. 
+* Definimos una función para calcular la humedad relativa basada en el punto de rocío y la temperatura. 
+* La función calcula la presión de vapor y la saturación de vapor usando las formulas respectivas. 
+* Finalmente se calcula la humedad relativa y se añade una nueva banda (`relative_humidity`) a la imagen. 
 
+Para aplicar la función a las imágenes diarias se "mapea" la función a todas los elementos de la colección. 
 
 ```JavaScript
-var land_eras_day_f = ee.ImageCollection("ECMWF/ERA5_LAND/HOURLY").filter(
-            ee.Filter.date(startdate, enddate)
-        ).select([
-            'dewpoint_temperature_2m',
-            'total_evaporation',
-            'temperature_2m',
-            'total_precipitation_hourly',
-            'total_precipitation'
-        ]).filterBounds(ZMVT_bb);
-
 land_eras_day_f = land_eras_day_f.map(relat_humed );
 ```
 
 
 ## Escalas
 
-
-Una problemática que nos podemos encontrar es que en algunas ocasiones al ajustar el modelo en **R** puede ser necesario escalar las variables usando **z-scores** para que el modelo converja. Si es necesario hacer esto entonces es necsario saber como se escalaron las variables y poder subir estos valores dentro de GEE usando una tabla. Si se escala con la funcción `scale` en **R** entonces nos interesan los valores "scale" y "center" donde "scale" es la desviación estandar y "center" es el promedio.
+Una problemática que nos podemos encontrar es que en algunas ocasiones al ajustar el modelo en **R** puede ser necesario escalar las variables usando **z-scores** para que el modelo converja. Si es necesario hacer esto entonces es necesario saber como se escalaron las variables y poder subir estos valores dentro de GEE usando una tabla. Si se escala con la función `scale` en **R** entonces nos interesan los valores "scale" y "center" donde "scale" es la desviación estandar y "center" es el promedio de los datos.
  
 $$
 v_{escalada} = \frac{v- \mu(v)}{\sigma(v)} 
@@ -231,7 +258,7 @@ $$
 $\mu(v)$ es el promedio de los valores de la variable $v$, $\sigma(v)$ es la desviación estandar de los valores de la variable $v$ y $v_{escalada}$ es la variable escalada.
 
 
-Si fue necesario escalar las variables para obtener la convergencia del modelo entonces podemos escalar los valores dentre de GEE si tenemos $\mu(v)$ y $\sigma(v)$. Por simplesa subimos una tabla la cual contiene dichos valores de forma anual. 
+Si fue necesario escalar las variables para obtener la convergencia del modelo entonces podemos escalar los valores dentre de GEE si tenemos $\mu(v)$ y $\sigma(v)$. Por simpleza subimos una tabla la cual contiene dichos valores de forma anual. 
 
 
 
@@ -252,10 +279,13 @@ Si fue necesario escalar las variables para obtener la convergencia del modelo e
 |PBLH_z|496.19|216.17|2005|
 |vialidades_z|1421.67|1855.65|2005|
 
-
+Para seleccionar los valores para poder escalar los datos seleccionamos los datos para un año en especifico de la siguiente forma:
 
 ```JavaScript
-scale_values = ee.FeatureCollection("projects/gee-education/assets/coeff_zm/escala_variables_zmvt");
+var selected_day = '2018-04-24';
+selected_day = ee.Date(selected_day);
+
+var scale_values = ee.FeatureCollection("your_scale_values_table");
 var all_scale_day = scale_values.filter(ee.Filter.eq('year', selected_day.get('year')));
 var optical_scale_dic = ee.Dictionary({
   'center': all_scale_day.filter(ee.Filter.eq('1', 'Optical_Depth_047_z')).first().get('center'),
@@ -287,9 +317,10 @@ var vialidades_scale_dic = ee.Dictionary({
   'scale':all_scale_day.filter(ee.Filter.eq('1', 'vialidades_z')).first().get('scale')
 });
 ```
+Para cada una de las variables tenemos un diccionario con valores `center` y `scale` para poder escalar los datos en GEE.  Se hace una función especifica para los datos obtenidos de reanálisis y para los demás se hace de forma individual. 
+
 
 ```JavaScript
-
 var z_scale_land = function(image){
   var temp_2m = image.select('temperature_2m');
   temp_2m= temp_2m.expression(
@@ -333,10 +364,15 @@ var optical_scale = optical_original.expression(
     ).rename('Optical_Depth_047_z');
 ```
 
+::: {.callout-note}
+Cabe destacar el uso de [`ee.Image.expression()`](https://developers.google.com/earth-engine/apidocs/ee-image-expression) este método nos permite evaluar los valores en las imágenes como si fuesen fórmulas usando un string. Se renombran las bandas de la imagen para saber que estas bandas se encuentran escaladas. 
+:::
 
 
 
-### Multiplicar elementos 
+### Unir todo
+
+
 
 ```JavaScript
 PBLH_day_s = PBLH_day_s.multiply(coeff_day.getNumber('PBLH_z')); 
@@ -368,7 +404,6 @@ var day_pm= ee.Image().expression(
   }
   ).rename('PM_scale');
 
-
 var day_pm_re = ee.Image().expression(
   'y*sd_x + mean_x',
   {
@@ -378,6 +413,10 @@ var day_pm_re = ee.Image().expression(
   }
 );
 ```
+
+
+
+
 ### Combinación lineal 
 
 ## Despliegue en mapa 

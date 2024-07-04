@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.551">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>GEE_intento - Hacer modelos en GEE</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">GEE_intento</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"> <i class="bi bi-twitter" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Hacer modelos en GEE</h1>
+                      </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="modelos-en-gee" class="level1">
+<h1>Modelos en GEE</h1>
+<p>Google Earth Engine (GEE) es una herramienta muy útil, dentro de la cuál se pueden generar modelos matemáticos para las distintas problemáticas que se deseen visualizar dentro de GEE. Sin embargo, el desarrollo no se debe limitar al uso exclusivo de GEE pues esto nos restringiría al uso de otras herramientas desarrolladas por distintos individuos o grupos de trabajo. Bajo esta primicia, en este pequeño tutorial vamos a mostrar como se podemos exportar un modelo creado en otras plataformas y poder exportarlo a GEE.</p>
+<p>En este sentido vamos a usar la plataforma GEE para exportar modelos y poder hacer la visualización de los resultados en GEE.</p>
+</section>
+<section id="bases" class="level1">
+<h1>Bases</h1>
+<p>Un modelo implica en términos muy simples implica poder describir como se comporta algo en lo cual estamos interesados y encontrar las causas que lo explican. Hay muchos tipos de modelos desde los muy complejos hasta los modelos muy simple, pero una forma de ver los es simplemente como funciones,</p>
+<p><span class="math display">\[
+y =  f(x_1, x_2, \dots , x_n )
+\]</span></p>
+<p>Donde <span class="math inline">\(\{ x_i \}\)</span> normalmente los llamamos variables explicativas y a <span class="math inline">\(y\)</span> la variable descriptiva. Y <span class="math inline">\(f\)</span> es nuestro modelo, un modelo simple puede ser la combinación lineal de los elementos</p>
+<p><span id="eq-simple"><span class="math display">\[
+f(x_1, x_2, \dots , x_n ) = \alpha_1 x_1 + \alpha_2 x_2 + \dots  + \alpha_n x_n
+\tag{1}\]</span></span></p>
+<p>o complejo</p>
+<p><span id="eq-compleja"><span class="math display">\[
+f(x_1, x_2, \dots , x_n ) = \alpha_{1,1}  x_1 + \alpha_{1,2}  x_1^2 + \dots + \alpha_{1 ,{\psi(x_1)}}  x_1^{\psi(x_1)}  + \dots
++ \alpha_{n ,{\psi(x_n)}} x_n ^{\psi(x_n)}
+\tag{2}\]</span></span></p>
+<p>donde <span class="math inline">\(\psi(x_n)\)</span> es una función que determina hasta que potencia se eleva a la variable <span class="math inline">\(x_i\)</span>.</p>
+<p>En estos casos determinar un modelo implicaría encontrar la variables (<span class="math inline">\(\{ x_i \}\)</span>) que se consideran que mejor explican a la variable <span class="math inline">\(y\)</span> y encontrar <span class="math inline">\(\psi(x_i)\)</span>. Haciendo uso de los datos propios de cada problemática ajustar el modelo implica poder encontrar las <span class="math inline">\(\{\alpha_{i,j}\}\)</span>.</p>
+<p>GEE tiene herramientas para poder hacer modelos sin embargo, los modelos dentro de GEE puede que no se ajusten a las problemáticas que se desean analizar, o no se tienen las herramientas disponibles para generar modelos complejos dentro de GEE. Por tal motivo, podemos obtener un modelo fuera de GEE y si se tiene una expresión como las descritas anteriormente es posible generar las predicciones dentro de GEE para su visualización.</p>
+<p>En este ejemplo vamos a obtener el contaminante <em>particle matter</em> de menos de <span class="math inline">\(2.5 \mu\)</span> (<strong>PM 2.5</strong>) para la zona metropolitana del valle de México. Para tal motivo vamos a utilizar los datos que se encuentran dentro de GEE, en este caso vamos a utilizar la colección de imágenes <strong>‘MODIS/006/MCD19A2_GRANULES’</strong> la cual contiene el resultado de algoritmo <em>Multi-Angle Implementation of Atmospheric Correction</em> (MAIAC), la banda que vamos a utilizar es la <em>Aerosol Optical Depth at 047 micron</em> esta banda es el espesor óptico de <span class="math inline">\(0.47\mu m\)</span> . Dicha banda ha sido utilizada para obtener los contaminantes <span class="math inline">\(PM_{10}\)</span> y <span class="math inline">\(PM_{2.5}\)</span> los cuales con lleva altos riesgos de la salud al tener una exposición prolongada.</p>
+<section id="colección-de-imágenes" class="level2">
+<h2 class="anchored" data-anchor-id="colección-de-imágenes">Colección de Imágenes</h2>
+<p>Para hacer uso de la colección de imágenes se hace usando la siguiente linea</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> AOD_MODIS_fix <span class="op">=</span>  ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">"MODIS/006/MCD19A2_GRANULES"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>La colección de imágenes contiene las imágenes disponibles del conjunto de datos, lo que normalmente son muchas imágenes disponibles, dentro de las cuales la mayoría no vamos a utilizar, para esto los objetos ‘ee.ImageCollection’ tienen métodos que nos ayudan a poder filtrar las imágenes dentro de la colección de imágenes.</p>
+<p>La siguiente linea de código nos filtra la colección sólo con las imágenes que se tomaron del ‘2005-01-01’ al ‘2016-01-01’.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> AOD_MODIS_fix <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">"MODIS/006/MCD19A2_GRANULES"</span>)<span class="op">.</span><span class="fu">filterDate</span>(<span class="st">'2005-01-01'</span><span class="op">,</span> <span class="st">'2016-01-01'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>La siguiente linea filtra las imágenes que contienen al punto cercano a CentroGeo (-99.221411, 19.29183)</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> AOD_MODIS_fix <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">"MODIS/006/MCD19A2_GRANULES"</span>)<span class="op">.</span><span class="fu">filterBounds</span>(ee<span class="op">.</span><span class="at">Geometry</span><span class="op">.</span><span class="fu">Point</span>(<span class="op">-</span><span class="fl">99.221411</span><span class="op">,</span> <span class="fl">19.29183</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Estas las podemos combinar para aplicar las distintas acciones de forma concatenada, es decir, podemos filtrar primero por fecha y después al resultado filtrar las imágenes que intersectan al punto dentro de la misma ejecución, como se muestra a continuación</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> AOD_MODIS_fix <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">"MODIS/006/MCD19A2_GRANULES"</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">filterDate</span>(<span class="st">'2005-01-01'</span><span class="op">,</span> <span class="st">'2016-01-01'</span>) </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="op">.</span><span class="fu">filterBounds</span>(ee<span class="op">.</span><span class="at">Geometry</span><span class="op">.</span><span class="fu">Point</span>(<span class="op">-</span><span class="fl">99.221411</span><span class="op">,</span> <span class="fl">19.29183</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Este tipo de acciones las podemos implementar no sólo con filtrados sino con distintas acciones disponibles en GEE.</p>
+</section>
+<section id="subir-datos-a-gee" class="level2">
+<h2 class="anchored" data-anchor-id="subir-datos-a-gee">Subir datos a GEE</h2>
+<p>En la pestaña ‘Assets’ dentro del editor de código de GEE (panel superior izquierdo) podemos añadir elementos para hacer uso de los mismos como se muestra en la imagen.</p>
+<p><img src="./GEE_assets.png" class="img-fluid" alt="Panel de Activos (assets)">.</p>
+<p>Los elementos que podemos añadir a GEE son imágenes (.tif, tiff), tablas en archivos shape (.shp, .shx, .dbf, .prj o .zip) o archivos csv (.csv). También podemos agregar colecciones de imágenes o folders que contengan este tipo de archivos. Los elementos que subimos a GEE se almacenan en proyectos en la nube de Google, esto hace que estén accesibles desde GEE cada vez que sea necesario. Al estar dentro de la nube de Google las políticas de acceso a los mismos son las de la Nube de Google y también son accesibles desde las API de Google cloud como <a href="https://cloud.google.com/cli?hl=en">CLI</a>.</p>
+<p>Para hacer uso de estos elementos dentro del editor de código de GEE se pueden insertar haciendo uso de la interfaz gráfica como se muestra en la imagen <span class="citation" data-cites="fig:ins_elem">@fig:ins_elem</span>. Los elementos añadidos se insertaran al inicio de nuestro código como un preámbulo llamado <code>Imports</code>, se pueden editar los nombres para que los nombres de las variables donde se almacenan sean de acuerdo a las políticas del desarrollador.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./Insert_asset.png" class="img-fluid figure-img"></p>
+<figcaption>insertar elementos</figcaption>
+</figure>
+</div>
+<p>Si se desea compartir los elementos que se encuentran en el preámbulo <code>Imports</code> se hace click en el botón azul a lado de <code>Imports</code> esto abrira una ventana la cual contendra todos los elementos que se encuentran dentro de el preámbulo <code>Imports</code>. Los elementos también pueden ser añadidos al código simplemente copiando y pegando. Se puede eliminar los elementos importados usando un botón de basura que se encuentra en el margen izquierdo cuando se pasa a lado del elemento insertado.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./Copiar_elemento.png" class="img-fluid figure-img"></p>
+<figcaption>copiar elementos</figcaption>
+</figure>
+</div>
+<p>Para añadirlo de forma directa al código, se hace a través de insertar el nombre del elemento y declararlo como el objeto que es. En el caso de una imagen se utiliza <code>ee.Image()</code>, para una tabla se hace con <code>ee.FeatureCollection()</code>, para el caso de un objeto geométrico dentro de un archivo .shp se hace como si fuese un tabla con <code>ee.FeatureCollection()</code>, y si es un conjunto de imágenes se declara con <code>ee.ImageCollection()</code>. El código a continuación se muestra como importamos el raster con la agregación de las vialidades extraídas de OpenStreet map (<a href="https://www.openstreetmap.org/">OSM</a>) y subida a GEE en el elemento “raster_agregados_vialidades” el cual se tendrá que añadir dentro de los assets.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> image <span class="op">=</span> ee<span class="op">.</span><span class="fu">Image</span>(<span class="st">"raster_agregados_vialidades"</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="explicación-del-modelo" class="level2">
+<h2 class="anchored" data-anchor-id="explicación-del-modelo">Explicación del Modelo</h2>
+<p>Nuestro modelo, es una modificación al modelo utilizado por Just, haciendo uso de una fuente de información distinta de los datos meteorológicos para hacer las estimaciones, la fuente de datos a utilizar son los datos de <a href="https://climate.copernicus.eu/climate-reanalysis">reánalisis meteorológicos</a> del <a href="https://www.ecmwf.int/en/about">“European Centre for Medium-Range Weather Forecasts”</a> los cuales se encuentran disponibles dentro de GEE en el <a href="https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_HOURLY">catálogo de datos</a>. Para importar estos datos lo hacemos a traves de el siguiente código y al igual que con la colección de MODIS la filtramos por fecha, seleccionamos las bandas que vamos a utilizar y las partes de las imágenes que se encuentren dentro del “bounding box” del polígono de la zona metropolitana el cual se encuentra en la variable <code>ZMVM_bb</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> land_eras_day_f <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">"ECMWF/ERA5_LAND/HOURLY"</span>)<span class="op">.</span><span class="fu">filter</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>            ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">date</span>(startdate<span class="op">,</span> enddate)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        )<span class="op">.</span><span class="fu">select</span>([</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">'dewpoint_temperature_2m'</span><span class="op">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>            <span class="st">'total_evaporation'</span><span class="op">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>            <span class="st">'temperature_2m'</span><span class="op">,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>            <span class="st">'total_precipitation_hourly'</span><span class="op">,</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            <span class="st">'total_precipitation'</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        ])<span class="op">.</span><span class="fu">filterBounds</span>(ZMVM_bb)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Para obtener el bounding box del polígono de la Zona Metropolitana del Valle de México (ZMVM) se hace de la siguiente forma:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> ZMVM_tabla <span class="op">=</span> ee<span class="op">.</span><span class="fu">FeatureCollection</span>(<span class="st">"Poligono_archivo_shape_ZMVM"</span>)<span class="op">;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> ZMVM_bb <span class="op">=</span> ZMVM_tabla<span class="op">.</span><span class="fu">geometry</span>()<span class="op">.</span><span class="fu">bounds</span>()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>donde “Poligono_archivo_shape_ZMVM” es un elemento que se deberá añadir en los assets que contenga al polígono de la ZMVM. El polígono se encuentra dentro de un archivo <code>.shp</code>, para poder hacer uso de este elemento geométrico se hace usando <code>.geometry()</code> el cual extrae lo que se encuentra dentro del campo <code>geometry</code> de una tabla, en nuestro caso el polígono de la ZMVM. Después tomamos el cuadrado delimitador o “bounding box” usando <code>.bounds()</code> el cual es un método de los objetos geométricos en GEE.</p>
+<p>De este conjunto de datos seleccionamos los que se encuentran en determinadas fechas y filtramos los elementos las imágenes que se intersecten con <code>ZMVM_bb</code>.</p>
+</section>
+<section id="todos-igual" class="level2">
+<h2 class="anchored" data-anchor-id="todos-igual">Todos igual</h2>
+<p>Por simpleza vamos a remuestrar todos los datos para que estos esten similar a los datos de MODIS.</p>
+<p>Para tal proposito definimos una función,</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> modisProj <span class="op">=</span> AOD_MODIS<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">projection</span>()<span class="op">;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> resample_coll <span class="op">=</span> <span class="kw">function</span>(image){</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> image<span class="op">.</span><span class="fu">reproject</span>(modisProj)<span class="op">;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="entrenamiento-fuera-de-gee." class="level1">
+<h1>Entrenamiento fuera de GEE.</h1>
+<p>El modelo fue entrenado con los datos de forma anual y para cada día se obtuvieron los valores de los coeficientes para el modelo, de forma similar a la presentada en <a href="#eq-compleja" class="quarto-xref">Equation&nbsp;2</a>.</p>
+<p><span class="math display">\[
+PM^{2.5}_{ij} =  \alpha  + \beta AOD_{ij}+ \beta_2 \text{temperature}_{ij} + \beta_3 \text{relative humidity}_{ij} +
+\]</span> <span id="eq-modelo"><span class="math display">\[
+\beta_4 PBLH_{ij} + \beta_5 \sqrt{\text{precipitation}_{ij}} + \beta_6 \text{Street density}_{i} + \varepsilon
+\tag{3}\]</span></span></p>
+<p>donde <span class="math inline">\(\beta_2, \beta_3, \beta_4, \beta_5, \beta_6\)</span> son coeficientes que se determinan en el modelo todo el año. Mientras que <span class="math inline">\(\beta\)</span> y <span class="math inline">\(\alpha\)</span> se determinan de forma diaria.</p>
+<section id="coeficientes" class="level2">
+<h2 class="anchored" data-anchor-id="coeficientes">Coeficientes</h2>
+<p>Por simplicidad, los coeficientes se ponen dentro de una tabla, la cual es añadida a través de los <strong>Assets</strong>. La cual tiene la siguiente forma:</p>
+<table class="table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>Intercept</th>
+<th>Optical_Depth_047_z</th>
+<th>temperature_2m_z</th>
+<th>relative_humidity_z</th>
+<th>total_precipitation_sqrt_z</th>
+<th>PBLH_z</th>
+<th>vialidades_z</th>
+<th>date</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>3.9526</td>
+<td>0.4266</td>
+<td>0.2033</td>
+<td>-0.3986</td>
+<td>-0.1151</td>
+<td>0.0128</td>
+<td>2004-01-01</td>
+<td>1072915200</td>
+</tr>
+<tr class="even">
+<td>1.1116</td>
+<td>0.2307</td>
+<td>0.2033</td>
+<td>-0.3986</td>
+<td>-0.1151</td>
+<td>0.0128</td>
+<td>2004-01-02</td>
+<td>1073001600</td>
+</tr>
+</tbody>
+</table>
+<p>sólo mostramos los primeros elementos pero la tabla deberá contener todos los días en donde es posible obtener el modelo.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Esta tabla se sube usando la pestaña <strong>Assets</strong>, se resalta en particular la columna ‘system:index’, esta es la fecha en <a href="https://en.wikipedia.org/wiki/Unix_time">‘Unix time’</a>, es importante pues dentro de GEE nos sirve para poder usar el filtro de fechas (<code>.filterDate</code>) si el dato no se encuentra en este formato los filtros específicos de fechas no se pueden utilizar.</p>
+</div>
+</div>
+<p>Las variables a usar dentro de nuestro modelo en <a href="#eq-modelo" class="quarto-xref">Equation&nbsp;3</a> son <span class="math inline">\(AOD_{ij}\)</span> es el espesor óptico de MODIS para el día <span class="math inline">\(j\)</span> en la celda <span class="math inline">\(i\)</span>, <span class="math inline">\(\text{precipitation}_{ij}\)</span> es la precipitación y <span class="math inline">\(\text{temperature}_{ij}\)</span> la temperatura a <span class="math inline">\(2\)</span> metros para el día <span class="math inline">\(j\)</span> en la celda <span class="math inline">\(i\)</span> las cuales se obtienen de la colección de reánalisis meteorológicos. <span class="math inline">\(PBLH_{ij}\)</span> es la altura de la capa límite de mezcla. Y <span class="math inline">\(\text{Street density}_{i}\)</span> la densidad de calles en la celda <span class="math inline">\(i\)</span>.</p>
+<p>Todas la variables anteriores las podemos extraer directamente de las colecciones de imágenes que se encuentran en los datos de GEE o bien colecciones que añadimos nosotros como es el caso de <span class="math inline">\(PBLH\)</span>, pues esta no se encuentra directamente en GEE, es necesario descargar y añadir como colección de imágenes a GEE.</p>
+<pre><code>var PBLH_ZMVT = ee.ImageCollection("PBLH_data")</code></pre>
+</section>
+<section id="calcular-para-toda-la-colección" class="level2">
+<h2 class="anchored" data-anchor-id="calcular-para-toda-la-colección">Calcular para toda la colección</h2>
+<p>Nos falta la variable <span class="math inline">\(\text{relative humidity}_{ij}\)</span> la cual es la humedad relativa en el día <span class="math inline">\(j\)</span> en la celda <span class="math inline">\(i\)</span>, pero esta puede ser obtenida usando la temperatura y el punto de rocío.</p>
+<p><span class="math display">\[
+\frac{\exp{(\frac{17.625*TD}{243.04+TD})}}{\exp(\frac{17.625*Temp}{243.04+Temp})} \cdot 100
+\]</span></p>
+<p>Donde <span class="math inline">\(Temp\)</span> es la temperatura y <span class="math inline">\(TD\)</span> es el punto de rocío. Podemos obtener un raster de la humedad relativa aplicando usando las bandas que seleccionamos de la colección de imágenes de los datos de reanálisis con la siguiente función:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> relat_humed <span class="op">=</span> <span class="kw">function</span>(image){</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">/*</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="co">  actual_water_press = 611.21 * math.exp((17.502 * td) / (240.97 + td))</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">  max_water_press = 611.21 * math.exp((17.502 * t) / (240.97 + t))</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">  </span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">  HR=(actual_water_press/ max_water_press)*100</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co">  */</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> lambda_i <span class="op">=</span> <span class="fl">243.04</span><span class="op">;</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> beta_i <span class="op">=</span> <span class="fl">17.625</span><span class="op">;</span> <span class="co">///17.1; //17.625;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> dew_point <span class="op">=</span>  image<span class="op">.</span><span class="fu">select</span>(<span class="st">'dewpoint_temperature_2m'</span>)<span class="op">;</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> temp_2m <span class="op">=</span>  image<span class="op">.</span><span class="fu">select</span>(<span class="st">'temperature_2m'</span>)<span class="op">;</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> prec_total <span class="op">=</span> image<span class="op">.</span><span class="fu">select</span>(<span class="st">'total_precipitation'</span>)<span class="op">;</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> e_up  <span class="op">=</span>  dew_point</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>                  <span class="op">.</span><span class="fu">multiply</span>(beta_i)<span class="op">;</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> e_dow <span class="op">=</span>   dew_point</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                  <span class="op">.</span><span class="fu">add</span>(lambda_i)<span class="op">;</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> e <span class="op">=</span> ((e_up<span class="op">.</span><span class="fu">divide</span>(e_dow))<span class="op">.</span><span class="fu">exp</span>())<span class="op">;</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> e_s_up  <span class="op">=</span>  temp_2m</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>                  <span class="op">.</span><span class="fu">multiply</span>(beta_i)<span class="op">;</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> e_s_dow <span class="op">=</span>   temp_2m</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>                  <span class="op">.</span><span class="fu">add</span>(lambda_i)<span class="op">;</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> e_s   <span class="op">=</span> ((e_s_up<span class="op">.</span><span class="fu">divide</span>(e_s_dow))<span class="op">.</span><span class="fu">exp</span>())<span class="op">;</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> rel_hum <span class="op">=</span> (e<span class="op">.</span><span class="fu">divide</span>(e_s))<span class="op">.</span><span class="fu">multiply</span>(<span class="dv">100</span>)<span class="op">;</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  rel_hum <span class="op">=</span> rel_hum <span class="op">.</span><span class="fu">select</span>([<span class="st">'dewpoint_temperature_2m'</span>])<span class="op">.</span><span class="fu">rename</span>([<span class="st">'relative_humidity'</span>])<span class="op">;</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  rel_hum <span class="op">=</span> rel_hum</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">addBands</span>(temp_2m)</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">addBands</span>(dew_point)</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">addBands</span>(prec_total)</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span><span class="fu">set</span>({<span class="st">'system:time_start'</span><span class="op">:</span>image<span class="op">.</span><span class="fu">get</span>(<span class="st">'system:time_start'</span>)})</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>        <span class="op">;</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> rel_hum<span class="op">;</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>Definimos una función para calcular la humedad relativa basada en el punto de rocío y la temperatura.</li>
+<li>La función calcula la presión de vapor y la saturación de vapor usando las formulas respectivas.</li>
+<li>Finalmente se calcula la humedad relativa y se añade una nueva banda (<code>relative_humidity</code>) a la imagen.</li>
+</ul>
+<p>Para aplicar la función a las imágenes diarias se “mapea” la función a todas los elementos de la colección.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>land_eras_day_f <span class="op">=</span> land_eras_day_f<span class="op">.</span><span class="fu">map</span>(relat_humed )<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="escalas" class="level2">
+<h2 class="anchored" data-anchor-id="escalas">Escalas</h2>
+<p>Una problemática que nos podemos encontrar es que en algunas ocasiones al ajustar el modelo en <strong>R</strong> puede ser necesario escalar las variables usando <strong>z-scores</strong> para que el modelo converja. Si es necesario hacer esto entonces es necesario saber como se escalaron las variables y poder subir estos valores dentro de GEE usando una tabla. Si se escala con la función <code>scale</code> en <strong>R</strong> entonces nos interesan los valores “scale” y “center” donde “scale” es la desviación estándar y “center” es el promedio de los datos.</p>
+<p><span class="math display">\[
+v_{escalada} = \frac{v- \mu(v)}{\sigma(v)}
+\]</span></p>
+<p><span class="math inline">\(\mu(v)\)</span> es el promedio de los valores de la variable <span class="math inline">\(v\)</span>, <span class="math inline">\(\sigma(v)\)</span> es la desviación estándar de los valores de la variable <span class="math inline">\(v\)</span> y <span class="math inline">\(v_{escalada}\)</span> es la variable escalada.</p>
+<p>Si fue necesario escalar las variables para obtener la convergencia del modelo entonces podemos escalar los valores dentro de GEE si tenemos <span class="math inline">\(\mu(v)\)</span> y <span class="math inline">\(\sigma(v)\)</span>. Por simpleza subimos una tabla la cual contiene dichos valores de forma anual.</p>
+<table class="table">
+<thead>
+<tr class="header">
+<th>Variable</th>
+<th>center</th>
+<th>scale</th>
+<th>year</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PM25_z</td>
+<td>29.48</td>
+<td>10.95</td>
+<td>2004</td>
+</tr>
+<tr class="even">
+<td>Optical_Depth_047_z</td>
+<td>249.99</td>
+<td>149.17</td>
+<td>2004</td>
+</tr>
+<tr class="odd">
+<td>temperature_2m_z</td>
+<td>292.50</td>
+<td>5.26</td>
+<td>2004</td>
+</tr>
+<tr class="even">
+<td>relative_humidity_z</td>
+<td>90.55</td>
+<td>3.76</td>
+<td>2004</td>
+</tr>
+<tr class="odd">
+<td>total_precipitation_sqrt_z</td>
+<td>0.02</td>
+<td>0.01</td>
+<td>2004</td>
+</tr>
+<tr class="even">
+<td>PBLH_z</td>
+<td>450.12</td>
+<td>176.57</td>
+<td>2004</td>
+</tr>
+<tr class="odd">
+<td>vialidades_z</td>
+<td>1421.67</td>
+<td>1855.65</td>
+<td>2004</td>
+</tr>
+<tr class="even">
+<td>PM25_z</td>
+<td>30.32</td>
+<td>13.84</td>
+<td>2005</td>
+</tr>
+<tr class="odd">
+<td>Optical_Depth_047_z</td>
+<td>266.90</td>
+<td>151.62</td>
+<td>2005</td>
+</tr>
+<tr class="even">
+<td>temperature_2m_z</td>
+<td>293.15</td>
+<td>5.34</td>
+<td>2005</td>
+</tr>
+<tr class="odd">
+<td>relative_humidity_z</td>
+<td>88.98</td>
+<td>5.56</td>
+<td>2005</td>
+</tr>
+<tr class="even">
+<td>total_precipitation_sqrt_z</td>
+<td>0.02</td>
+<td>0.02</td>
+<td>2005</td>
+</tr>
+<tr class="odd">
+<td>PBLH_z</td>
+<td>496.19</td>
+<td>216.17</td>
+<td>2005</td>
+</tr>
+<tr class="even">
+<td>vialidades_z</td>
+<td>1421.67</td>
+<td>1855.65</td>
+<td>2005</td>
+</tr>
+</tbody>
+</table>
+<p>Para seleccionar los valores para poder escalar los datos seleccionamos los datos para un año en especifico de la siguiente forma:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> selected_day <span class="op">=</span> <span class="st">'2018-04-24'</span><span class="op">;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>selected_day <span class="op">=</span> ee<span class="op">.</span><span class="fu">Date</span>(selected_day)<span class="op">;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> scale_values <span class="op">=</span> ee<span class="op">.</span><span class="fu">FeatureCollection</span>(<span class="st">"your_scale_values_table"</span>)<span class="op">;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> all_scale_day <span class="op">=</span> scale_values<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'year'</span><span class="op">,</span> selected_day<span class="op">.</span><span class="fu">get</span>(<span class="st">'year'</span>)))<span class="op">;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> optical_scale_dic <span class="op">=</span> ee<span class="op">.</span><span class="fu">Dictionary</span>({</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">'center'</span><span class="op">:</span> all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'Optical_Depth_047_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'center'</span>)<span class="op">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">'scale'</span><span class="op">:</span>all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'Optical_Depth_047_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'scale'</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> PBLH_scale_dic <span class="op">=</span> ee<span class="op">.</span><span class="fu">Dictionary</span>({</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">'center'</span><span class="op">:</span> all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'PBLH_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'center'</span>)<span class="op">,</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">'scale'</span><span class="op">:</span>all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'PBLH_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'scale'</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> PM25_scale_dic <span class="op">=</span> ee<span class="op">.</span><span class="fu">Dictionary</span>({</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">'center'</span><span class="op">:</span> all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'PM10_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'center'</span>)<span class="op">,</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">'scale'</span><span class="op">:</span>all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'PM10_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'scale'</span>)</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> precipitation_scale_dic <span class="op">=</span> ee<span class="op">.</span><span class="fu">Dictionary</span>({</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">'center'</span><span class="op">:</span> all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'total_precipitation_sqrt_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'center'</span>)<span class="op">,</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">'scale'</span><span class="op">:</span>all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'total_precipitation_sqrt_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'scale'</span>)</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> RH_scale_dic <span class="op">=</span> ee<span class="op">.</span><span class="fu">Dictionary</span>({</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">'center'</span><span class="op">:</span> all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'relative_humidity_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'center'</span>)<span class="op">,</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">'scale'</span><span class="op">:</span>all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'relative_humidity_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'scale'</span>)</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> Temp_scale_dic <span class="op">=</span> ee<span class="op">.</span><span class="fu">Dictionary</span>({</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>  <span class="st">'center'</span><span class="op">:</span> all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'temperature_2m_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'center'</span>)<span class="op">,</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>  <span class="st">'scale'</span><span class="op">:</span>all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'temperature_2m_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'scale'</span>)</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> vialidades_scale_dic <span class="op">=</span> ee<span class="op">.</span><span class="fu">Dictionary</span>({</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">'center'</span><span class="op">:</span> all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'vialidades_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'center'</span>)<span class="op">,</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">'scale'</span><span class="op">:</span>all_scale_day<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'1'</span><span class="op">,</span> <span class="st">'vialidades_z'</span>))<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">get</span>(<span class="st">'scale'</span>)</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Para cada una de las variables tenemos un diccionario con valores <code>center</code> y <code>scale</code> para poder escalar los datos en GEE. Se hace una función especifica para las variable obtenidos de reanálisis y para los demás se hace de forma individual.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> z_scale_land <span class="op">=</span> <span class="kw">function</span>(image){</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> temp_2m <span class="op">=</span> image<span class="op">.</span><span class="fu">select</span>(<span class="st">'temperature_2m'</span>)<span class="op">;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  temp_2m<span class="op">=</span> temp_2m<span class="op">.</span><span class="fu">expression</span>(</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>      <span class="st">'(x - mean_x) / sd_x'</span><span class="op">,</span> {</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">'x'</span><span class="op">:</span>temp_2m <span class="op">,</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">'mean_x'</span><span class="op">:</span> Temp_scale_dic<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'center'</span>)<span class="op">,</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">'sd_x'</span><span class="op">:</span> Temp_scale_dic<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'scale'</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    )<span class="op">.</span><span class="fu">rename</span>(<span class="st">'temperature_2m_z'</span>)<span class="op">;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> rh <span class="op">=</span> image<span class="op">.</span><span class="fu">select</span>(<span class="st">'relative_humidity'</span>)<span class="op">;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  rh<span class="op">=</span> rh<span class="op">.</span><span class="fu">expression</span>(</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>      <span class="st">'(x - mean_x) / sd_x'</span><span class="op">,</span> {</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">'x'</span><span class="op">:</span>rh <span class="op">,</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">'mean_x'</span><span class="op">:</span> RH_scale_dic<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'center'</span>)<span class="op">,</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">'sd_x'</span><span class="op">:</span> RH_scale_dic<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'scale'</span>)</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    )<span class="op">.</span><span class="fu">rename</span>(<span class="st">'relative_humidity_z'</span>) <span class="op">;</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  <span class="kw">var</span> total_prec <span class="op">=</span> image<span class="op">.</span><span class="fu">select</span>(<span class="st">'total_precipitation'</span>)<span class="op">;</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>  total_prec<span class="op">=</span> total_prec<span class="op">.</span><span class="fu">expression</span>(</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>      <span class="st">'(x - mean_x) / sd_x'</span><span class="op">,</span> {</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">'x'</span><span class="op">:</span>total_prec <span class="op">,</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">'mean_x'</span><span class="op">:</span> precipitation_scale_dic<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'center'</span>)<span class="op">,</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">'sd_x'</span><span class="op">:</span> precipitation_scale_dic<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'scale'</span>)</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    )<span class="op">.</span><span class="fu">rename</span>(<span class="st">'total_precipitation_sqrt_z'</span>) <span class="op">;</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> temp_2m</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">addBands</span>(rh)</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">addBands</span>(total_prec)</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">set</span>({<span class="st">'system:time_start'</span><span class="op">:</span>image<span class="op">.</span><span class="fu">get</span>(<span class="st">'system:time_start'</span>)})<span class="op">;</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> optical_scale <span class="op">=</span> optical_original<span class="op">.</span><span class="fu">expression</span>(</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>      <span class="st">'(x - mean_x) / sd_x'</span><span class="op">,</span> {</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">'x'</span><span class="op">:</span> optical_original<span class="op">,</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">'mean_x'</span><span class="op">:</span> optical_scale_dic<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'center'</span>)<span class="op">,</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">'sd_x'</span><span class="op">:</span> optical_scale_dic<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'scale'</span>)</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>    )<span class="op">.</span><span class="fu">rename</span>(<span class="st">'Optical_Depth_047_z'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Cabe destacar el uso de <a href="https://developers.google.com/earth-engine/apidocs/ee-image-expression"><code>ee.Image.expression()</code></a> este método nos permite evaluar los valores en las imágenes como si fuesen fórmulas usando un string.</p>
+</div>
+</div>
+<p>Una vez escalados los valores se renombran las bandas de las imágenes, con la intención de tener un nombre que identifique que estas bandas se encuentran escaladas.</p>
+<section id="unir-todo" class="level3">
+<h3 class="anchored" data-anchor-id="unir-todo">Unir todo</h3>
+<p>Ahora vamos a hace uso de las bandas escaladas para poder obtener el resultado de <span class="math inline">\(PM_{2.5}\)</span> tomando la combinación lineal de nuestro modelo. Aunque se puede hacer las operaciones de forma compacta en código, hacemos éstas en lineas separadas de código para que al leerlo quede de forma legible y entender los distintos pasos realizados.</p>
+<ul>
+<li>Multiplicamos cada banda por el respectivo coeficiente.</li>
+<li>Generamos una imagen que tenga el valor constante <code>XIntercept</code></li>
+<li>Hacemos la suma de las distintas imágenes en una sola y la renombramos.</li>
+<li>Se re escalan los valores de <span class="math inline">\(PM_{2.5}\)</span>.</li>
+</ul>
+<div class="sourceCode" id="cb14"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">///Multiplicar bandas coeficientes </span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>PBLH_day_s <span class="op">=</span> PBLH_day_s<span class="op">.</span><span class="fu">multiply</span>(coeff_day<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'PBLH_z'</span>))<span class="op">;</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>optical_scale <span class="op">=</span> optical_scale<span class="op">.</span><span class="fu">multiply</span>(coeff_day<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'Optical_Depth_047_z'</span>))<span class="op">;</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> hum_image  <span class="op">=</span> day_land_eras_image_s<span class="op">.</span><span class="fu">select</span>(<span class="st">'relative_humidity_z'</span>)<span class="op">.</span><span class="fu">multiply</span>(coeff_day<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'relative_humidity_z'</span>))<span class="op">;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> tem_image  <span class="op">=</span> day_land_eras_image_s<span class="op">.</span><span class="fu">select</span>(<span class="st">'temperature_2m_z'</span>)<span class="op">.</span><span class="fu">multiply</span>(coeff_day<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'temperature_2m_z'</span>))<span class="op">;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> prec_image <span class="op">=</span> day_land_eras_image_s<span class="op">.</span><span class="fu">select</span>(<span class="st">'total_precipitation_sqrt_z'</span>)<span class="op">.</span><span class="fu">multiply</span>(coeff_day<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'total_precipitation_sqrt_z'</span>))<span class="op">;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>vialidades_s <span class="op">=</span> vialidades_s<span class="op">.</span><span class="fu">multiply</span>(coeff_day<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'vialidades_z'</span>))<span class="op">;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> image_interc <span class="op">=</span> ee<span class="op">.</span><span class="fu">Image</span>(coeff_day<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'XIntercept'</span>))<span class="op">.</span><span class="fu">clip</span>(ZMVM_bb)<span class="op">;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">//// Suma </span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> day_pm<span class="op">=</span> ee<span class="op">.</span><span class="fu">Image</span>()<span class="op">.</span><span class="fu">expression</span>(</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">'opt + pblh + viali + rh + temp + prec_sqr + Intercept'</span><span class="op">,</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'opt'</span> <span class="op">:</span>optical_scale<span class="op">,</span> </span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">'pblh'</span> <span class="op">:</span>PBLH_day_s<span class="op">,</span> </span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">'viali'</span> <span class="op">:</span>vialidades_s<span class="op">,</span> </span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">'Intercept'</span><span class="op">:</span> image_interc<span class="op">,</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">'rh'</span><span class="op">:</span>  hum_image<span class="op">,</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">'temp'</span><span class="op">:</span>tem_image<span class="op">,</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">'prec_sqr'</span><span class="op">:</span>prec_image</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>     </span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>  )<span class="op">.</span><span class="fu">rename</span>(<span class="st">'PM_scale'</span>)<span class="op">;</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co">/// Rescalar a valores</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> day_pm_re <span class="op">=</span> ee<span class="op">.</span><span class="fu">Image</span>()<span class="op">.</span><span class="fu">expression</span>(</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">'y*sd_x + mean_x'</span><span class="op">,</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    <span class="st">'y'</span><span class="op">:</span> day_pm<span class="op">,</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    <span class="st">'mean_x'</span><span class="op">:</span> PM25_scale_dic<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'center'</span>)<span class="op">,</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">'sd_x'</span><span class="op">:</span> PM25_scale_dic<span class="op">.</span><span class="fu">getNumber</span>(<span class="st">'scale'</span>)</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>En la última imagen se encuentran los valores calculados de <span class="math inline">\(PM_{2.5}\)</span> y esta es la imagen que vamos a desplegar en un mapa.</p>
+</section>
+</section>
+<section id="despliegue-en-mapa" class="level2">
+<h2 class="anchored" data-anchor-id="despliegue-en-mapa">Despliegue en mapa</h2>
+<p>Usamos la imagen y la añadimos al mapa, como los valores mínimos y máximos van a ser de forma diaria para poder hacer una visualización buscamos los mínimos y máximos para ese día usando el método <a href="https://developers.google.com/earth-engine/apidocs/ee-image-reduceregion"><code>ee.Image.reduceRegion()</code></a> la cual nos permite hacer uso de la <a href="https://en.wikipedia.org/wiki/Many-one_reduction">operación reduce</a> y <a href="https://developers.google.com/earth-engine/apidocs/ee-reducer-minmax"><code>ee.Reducer.minMax()</code></a> para obtener el mínimo y el máximo.</p>
+<p>Una vez añadida la capa al mapa centramos el mapa al centro de la zona metropolitana.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> amm_roj <span class="op">=</span> [<span class="st">'#ffffb2'</span><span class="op">,</span><span class="st">'#fecc5c'</span><span class="op">,</span><span class="st">'#fd8d3c'</span><span class="op">,</span><span class="st">'#f03b20'</span><span class="op">,</span><span class="st">'#bd0026'</span>]<span class="op">;</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> min_max <span class="op">=</span>  day_pm_re<span class="op">.</span><span class="fu">reduceRegion</span>(ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">minMax</span>()<span class="op">,</span>ZMVM_bb)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(min_max)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> max_pmval <span class="op">=</span> min_max<span class="op">.</span><span class="fu">get</span>(<span class="st">'PM_scale_max'</span>)<span class="op">.</span><span class="fu">getInfo</span>()<span class="op">;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> min_pmval <span class="op">=</span> min_max<span class="op">.</span><span class="fu">get</span>(<span class="st">'PM_scale_min'</span>)<span class="op">.</span><span class="fu">getInfo</span>()<span class="op">;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  day_pm_re<span class="op">,</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  { </span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">'bands'</span><span class="op">:</span><span class="st">'PM_scale'</span><span class="op">,</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">min</span> <span class="op">:</span> min_pmval<span class="op">,</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">max</span> <span class="op">:</span>max_pmval<span class="op">,</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">palette</span><span class="op">:</span> amm_roj</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  }<span class="op">,</span> <span class="st">'PM 2.5'</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">centerObject</span>(ZMVM_bb<span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Al final podemos observar como queda la estimación generada por el modelo.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./resultado.png" class="img-fluid figure-img"></p>
+<figcaption>Resultado Final</figcaption>
+</figure>
+</div>
+</section>
+<section id="comentario-final" class="level2">
+<h2 class="anchored" data-anchor-id="comentario-final">Comentario final</h2>
+<p>Este tutorial donde mostramos que podemos hacer uso de distintas herramientas e integrarlas dentro de GEE.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/msalazarcgeo\.github\.io\/GEE_intento\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

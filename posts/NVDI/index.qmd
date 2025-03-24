@@ -112,7 +112,7 @@ Se recomienda intentar las siguientes mejoras como ejercicio.
 Cosas para que se vea bien.
 
 * Mostrar sólo el pais.
-* Esta borroso
+* Esta borroso. 
  
 
 
@@ -151,6 +151,4 @@ var addNDVI = function(image) {
 
 var S2_NDVI = S2_SR.map(addNDVI);
 Map.addLayer(S2_NDVI.select('NDVI'), {palette: NDVIpalette}, 'NVDI de Sentinel');
-
-
 ```

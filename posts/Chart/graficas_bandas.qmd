@@ -1,0 +1,80 @@
+---
+title: "Graficos en bandas "
+format: html
+---
+
+
+La idea de este pequeño tutorial es hacer unos gráficos dentro junto a un  mapa donde nos muestren que es lo que pasa dentro de las imágenes satelitáles u otro tipo de imágenes que se encuentran dentro de GEE. Para empezar hacer anáslisis o mostrar diversos comportamientos dentro de las ciencias la forma más común para mostrar las relaciones entre datos es presentarlos a través de gráficas. Entonces es de nuestro interes poder mostrar resultados o la relación entre datos para mejorar lo que se muestra dentro de un mapa. 
+
+Que es lo que vamos a hacer dentro de estye pequeño tutorial :
+
+
+* Hacer un mapa que muestre los datos de sentinel 2 en todo el estado de Yucatan México. 
+* Hacer una selección de un municipio dentro de Yucatan
+* Cuando se selecciona el municipio  en el mapa se mostrará el promedio de las imagenes de las bandas 11 y 12 de Sentinel 2 en un intervalo especifico del tiempo. 
+* Mostrar como se estan comportando las bandas 11 y 12 tomando el promedio diario en un intervalo especifico de tiempo. 
+
+
+Para tal motivo vamos a utilizar las colecciones de imágenes armonizádas de [Sentinel 2](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED#description). A este conjunto de imágenes vamos a seleccionar 
+
+
+El conjunto de imágenes se filtra primero por fecha (de 2020-01-01 a 2020-12-31), y haciendo uso de la metadata original nos quedamos unicamente con aquellas imágenes que tienen menos del $10\%$ de pixeles con nubes. Y nos quedamos únicamente con las bandas de mediciones ('B1','B2','B3','B4','B5','B6','B7','B8','B8A','B9', 'B11','B12')
+
+El siguiente script muestra la selección del conjunto de imágenes. 
+
+```JavaScript
+var s2a_cloudfree = ee.ImageCollection(
+    'COPERNICUS/S2_SR_HARMONIZED')
+    .filterDate('2020-01-01', '2020-12-31')
+    .filter(
+        ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 10)
+    )
+    .select(
+        'B1','B2','B3','B4','B5','B6','B7','B8','B8A','B9', 'B11','B12'
+    );
+```
+Para mostrar el conjunto de imágenes en un mapa podemos añadimos la colección al mapa usando `Map.addLayer`, como son muchas bandas es complicado ver todas por tal motivo vamos a seleccionar las bandas B4, B8, B3 para hacer su vizualización como si fuera una imagen RGB. Esto lo entiende por defecto GEE sólo cuando haecmos uso de tres bandas. 
+
+Para la vizualización es necesario pasar los páramentros de la visualización a la fuinción `Map.addLayer` de la siguiente forma. 
+
+
+```JavaScript
+var visParams = {'min': 400,'max': [4000,3000,3000],   'bands':'B8,B4,B3'}; 
+```
+
+Aquí se muestra que los valores mínimos a vizualizar son 400 y los máximos van a depender de cada banda. Para la banda 8 (B8) el máximo es 4000, 3000 para la banda 4 (B4) y 3000 para la banda 3 (B3). 
+
+Para mostrar las imagenes el código quedaria como
+
+```JavaScript 
+Map.addLayer(s2a_cloudfree, visParams ,'Sentinel2 B8 B4 B3');
+```
+Si corremos nuestro código lo que nos mostrará es una visualización a nivel global pues no se ha selecciónado la region que nos interesa. con la intención de seleccionar nuestra región vamos hacer uso de base de datos [Global Administrative Unit Layers](https://en.wikipedia.org/wiki/Global_Administrative_Unit_Layers) la cual contiene los distintos niveles de administración de los distintos paises. La base de datos es recopilada por la organizacción de las Naciones Unidas para la alimentación y la Agricultura.  (Food and Agriculture Organization (FAO)).
+
+Primero deseamos mostrar como son las imágenes sobre Yucatan, seleccionamos a todos los estados en Mexico y despues a Yucatan. Cabe obserbar que lo que seguimos teniendo es una collección de "Features" (`ee.FeatureCollection`) de un sólo elemento. Por tal motivo si lo queremos añadir de forma directa esto nos generara un error.
+
+```JavaScript
+dataset_2 = ee.FeatureCollection('FAO/GAUL/2015/level1')
+    .filter(ee.Filter.eq('ADM0_NAME', 'Mexico'))
+    .filter(ee.Filter.eq('ADM1_NAME', 'Yucatan'));
+```
+
+Para añadirlo al mapa lo que nos interesa en esta ocación es el polígono de Yucatan, es decir, la geometria del elemento que se encuentra dentro de nuestra collección de "Features". Para seleccionar diho elemento hacemos uso de `.first()` el ual toma al primer elemento de la colección y a dicho elelmento tomamos la geometría con `.geometry()`. Para  desplegarlo dentro del mapa utilizamos un color rojizo intenso. 
+
+```JavaScript
+Map.addLayer(dataset_2.first().geometry(),  {color: 'FF1500'}, 'Yucatan');
+```
+Como queremos mostrar lo que hemos heho hasta ahorita centramos el mapa sobre la geometria de Yucatan usando `Map.CenterObject`. 
+
+```JavaScript
+Map.centerObject(dataset_2.first().geometry(), 7);
+```
+
+Al correr el código nos debe de mostrar un mapa como el que se muestra en la imagen
+
+
+![Sentinel en Yucactan](./B8_B4_B3_Yucactan.png)
+
+
+
+

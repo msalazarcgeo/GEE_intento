@@ -3,6 +3,7 @@
     "listing": "/index.html",
     "items": [
       "/posts/Modelo/Modelo.html",
+      "/posts/Chart/graficas_bandas.html",
       "/posts/Slope/Pendiente.html",
       "/posts/NVDI/index.html",
       "/posts/Introduccion/index.html"

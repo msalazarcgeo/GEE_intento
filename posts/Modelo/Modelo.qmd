@@ -1,9 +1,11 @@
 ---
 title: "Hacer modelos en GEE"
-format: html
+author: "J. Miguel Salazar"
 date: "2024-07-04"
 categories: [news, course,models, GEE]
 Image: "resultado.png"
+execute: 
+  enabled: false
 ---
 
 

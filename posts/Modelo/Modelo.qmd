@@ -1,6 +1,9 @@
 ---
 title: "Hacer modelos en GEE"
 format: html
+date: "2024-07-04"
+categories: [news, course,models, GEE]
+Image: "resultado.png"
 ---
 
 

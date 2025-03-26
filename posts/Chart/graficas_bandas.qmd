@@ -68,7 +68,7 @@ dataset_2 = ee.FeatureCollection('FAO/GAUL/2015/level1')
 Primero deseamos mostrar como son las imágenes sobre Yucatan, seleccionamos a todos los estados en Mexico y despues a Yucatan. Cabe observar que lo que seguimos teniendo es una collección de "Features" (`ee.FeatureCollection`) de un sólo elemento. Por tal motivo si lo queremos añadir de forma directa esto nos generara un error.
 
 
-Para añadirlo al mapa lo que nos interesa en esta ocación es el polígono de Yucatan, es decir, la geometria del elemento que se encuentra dentro de nuestra collección de "Features". Para seleccionar dicho elemento hacemos uso de `.first()` el cual toma al primer elemento de la colección y a dicho elemento tomamos la geometría con `.geometry()`. Para desplegarlo dentro del mapa utilizamos un color rojizo intenso. 
+Para añadirlo al mapa lo que nos interesa en esta ocasión es el polígono de Yucatan, es decir, la geometría del elemento que se encuentra dentro de nuestra collección de "Features". Para seleccionar dicho elemento hacemos uso de `.first()` el cual toma al primer elemento de la colección y a dicho elemento tomamos la geometría con `.geometry()`. Para desplegarlo dentro del mapa utilizamos un color rojizo intenso. 
 
 ```JavaScript
 Map.addLayer(dataset_2.first().geometry(),  {color: 'FF1500'}, 'Yucatan');
@@ -79,10 +79,10 @@ Como queremos mostrar lo que hemos hecho hasta ahorita centramos el mapa sobre l
 Map.centerObject(dataset_2.first().geometry(), 7);
 ```
 
-Al correr el código nos debe de mostrar un mapa como el que se muestra en la imagen
+Al correr el código nos debe de mostrar un mapa como el que se muestra en la imagen @fig-S2_Yucatan
 
 
-![Sentinel en Yucactan](./B8_B4_B3_Yucactan.png)
+![Sentinel en Yucatan](./B8_B4_B3_Yucactan.png){#fig-S2_Yucatan}
 
 
 
@@ -96,21 +96,28 @@ var dataset_3 = ee.FeatureCollection('FAO/GAUL/2015/level2')
     .filter(ee.Filter.eq('ADM1_NAME', 'Yucatan'));
 ```
 
-El boton generado con `ui.Select` necesita una lista con los elemento que se pueden seleccionar para obtener esta lista de la colleccion de "Features" la agregamos con el método `.aggregate_array` y lo almacenamos dentro de una variable. 
+El boton generado con `ui.Select` necesita una lista con los elemento que se pueden seleccionar para obtener esta lista de la collección de "Features" la agregamos con el método `.aggregate_array` y lo almacenamos dentro de una variable. Tambien vamos a generar un panel en donde poner el boton de selección.  
 
 ```JavaScript
 var key_mun = dataset_3.aggregate_array('ADM2_NAME');
 ```
 
-En la variable `key_mun` se encuentra la lista con todos los municipios del estado de Yucatan el cual vamos a utilizar para crear el boton para hacer la selección de los municipios. Es necesario construir la función que se ejecuta cuando se hace la selección, dentro de la función es necesario restringir la imagenes al municipio seleccionado obtener el promedio del periode y restringir las imagenes sólo a la geometría seleccionada. Todo lo anterior depende de la geometría del municipio.  Es necesario obtener la geometría, la cual se obtiene haciendo uso del conjunto de municipios filtrados anteriormente donde sólo se encuentran los municipios de Yucatan.  
+```JavaScript
+var panel_select = ui.Panel({
+  layout: ui.Panel.Layout.flow('vertical'),
+  style: {width: '500px'}
+}).add(ui.Label('Seleccione Municipio'));
+```
+
+En la variable `key_mun` se encuentra la lista con todos los municipios del estado de Yucatan, el cual vamos a utilizar para crear el boton para hacer la selección de los municipios. Es necesario construir la función que se ejecuta cuando se hace la selección, dentro de la función es necesario restringir la imágenes al municipio seleccionado obtener el promedielephanto del periodo y restringir las imágenes sólo a la geometría seleccionada. Todo lo anterior depende de la geometría del municipio. Es necesario obtener la geometría, la cual se obtiene haciendo uso del conjunto de municipios filtrados anteriormente donde sólo se encuentran los municipios de Yucatan.  
 
 
-La función va a recibir un parámetro `key` que es el string del municipio, a partir de este se tienen que hacer todos los procedimientos detallados en el párrafo anterior. 
+La función va a recibir un parámetro `key` que es el string que identifica al  municipio, a partir de este se tienen que hacer todos los procedimientos detallados en el párrafo anterior. 
 
 ```JavaScript
 var elemet_selected= dataset_3.filter(ee.Filter.eq('ADM2_NAME', key));
 ```
-El código anterior hace la selección del "Feature" que contiene la geometría del municipio. La cual vamos a añadir en una capa haciendo uso de `ui.Map.Layer`, pero como ya tenemos muchas cosas es necesario eliminar lo que tenemos actualmente en el mapa haciendo uso de  `Map.layers().reset()` y depues podemos añadir la capa que contiene a la geometría del municipio con un color gris, como la selecciön del municipio puede cambiar vamos a fijar que la capa que contiene al municipio se mantenga en un nivel específico fijando dicha capa. Como nos interesa nuestro municipio seleccionado vamos a centrar el mapa con el método `.centerObject()`. 
+El código anterior hace la selección del "Feature" que contiene la geometría del municipio. La cual vamos a añadir en una capa haciendo uso de `ui.Map.Layer`, pero como ya tenemos muchas cosas dentro del mapa es necesario eliminar lo que tenemos actualmente en el mapa haciendo uso de  `Map.layers().reset()` y despues podemos añadir la capa que contiene a la geometría del municipio con un color gris. Como la selección del municipio puede cambiar, vamos a fijar que la capa que contiene al municipio se mantenga en un nivel específico fijando dicha capa. Como nos interesa nuestro municipio seleccionado vamos a centrar el mapa con el método `.centerObject()`. 
 
 
 
@@ -121,11 +128,11 @@ Map.layers().set(0, lay_muni);
 Map.centerObject(elemet_selected.geometry(), 10);
 ```
 
-Si se añade una función con los elementos descritos y se añade al boton selector que la hacer una selección con esdte entonces tendremos un mapa con un boton selector como se muestra en la siguiente imagen
+Si se añade una función con los elementos descritos y se añade al boton selector que la hacer una selección con esdte entonces tendremos un mapa con un boton selector como se muestra en la siguiente imagen (@fig-mun_select)
 
-![Municipio seleccionado](./Mun_selector.png)
+![Municipio seleccionado](./Mun_selector.png){#fig-mun_select}
 
-Pero como queremos hacer más cosas vamos a continuar añadiendo funcionalidades, a la función que se activa cuando se selecciona un municipio. Nos falta obtener la imagen del promedio en el intervalo de tiempo para las bandas 11 y 12 para el municipio seleccionado. Adicionalmente esta imagen nos servirá para  hacer la gráfica de serie de tiempo. 
+Pero como queremos hacer más cosas vamos a continuar añadiendo funcionalidades, a la función que se activa cuando se selecciona un municipio. Nos falta obtener la imagen del promedio en el intervalo de tiempo para las bandas 11 y 12 para el municipio seleccionado. Adicionalmente esta imagen nos servirá para hacer la gráfica de serie de tiempo. 
 
 Vamos a filtrar el conjunto de imágenes obteniendo únicamante las imagenes que estan en "contacto" con la geometría del municipio seleccionado y solo las bandas 11 y 12, esto ya es una colección de imagenes que se pueden visualizar pero al estar dentro de una misma area las imagenes se sobrepondrian una sobre otra, por tal motivo para poder desplegarlas tomamos el promedio de toda la colección de imágenes con el método `.mean()` y las restingimos a la geometría del municipio con el método `.clip()`. 
 
@@ -136,8 +143,7 @@ var select_collection = s2a_cloudfree
       .select( ['B11', 'B12']);
 ```
 
-
-Para añadir los promedios vamos hace uso de palletas de colores ya prehechas las cualse se pueden obtener usando el paquete `users/gena/packages:palettes`. Este paquete tiene distintas paletas de colores las cuales vamos a utilizar para la vizualización de las bandas 11 y 12, para la banda 11 se utiliza la ` colorbrewer.YlOrRd` y para la banda 12 `kovesi.linear_blue_5_95_c73`. Para ver la paletas disponible estas se encuentran en el siguiente [link](https://github.com/gee-community/ee-palettes).
+Para añadir los promedios vamos hace uso de palletas de colores ya pre-hechas las cual se pueden obtener usando el paquete `users/gena/packages:palettes`. Este paquete tiene distintas paletas de colores las cuales vamos a utilizar para la vizualización de las bandas 11 y 12, para la banda 11 se utiliza la ` colorbrewer.YlOrRd` y para la banda 12 `kovesi.linear_blue_5_95_c73`. Para ver la paletas disponible estas se encuentran en el siguiente [link](https://github.com/gee-community/ee-palettes).
 
 
 
@@ -148,7 +154,7 @@ var palette_b11 = palettes.colorbrewer.YlOrRd[7];
 var palette_b12 = palettes.kovesi.linear_blue_5_95_c73[7];
 ```
 
-Ya con las imagenes seleccionadas podemos mostrar en el mapa las bandas en el municipio seleccionado con el siguiente código. 
+Ya con las imágenes seleccionadas podemos mostrar en el mapa las bandas en el municipio seleccionado con el siguiente código. 
 
 ```JavaScript
 lay_filtered_11 = ui.Map.Layer(
@@ -169,18 +175,17 @@ Map.layers().set(1, lay_filtered_11);
 Map.layers().set(2, lay_filtered_12);
 ```
 
-
 De igual forma que al añadir la geometría del municipio, fijamos las capas para que cada banda se despliegue una sobre otra. El resultado mostraría el siguiente mapa
 
 
-![Banda 12](./B12.png)
+![Banda 12](./B12.png){#fig-B12}
 
-Si se estaba atento a la generación del mapa se puede observar que la banda 11 se encuentra por debajo de la banda 12, para poder mostrar la banda 11 en el boton `Layers` y se deselacciona la banda capa llamada 'En Municipio B12' donde mostra ra la siguiente imagen. 
+Si se estaba atento a la generación del mapa se puede observar que la banda 11 se encuentra por debajo de la banda 12, para poder mostrar la banda 11 en el boton `Layers` y se deselacciona la banda capa llamada 'En Municipio B12' donde mostrará la siguiente imagen. 
 
-![banda 11](./B11.png)
+![banda 11](./B11.png){#fig-B11}
 
 
-La función hasta el momento seria la siguiente, se pone para que si se sigue este tutorial pueda ver que lo que hemos hecho hasta el momento coincide con lo explicado. 
+La función hasta el momento sería la siguiente, se pone para que si se sigue este tutorial pueda ver que lo que hemos hecho hasta el momento coincide con lo explicado. 
  
 ```JavaScript
 var b11_b12_mun = function(key) {
@@ -229,11 +234,54 @@ panel_select.add(selector)
 
 
 
+## Añadir gráfico
 
 
+Ya tenemos determinado tanto la región como la selección de imágenes que nos interesan para poder obtener nuestra serie de tiempo, estas se encuentran dentro de la variable `select_collection`. La idea es modificar la función que ya hicimos para generar nuestro gráfico cuando se hace la selección de un municipio. 
+
+Antes de modificar nuestra función, es necesario tener un lugar donde vamoa a añadir el gráfico que vamos a generar. 
+
+Como se ve en la imagen @fig-mun_select, ya hemos hecho un panel donde se encuentra el boton para seleccionar el municipio, entonces podemos poner el gráfico dentro del mismo. Para tal motivo, vamos a hacer un panel que contenga al gráfico este se añade al panel despues de nuestro boton selector. 
 
 
+```JavaScript
+var chartPanel = ui.Panel({
+  layout: ui.Panel.Layout.flow('vertical'),
+  style: {width: '450px'}
+});
+```
+Vamos hacer nuestro gráfico con la serie de tiempo dentro de nuestra función con `ui.Chart.image.series`, se seleccionan las bandas 'B11' y 'B12', se toma como región al municipio selecionado que se encuentra dentro de la variable `element_selected`, y para tomar el promedio en la región se utiliza como reductor ("reducer") `ee.Reducer.mean()`. 
 
+Ya seleccionamos el tipo de gráfico (`LineChart`) y los párametros del gráfico como el ancho de linea el tamaño del punto y el color de las series. 
+
+
+```JavaScript
+var tempTimeSeries = ui.Chart.image.series({
+      imageCollection: select_collection.select( ['B11', 'B12']),
+      region: elemet_selected,
+      reducer: ee.Reducer.mean()
+    })
+    .setChartType('LineChart')
+    .setOptions({
+      title: 'Bands 11 y 12',
+      vAxis: {
+        title: 'nm'
+      },
+      lineWidth: 1,
+      pointSize: 4,
+      series: {
+        0: {color: 'red'},
+        1: {color: 'blue'}
+      }
+    });
+```
+
+Ya con el grafico lo añadimos al panel que creamos para tal efecto, como la idea es poder seleccionar a distintos municipios (no de forma simultanea), entonces borramos el gráfico anterior dentro del panel y lo sustituimos con el nuevo gráfico. 
+
+```JavaScript
+chartPanel.widgets().reset([tempTimeSeries]);
+```
+El selector queda de la siguiente forma
 
 ```JavaScript
 
@@ -247,12 +295,36 @@ var select = ui.Select({
     var lay_muni = ui.Map.Layer(elemet_selected,{color:'gray', opacity:0.3}, 'Municipio');
     Map.layers().reset();
     Map.layers().set(0, lay_muni);
+
+
+
     Map.centerObject(elemet_selected.geometry(), 10);
     var select_collection = s2a_cloudfree
       .filterBounds(elemet_selected)
       .select( ['B11', 'B12']);
-      ////get the time series 
-    print(select_collection)
+
+    ///Add B11, B12 mean bands ror the region 
+    lay_filtered_11 = ui.Map.Layer(
+      select_collection.mean().select('B11').clip(elemet_selected),
+      {min:1000,
+      max:3000,
+      palette: palette_b11,
+      opacity:0.4},
+      'En Municipio B11');
+    lay_filtered_12 = ui.Map.Layer(
+      select_collection.select('B12').mean().clip(elemet_selected),
+      {min:1000,
+      max:2600,
+      palette: palette_b12,
+      opacity:0.4},
+      'En Municipio B12');
+    
+    Map.layers().set(1, lay_filtered_11);
+    Map.layers().set(2, lay_filtered_12);
+    
+
+    ////get the time series 
+    
     var tempTimeSeries = ui.Chart.image.series({
       imageCollection: select_collection.select( ['B11', 'B12']),
       region: elemet_selected,
@@ -273,32 +345,18 @@ var select = ui.Select({
       }
     });
 
-    //print(tempTimeSeries);
+    ///Add to panel 
     chartPanel.widgets().reset([tempTimeSeries]);    
-    
-    lay_filtered_11 = ui.Map.Layer(
-      select_collection.mean().select('B11').clip(elemet_selected),
-      {min:1000,
-      max:3000,
-      palette: palette_b11,
-      opacity:0.4},
-      'En Municipio B11');
-    lay_filtered_12 = ui.Map.Layer(
-      select_collection.select('B12').mean().clip(elemet_selected),
-      {min:1000,
-      max:2600,
-      palette: palette_b12,
-      opacity:0.4},
-      'En Municipio B12');
-    Map.layers().set(1, lay_filtered_11);
-    Map.layers().set(2, lay_filtered_12);
     return;
   }
 });
-
-
 ```
+Al final la aplicación queda como se muestra en la imagen @fig-serie_tiempo
 
+![Serie de tiempo con el promedio diario](./time_series.png){#fig-serie_tiempo}
+
+
+El código de todo lo podemos encontrar en el siguiente [link](https://code.earthengine.google.com/fbe7b2ca825eba820a42acd57a09f3e3)
 
 
 

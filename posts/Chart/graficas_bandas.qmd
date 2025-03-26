@@ -1,7 +1,7 @@
 ---
 title: "Graficos en bandas "
 author: "J. Miguel Salazar"
-date: "2025-03-24"
+date: "2025-03-26"
 categories: [news, course,charts, GEE]
 Image: "B8_B4_B3_Yucactan.png"
 execute: 

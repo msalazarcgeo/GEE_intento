@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="J. Miguel Salazar">
-<meta name="dcterms.date" content="2025-03-24">
+<meta name="dcterms.date" content="2025-03-26">
 
 <title>GEE_intento - Graficos en bandas</title>
 <style>
@@ -182,7 +182,7 @@ window.Quarto = {
                                 <div class="quarto-categories">
                 <div class="quarto-category">news</div>
                 <div class="quarto-category">course</div>
-                <div class="quarto-category">models</div>
+                <div class="quarto-category">charts</div>
                 <div class="quarto-category">GEE</div>
               </div>
                   </div>
@@ -201,7 +201,7 @@ window.Quarto = {
       <div>
       <div class="quarto-title-meta-heading">Published</div>
       <div class="quarto-title-meta-contents">
-        <p class="date">March 24, 2025</p>
+        <p class="date">March 26, 2025</p>
       </div>
     </div>
     
@@ -253,15 +253,19 @@ window.Quarto = {
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'ADM0_NAME'</span><span class="op">,</span> <span class="st">'Mexico'</span>))</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'ADM1_NAME'</span><span class="op">,</span> <span class="st">'Yucatan'</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Primero deseamos mostrar como son las imágenes sobre Yucatan, seleccionamos a todos los estados en Mexico y despues a Yucatan. Cabe observar que lo que seguimos teniendo es una collección de “Features” (<code>ee.FeatureCollection</code>) de un sólo elemento. Por tal motivo si lo queremos añadir de forma directa esto nos generara un error.</p>
-<p>Para añadirlo al mapa lo que nos interesa en esta ocación es el polígono de Yucatan, es decir, la geometria del elemento que se encuentra dentro de nuestra collección de “Features”. Para seleccionar dicho elemento hacemos uso de <code>.first()</code> el cual toma al primer elemento de la colección y a dicho elemento tomamos la geometría con <code>.geometry()</code>. Para desplegarlo dentro del mapa utilizamos un color rojizo intenso.</p>
+<p>Para añadirlo al mapa lo que nos interesa en esta ocasión es el polígono de Yucatan, es decir, la geometría del elemento que se encuentra dentro de nuestra collección de “Features”. Para seleccionar dicho elemento hacemos uso de <code>.first()</code> el cual toma al primer elemento de la colección y a dicho elemento tomamos la geometría con <code>.geometry()</code>. Para desplegarlo dentro del mapa utilizamos un color rojizo intenso.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(dataset_2<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">geometry</span>()<span class="op">,</span>  {<span class="dt">color</span><span class="op">:</span> <span class="st">'FF1500'</span>}<span class="op">,</span> <span class="st">'Yucatan'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Como queremos mostrar lo que hemos hecho hasta ahorita centramos el mapa sobre la geometría de Yucatan usando <code>Map.CenterObject</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">centerObject</span>(dataset_2<span class="op">.</span><span class="fu">first</span>()<span class="op">.</span><span class="fu">geometry</span>()<span class="op">,</span> <span class="dv">7</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Al correr el código nos debe de mostrar un mapa como el que se muestra en la imagen</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./B8_B4_B3_Yucactan.png" class="img-fluid figure-img"></p>
-<figcaption>Sentinel en Yucactan</figcaption>
+<p>Al correr el código nos debe de mostrar un mapa como el que se muestra en la imagen <a href="#fig-S2_Yucatan" class="quarto-xref">Figure&nbsp;1</a></p>
+<div id="fig-S2_Yucatan" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-S2_Yucatan-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./B8_B4_B3_Yucactan.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-S2_Yucatan-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1: Sentinel en Yucatan
+</figcaption>
 </figure>
 </div>
 </section>
@@ -271,162 +275,229 @@ window.Quarto = {
 <div class="sourceCode" id="cb7"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> dataset_3 <span class="op">=</span> ee<span class="op">.</span><span class="fu">FeatureCollection</span>(<span class="st">'FAO/GAUL/2015/level2'</span>)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'ADM0_NAME'</span><span class="op">,</span> <span class="st">'Mexico'</span>))</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'ADM1_NAME'</span><span class="op">,</span> <span class="st">'Yucatan'</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>El boton generado con <code>ui.Select</code> necesita una lista con los elemento que se pueden seleccionar para obtener esta lista de la colleccion de “Features” la agregamos con el método <code>.aggregate_array</code> y lo almacenamos dentro de una variable.</p>
+<p>El boton generado con <code>ui.Select</code> necesita una lista con los elemento que se pueden seleccionar para obtener esta lista de la collección de “Features” la agregamos con el método <code>.aggregate_array</code> y lo almacenamos dentro de una variable. Tambien vamos a generar un panel en donde poner el boton de selección.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> key_mun <span class="op">=</span> dataset_3<span class="op">.</span><span class="fu">aggregate_array</span>(<span class="st">'ADM2_NAME'</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>En la variable <code>key_mun</code> se encuentra la lista con todos los municipios del estado de Yucatan el cual vamos a utilizar para crear el boton para hacer la selección de los municipios. Es necesario construir la función que se ejecuta cuando se hace la selección, dentro de la función es necesario restringir la imagenes al municipio seleccionado obtener el promedio del periode y restringir las imagenes sólo a la geometría seleccionada. Todo lo anterior depende de la geometría del municipio. Es necesario obtener la geometría, la cual se obtiene haciendo uso del conjunto de municipios filtrados anteriormente donde sólo se encuentran los municipios de Yucatan.</p>
-<p>La función va a recibir un parámetro <code>key</code> que es el string del municipio, a partir de este se tienen que hacer todos los procedimientos detallados en el párrafo anterior.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> elemet_selected<span class="op">=</span> dataset_3<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'ADM2_NAME'</span><span class="op">,</span> key))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>El código anterior hace la selección del “Feature” que contiene la geometría del municipio. La cual vamos a añadir en una capa haciendo uso de <code>ui.Map.Layer</code>, pero como ya tenemos muchas cosas es necesario eliminar lo que tenemos actualmente en el mapa haciendo uso de <code>Map.layers().reset()</code> y depues podemos añadir la capa que contiene a la geometría del municipio con un color gris, como la selecciön del municipio puede cambiar vamos a fijar que la capa que contiene al municipio se mantenga en un nivel específico fijando dicha capa. Como nos interesa nuestro municipio seleccionado vamos a centrar el mapa con el método <code>.centerObject()</code>.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> lay_muni <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(elemet_selected<span class="op">,</span>{<span class="dt">color</span><span class="op">:</span><span class="st">'gray'</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.3</span>}<span class="op">,</span> <span class="st">'Municipio'</span>)<span class="op">;</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">reset</span>()<span class="op">;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">0</span><span class="op">,</span> lay_muni)<span class="op">;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">centerObject</span>(elemet_selected<span class="op">.</span><span class="fu">geometry</span>()<span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Si se añade una función con los elementos descritos y se añade al boton selector que la hacer una selección con esdte entonces tendremos un mapa con un boton selector como se muestra en la siguiente imagen</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./Mun_selector.png" class="img-fluid figure-img"></p>
-<figcaption>Municipio seleccionado</figcaption>
+<div class="sourceCode" id="cb9"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> panel_select <span class="op">=</span> ui<span class="op">.</span><span class="fu">Panel</span>({</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">layout</span><span class="op">:</span> ui<span class="op">.</span><span class="at">Panel</span><span class="op">.</span><span class="at">Layout</span><span class="op">.</span><span class="fu">flow</span>(<span class="st">'vertical'</span>)<span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> {<span class="dt">width</span><span class="op">:</span> <span class="st">'500px'</span>}</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">.</span><span class="fu">add</span>(ui<span class="op">.</span><span class="fu">Label</span>(<span class="st">'Seleccione Municipio'</span>))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>En la variable <code>key_mun</code> se encuentra la lista con todos los municipios del estado de Yucatan, el cual vamos a utilizar para crear el boton para hacer la selección de los municipios. Es necesario construir la función que se ejecuta cuando se hace la selección, dentro de la función es necesario restringir la imágenes al municipio seleccionado obtener el promedielephanto del periodo y restringir las imágenes sólo a la geometría seleccionada. Todo lo anterior depende de la geometría del municipio. Es necesario obtener la geometría, la cual se obtiene haciendo uso del conjunto de municipios filtrados anteriormente donde sólo se encuentran los municipios de Yucatan.</p>
+<p>La función va a recibir un parámetro <code>key</code> que es el string que identifica al municipio, a partir de este se tienen que hacer todos los procedimientos detallados en el párrafo anterior.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> elemet_selected<span class="op">=</span> dataset_3<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'ADM2_NAME'</span><span class="op">,</span> key))<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>El código anterior hace la selección del “Feature” que contiene la geometría del municipio. La cual vamos a añadir en una capa haciendo uso de <code>ui.Map.Layer</code>, pero como ya tenemos muchas cosas dentro del mapa es necesario eliminar lo que tenemos actualmente en el mapa haciendo uso de <code>Map.layers().reset()</code> y despues podemos añadir la capa que contiene a la geometría del municipio con un color gris. Como la selección del municipio puede cambiar, vamos a fijar que la capa que contiene al municipio se mantenga en un nivel específico fijando dicha capa. Como nos interesa nuestro municipio seleccionado vamos a centrar el mapa con el método <code>.centerObject()</code>.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> lay_muni <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(elemet_selected<span class="op">,</span>{<span class="dt">color</span><span class="op">:</span><span class="st">'gray'</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.3</span>}<span class="op">,</span> <span class="st">'Municipio'</span>)<span class="op">;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">reset</span>()<span class="op">;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">0</span><span class="op">,</span> lay_muni)<span class="op">;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">centerObject</span>(elemet_selected<span class="op">.</span><span class="fu">geometry</span>()<span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Si se añade una función con los elementos descritos y se añade al boton selector que la hacer una selección con esdte entonces tendremos un mapa con un boton selector como se muestra en la siguiente imagen (<a href="#fig-mun_select" class="quarto-xref">Figure&nbsp;2</a>)</p>
+<div id="fig-mun_select" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-mun_select-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./Mun_selector.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-mun_select-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2: Municipio seleccionado
+</figcaption>
 </figure>
 </div>
 <p>Pero como queremos hacer más cosas vamos a continuar añadiendo funcionalidades, a la función que se activa cuando se selecciona un municipio. Nos falta obtener la imagen del promedio en el intervalo de tiempo para las bandas 11 y 12 para el municipio seleccionado. Adicionalmente esta imagen nos servirá para hacer la gráfica de serie de tiempo.</p>
 <p>Vamos a filtrar el conjunto de imágenes obteniendo únicamante las imagenes que estan en “contacto” con la geometría del municipio seleccionado y solo las bandas 11 y 12, esto ya es una colección de imagenes que se pueden visualizar pero al estar dentro de una misma area las imagenes se sobrepondrian una sobre otra, por tal motivo para poder desplegarlas tomamos el promedio de toda la colección de imágenes con el método <code>.mean()</code> y las restingimos a la geometría del municipio con el método <code>.clip()</code>.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> select_collection <span class="op">=</span> s2a_cloudfree</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">filterBounds</span>(elemet_selected)</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">select</span>( [<span class="st">'B11'</span><span class="op">,</span> <span class="st">'B12'</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Para añadir los promedios vamos hace uso de palletas de colores ya prehechas las cualse se pueden obtener usando el paquete <code>users/gena/packages:palettes</code>. Este paquete tiene distintas paletas de colores las cuales vamos a utilizar para la vizualización de las bandas 11 y 12, para la banda 11 se utiliza la <code>colorbrewer.YlOrRd</code> y para la banda 12 <code>kovesi.linear_blue_5_95_c73</code>. Para ver la paletas disponible estas se encuentran en el siguiente <a href="https://github.com/gee-community/ee-palettes">link</a>.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> palettes <span class="op">=</span> <span class="pp">require</span>(<span class="st">'users/gena/packages:palettes'</span>)<span class="op">;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> palettes <span class="op">=</span> <span class="pp">require</span>(<span class="st">'users/gena/packages:palettes'</span>)<span class="op">;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> palette_b11 <span class="op">=</span> palettes<span class="op">.</span><span class="at">colorbrewer</span><span class="op">.</span><span class="at">YlOrRd</span>[<span class="dv">7</span>]<span class="op">;</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> palette_b12 <span class="op">=</span> palettes<span class="op">.</span><span class="at">kovesi</span><span class="op">.</span><span class="at">linear_blue_5_95_c73</span>[<span class="dv">7</span>]<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Ya con las imagenes seleccionadas podemos mostrar en el mapa las bandas en el municipio seleccionado con el siguiente código.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>lay_filtered_11 <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    select_collection<span class="op">.</span><span class="fu">mean</span>()<span class="op">.</span><span class="fu">select</span>(<span class="st">'B11'</span>)<span class="op">.</span><span class="fu">clip</span>(elemet_selected)<span class="op">,</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">min</span><span class="op">:</span><span class="dv">1000</span><span class="op">,</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">max</span><span class="op">:</span><span class="dv">3000</span><span class="op">,</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">palette</span><span class="op">:</span> palette_b11<span class="op">,</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.4</span>}<span class="op">,</span></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'En Municipio B11'</span>)<span class="op">;</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>lay_filtered_12 <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    select_collection<span class="op">.</span><span class="fu">select</span>(<span class="st">'B12'</span>)<span class="op">.</span><span class="fu">mean</span>()<span class="op">.</span><span class="fu">clip</span>(elemet_selected)<span class="op">,</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">min</span><span class="op">:</span><span class="dv">1000</span><span class="op">,</span></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">max</span><span class="op">:</span><span class="dv">2600</span><span class="op">,</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">palette</span><span class="op">:</span> palette_b12<span class="op">,</span></span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.4</span>}<span class="op">,</span></span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'En Municipio B12'</span>)<span class="op">;</span></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">1</span><span class="op">,</span> lay_filtered_11)<span class="op">;</span></span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">2</span><span class="op">,</span> lay_filtered_12)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> select_collection <span class="op">=</span> s2a_cloudfree</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">filterBounds</span>(elemet_selected)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">select</span>( [<span class="st">'B11'</span><span class="op">,</span> <span class="st">'B12'</span>])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Para añadir los promedios vamos hace uso de palletas de colores ya pre-hechas las cual se pueden obtener usando el paquete <code>users/gena/packages:palettes</code>. Este paquete tiene distintas paletas de colores las cuales vamos a utilizar para la vizualización de las bandas 11 y 12, para la banda 11 se utiliza la <code>colorbrewer.YlOrRd</code> y para la banda 12 <code>kovesi.linear_blue_5_95_c73</code>. Para ver la paletas disponible estas se encuentran en el siguiente <a href="https://github.com/gee-community/ee-palettes">link</a>.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> palettes <span class="op">=</span> <span class="pp">require</span>(<span class="st">'users/gena/packages:palettes'</span>)<span class="op">;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> palettes <span class="op">=</span> <span class="pp">require</span>(<span class="st">'users/gena/packages:palettes'</span>)<span class="op">;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> palette_b11 <span class="op">=</span> palettes<span class="op">.</span><span class="at">colorbrewer</span><span class="op">.</span><span class="at">YlOrRd</span>[<span class="dv">7</span>]<span class="op">;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> palette_b12 <span class="op">=</span> palettes<span class="op">.</span><span class="at">kovesi</span><span class="op">.</span><span class="at">linear_blue_5_95_c73</span>[<span class="dv">7</span>]<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ya con las imágenes seleccionadas podemos mostrar en el mapa las bandas en el municipio seleccionado con el siguiente código.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>lay_filtered_11 <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    select_collection<span class="op">.</span><span class="fu">mean</span>()<span class="op">.</span><span class="fu">select</span>(<span class="st">'B11'</span>)<span class="op">.</span><span class="fu">clip</span>(elemet_selected)<span class="op">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">min</span><span class="op">:</span><span class="dv">1000</span><span class="op">,</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">max</span><span class="op">:</span><span class="dv">3000</span><span class="op">,</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">palette</span><span class="op">:</span> palette_b11<span class="op">,</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.4</span>}<span class="op">,</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">'En Municipio B11'</span>)<span class="op">;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>lay_filtered_12 <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    select_collection<span class="op">.</span><span class="fu">select</span>(<span class="st">'B12'</span>)<span class="op">.</span><span class="fu">mean</span>()<span class="op">.</span><span class="fu">clip</span>(elemet_selected)<span class="op">,</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">min</span><span class="op">:</span><span class="dv">1000</span><span class="op">,</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="dt">max</span><span class="op">:</span><span class="dv">2600</span><span class="op">,</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">palette</span><span class="op">:</span> palette_b12<span class="op">,</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.4</span>}<span class="op">,</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">'En Municipio B12'</span>)<span class="op">;</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">1</span><span class="op">,</span> lay_filtered_11)<span class="op">;</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">2</span><span class="op">,</span> lay_filtered_12)<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>De igual forma que al añadir la geometría del municipio, fijamos las capas para que cada banda se despliegue una sobre otra. El resultado mostraría el siguiente mapa</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./B12.png" class="img-fluid figure-img"></p>
-<figcaption>Banda 12</figcaption>
+<div id="fig-B12" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-B12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./B12.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-B12-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3: Banda 12
+</figcaption>
 </figure>
 </div>
-<p>Si se estaba atento a la generación del mapa se puede observar que la banda 11 se encuentra por debajo de la banda 12, para poder mostrar la banda 11 en el boton <code>Layers</code> y se deselacciona la banda capa llamada ‘En Municipio B12’ donde mostra ra la siguiente imagen.</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="./B11.png" class="img-fluid figure-img"></p>
-<figcaption>banda 11</figcaption>
+<p>Si se estaba atento a la generación del mapa se puede observar que la banda 11 se encuentra por debajo de la banda 12, para poder mostrar la banda 11 en el boton <code>Layers</code> y se deselacciona la banda capa llamada ‘En Municipio B12’ donde mostrará la siguiente imagen.</p>
+<div id="fig-B11" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-B11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./B11.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-B11-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4: banda 11
+</figcaption>
 </figure>
 </div>
-<p>La función hasta el momento seria la siguiente, se pone para que si se sigue este tutorial pueda ver que lo que hemos hecho hasta el momento coincide con lo explicado.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> b11_b12_mun <span class="op">=</span> <span class="kw">function</span>(key) {</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> elemet_selected<span class="op">=</span> dataset_3<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'ADM2_NAME'</span><span class="op">,</span> key))<span class="op">;</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">///Add municipal  layer</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> lay_muni <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(elemet_selected<span class="op">,</span>{<span class="dt">color</span><span class="op">:</span><span class="st">'gray'</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.3</span>}<span class="op">,</span> <span class="st">'Municipio'</span>)<span class="op">;</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">reset</span>()<span class="op">;</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">0</span><span class="op">,</span> lay_muni)<span class="op">;</span></span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">centerObject</span>(elemet_selected<span class="op">.</span><span class="fu">geometry</span>()<span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> select_collection <span class="op">=</span> s2a_cloudfree</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">filterBounds</span>(elemet_selected)</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">select</span>( [<span class="st">'B11'</span><span class="op">,</span> <span class="st">'B12'</span>])<span class="op">;</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    lay_filtered_11 <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(</span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>      select_collection<span class="op">.</span><span class="fu">mean</span>()<span class="op">.</span><span class="fu">select</span>(<span class="st">'B11'</span>)<span class="op">.</span><span class="fu">clip</span>(elemet_selected)<span class="op">,</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">min</span><span class="op">:</span><span class="dv">1000</span><span class="op">,</span></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">max</span><span class="op">:</span><span class="dv">3000</span><span class="op">,</span></span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">palette</span><span class="op">:</span> palette_b11<span class="op">,</span></span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.4</span>}<span class="op">,</span></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">'En Municipio B11'</span>)<span class="op">;</span></span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    lay_filtered_12 <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>      select_collection<span class="op">.</span><span class="fu">select</span>(<span class="st">'B12'</span>)<span class="op">.</span><span class="fu">mean</span>()<span class="op">.</span><span class="fu">clip</span>(elemet_selected)<span class="op">,</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">min</span><span class="op">:</span><span class="dv">1000</span><span class="op">,</span></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>      <span class="dt">max</span><span class="op">:</span><span class="dv">2600</span><span class="op">,</span></span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>      <span class="dt">palette</span><span class="op">:</span> palette_b12<span class="op">,</span></span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>      <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.4</span>}<span class="op">,</span></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>      <span class="st">'En Municipio B12'</span>)<span class="op">;</span></span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">1</span><span class="op">,</span> lay_filtered_11)<span class="op">;</span></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">2</span><span class="op">,</span> lay_filtered_12)<span class="op">;</span></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span><span class="op">;</span>  </span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>La función hasta el momento sería la siguiente, se pone para que si se sigue este tutorial pueda ver que lo que hemos hecho hasta el momento coincide con lo explicado.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> b11_b12_mun <span class="op">=</span> <span class="kw">function</span>(key) {</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> elemet_selected<span class="op">=</span> dataset_3<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'ADM2_NAME'</span><span class="op">,</span> key))<span class="op">;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">///Add municipal  layer</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> lay_muni <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(elemet_selected<span class="op">,</span>{<span class="dt">color</span><span class="op">:</span><span class="st">'gray'</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.3</span>}<span class="op">,</span> <span class="st">'Municipio'</span>)<span class="op">;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">reset</span>()<span class="op">;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">0</span><span class="op">,</span> lay_muni)<span class="op">;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">centerObject</span>(elemet_selected<span class="op">.</span><span class="fu">geometry</span>()<span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> select_collection <span class="op">=</span> s2a_cloudfree</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">filterBounds</span>(elemet_selected)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">select</span>( [<span class="st">'B11'</span><span class="op">,</span> <span class="st">'B12'</span>])<span class="op">;</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>    lay_filtered_11 <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>      select_collection<span class="op">.</span><span class="fu">mean</span>()<span class="op">.</span><span class="fu">select</span>(<span class="st">'B11'</span>)<span class="op">.</span><span class="fu">clip</span>(elemet_selected)<span class="op">,</span></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">min</span><span class="op">:</span><span class="dv">1000</span><span class="op">,</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">max</span><span class="op">:</span><span class="dv">3000</span><span class="op">,</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">palette</span><span class="op">:</span> palette_b11<span class="op">,</span></span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.4</span>}<span class="op">,</span></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>      <span class="st">'En Municipio B11'</span>)<span class="op">;</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>    lay_filtered_12 <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>      select_collection<span class="op">.</span><span class="fu">select</span>(<span class="st">'B12'</span>)<span class="op">.</span><span class="fu">mean</span>()<span class="op">.</span><span class="fu">clip</span>(elemet_selected)<span class="op">,</span></span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">min</span><span class="op">:</span><span class="dv">1000</span><span class="op">,</span></span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>      <span class="dt">max</span><span class="op">:</span><span class="dv">2600</span><span class="op">,</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>      <span class="dt">palette</span><span class="op">:</span> palette_b12<span class="op">,</span></span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>      <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.4</span>}<span class="op">,</span></span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>      <span class="st">'En Municipio B12'</span>)<span class="op">;</span></span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">1</span><span class="op">,</span> lay_filtered_11)<span class="op">;</span></span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">2</span><span class="op">,</span> lay_filtered_12)<span class="op">;</span></span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span><span class="op">;</span>  </span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Para añadir el boton selector y este añadirlo a el panel se utiliza el siguiente código.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> selector <span class="op">=</span> ui<span class="op">.</span><span class="fu">Select</span>({</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">items</span><span class="op">:</span> key_mun<span class="op">.</span><span class="fu">getInfo</span>()<span class="op">,</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">onChange</span><span class="op">:</span> b11_b12_mun</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>panel_select<span class="op">.</span><span class="fu">add</span>(selector)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb16"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> select <span class="op">=</span> ui<span class="op">.</span><span class="fu">Select</span>({</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">items</span><span class="op">:</span> key_mun<span class="op">.</span><span class="fu">getInfo</span>()<span class="op">,</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">onChange</span><span class="op">:</span> <span class="kw">function</span>(key) {</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> elemet_selected<span class="op">=</span> dataset_3<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'ADM2_NAME'</span><span class="op">,</span> key))<span class="op">;</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">///Add municipal  layer</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> lay_muni <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(elemet_selected<span class="op">,</span>{<span class="dt">color</span><span class="op">:</span><span class="st">'gray'</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.3</span>}<span class="op">,</span> <span class="st">'Municipio'</span>)<span class="op">;</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">reset</span>()<span class="op">;</span></span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">0</span><span class="op">,</span> lay_muni)<span class="op">;</span></span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">centerObject</span>(elemet_selected<span class="op">.</span><span class="fu">geometry</span>()<span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> select_collection <span class="op">=</span> s2a_cloudfree</span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">filterBounds</span>(elemet_selected)</span>
-<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">select</span>( [<span class="st">'B11'</span><span class="op">,</span> <span class="st">'B12'</span>])<span class="op">;</span></span>
-<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>      <span class="co">////get the time series </span></span>
-<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(select_collection)</span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> tempTimeSeries <span class="op">=</span> ui<span class="op">.</span><span class="at">Chart</span><span class="op">.</span><span class="at">image</span><span class="op">.</span><span class="fu">series</span>({</span>
-<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>      <span class="dt">imageCollection</span><span class="op">:</span> select_collection<span class="op">.</span><span class="fu">select</span>( [<span class="st">'B11'</span><span class="op">,</span> <span class="st">'B12'</span>])<span class="op">,</span></span>
-<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>      <span class="dt">region</span><span class="op">:</span> elemet_selected<span class="op">,</span></span>
-<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>      <span class="dt">reducer</span><span class="op">:</span> ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">mean</span>()</span>
-<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>    })</span>
-<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">setChartType</span>(<span class="st">'LineChart'</span>)</span>
-<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">setOptions</span>({</span>
-<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>      <span class="dt">title</span><span class="op">:</span> <span class="st">'Bands 11 y 12'</span><span class="op">,</span></span>
-<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>      <span class="dt">vAxis</span><span class="op">:</span> {</span>
-<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>      <span class="dt">title</span><span class="op">:</span> <span class="st">'nm'</span></span>
-<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
-<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>      <span class="dt">lineWidth</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
-<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>      <span class="dt">pointSize</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span></span>
-<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>      <span class="dt">series</span><span class="op">:</span> {</span>
-<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>        <span class="dv">0</span><span class="op">:</span> {<span class="dt">color</span><span class="op">:</span> <span class="st">'red'</span>}<span class="op">,</span></span>
-<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span><span class="op">:</span> {<span class="dt">color</span><span class="op">:</span> <span class="st">'blue'</span>}</span>
-<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>      }</span>
-<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
-<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>    <span class="co">//print(tempTimeSeries);</span></span>
-<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>    chartPanel<span class="op">.</span><span class="fu">widgets</span>()<span class="op">.</span><span class="fu">reset</span>([tempTimeSeries])<span class="op">;</span>    </span>
-<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>    lay_filtered_11 <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(</span>
-<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>      select_collection<span class="op">.</span><span class="fu">mean</span>()<span class="op">.</span><span class="fu">select</span>(<span class="st">'B11'</span>)<span class="op">.</span><span class="fu">clip</span>(elemet_selected)<span class="op">,</span></span>
-<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">min</span><span class="op">:</span><span class="dv">1000</span><span class="op">,</span></span>
-<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>      <span class="dt">max</span><span class="op">:</span><span class="dv">3000</span><span class="op">,</span></span>
-<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>      <span class="dt">palette</span><span class="op">:</span> palette_b11<span class="op">,</span></span>
-<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>      <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.4</span>}<span class="op">,</span></span>
-<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>      <span class="st">'En Municipio B11'</span>)<span class="op">;</span></span>
-<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>    lay_filtered_12 <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(</span>
-<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>      select_collection<span class="op">.</span><span class="fu">select</span>(<span class="st">'B12'</span>)<span class="op">.</span><span class="fu">mean</span>()<span class="op">.</span><span class="fu">clip</span>(elemet_selected)<span class="op">,</span></span>
-<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">min</span><span class="op">:</span><span class="dv">1000</span><span class="op">,</span></span>
-<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>      <span class="dt">max</span><span class="op">:</span><span class="dv">2600</span><span class="op">,</span></span>
-<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>      <span class="dt">palette</span><span class="op">:</span> palette_b12<span class="op">,</span></span>
-<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>      <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.4</span>}<span class="op">,</span></span>
-<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>      <span class="st">'En Municipio B12'</span>)<span class="op">;</span></span>
-<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">1</span><span class="op">,</span> lay_filtered_11)<span class="op">;</span></span>
-<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">2</span><span class="op">,</span> lay_filtered_12)<span class="op">;</span></span>
-<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span><span class="op">;</span></span>
-<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
-<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> selector <span class="op">=</span> ui<span class="op">.</span><span class="fu">Select</span>({</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">items</span><span class="op">:</span> key_mun<span class="op">.</span><span class="fu">getInfo</span>()<span class="op">,</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">onChange</span><span class="op">:</span> b11_b12_mun</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>panel_select<span class="op">.</span><span class="fu">add</span>(selector)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="añadir-gráfico" class="level2">
+<h2 class="anchored" data-anchor-id="añadir-gráfico">Añadir gráfico</h2>
+<p>Ya tenemos determinado tanto la región como la selección de imágenes que nos interesan para poder obtener nuestra serie de tiempo, estas se encuentran dentro de la variable <code>select_collection</code>. La idea es modificar la función que ya hicimos para generar nuestro gráfico cuando se hace la selección de un municipio.</p>
+<p>Antes de modificar nuestra función, es necesario tener un lugar donde vamoa a añadir el gráfico que vamos a generar.</p>
+<p>Como se ve en la imagen <a href="#fig-mun_select" class="quarto-xref">Figure&nbsp;2</a>, ya hemos hecho un panel donde se encuentra el boton para seleccionar el municipio, entonces podemos poner el gráfico dentro del mismo. Para tal motivo, vamos a hacer un panel que contenga al gráfico este se añade al panel despues de nuestro boton selector.</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> chartPanel <span class="op">=</span> ui<span class="op">.</span><span class="fu">Panel</span>({</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">layout</span><span class="op">:</span> ui<span class="op">.</span><span class="at">Panel</span><span class="op">.</span><span class="at">Layout</span><span class="op">.</span><span class="fu">flow</span>(<span class="st">'vertical'</span>)<span class="op">,</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> {<span class="dt">width</span><span class="op">:</span> <span class="st">'450px'</span>}</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Vamos hacer nuestro gráfico con la serie de tiempo dentro de nuestra función con <code>ui.Chart.image.series</code>, se seleccionan las bandas ‘B11’ y ‘B12’, se toma como región al municipio selecionado que se encuentra dentro de la variable <code>element_selected</code>, y para tomar el promedio en la región se utiliza como reductor (“reducer”) <code>ee.Reducer.mean()</code>.</p>
+<p>Ya seleccionamos el tipo de gráfico (<code>LineChart</code>) y los párametros del gráfico como el ancho de linea el tamaño del punto y el color de las series.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> tempTimeSeries <span class="op">=</span> ui<span class="op">.</span><span class="at">Chart</span><span class="op">.</span><span class="at">image</span><span class="op">.</span><span class="fu">series</span>({</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>      <span class="dt">imageCollection</span><span class="op">:</span> select_collection<span class="op">.</span><span class="fu">select</span>( [<span class="st">'B11'</span><span class="op">,</span> <span class="st">'B12'</span>])<span class="op">,</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>      <span class="dt">region</span><span class="op">:</span> elemet_selected<span class="op">,</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>      <span class="dt">reducer</span><span class="op">:</span> ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">mean</span>()</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">setChartType</span>(<span class="st">'LineChart'</span>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">setOptions</span>({</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>      <span class="dt">title</span><span class="op">:</span> <span class="st">'Bands 11 y 12'</span><span class="op">,</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>      <span class="dt">vAxis</span><span class="op">:</span> {</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>        <span class="dt">title</span><span class="op">:</span> <span class="st">'nm'</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>      <span class="dt">lineWidth</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">pointSize</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">series</span><span class="op">:</span> {</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>        <span class="dv">0</span><span class="op">:</span> {<span class="dt">color</span><span class="op">:</span> <span class="st">'red'</span>}<span class="op">,</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span><span class="op">:</span> {<span class="dt">color</span><span class="op">:</span> <span class="st">'blue'</span>}</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Ya con el grafico lo añadimos al panel que creamos para tal efecto, como la idea es poder seleccionar a distintos municipios (no de forma simultanea), entonces borramos el gráfico anterior dentro del panel y lo sustituimos con el nuevo gráfico.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>chartPanel<span class="op">.</span><span class="fu">widgets</span>()<span class="op">.</span><span class="fu">reset</span>([tempTimeSeries])<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>El selector queda de la siguiente forma</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode javascript code-with-copy"><code class="sourceCode javascript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> select <span class="op">=</span> ui<span class="op">.</span><span class="fu">Select</span>({</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">items</span><span class="op">:</span> key_mun<span class="op">.</span><span class="fu">getInfo</span>()<span class="op">,</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">onChange</span><span class="op">:</span> <span class="kw">function</span>(key) {</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> elemet_selected<span class="op">=</span> dataset_3<span class="op">.</span><span class="fu">filter</span>(ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'ADM2_NAME'</span><span class="op">,</span> key))<span class="op">;</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">///Add municipal  layer</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> lay_muni <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(elemet_selected<span class="op">,</span>{<span class="dt">color</span><span class="op">:</span><span class="st">'gray'</span><span class="op">,</span> <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.3</span>}<span class="op">,</span> <span class="st">'Municipio'</span>)<span class="op">;</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">reset</span>()<span class="op">;</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">0</span><span class="op">,</span> lay_muni)<span class="op">;</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">centerObject</span>(elemet_selected<span class="op">.</span><span class="fu">geometry</span>()<span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> select_collection <span class="op">=</span> s2a_cloudfree</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">filterBounds</span>(elemet_selected)</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>      <span class="op">.</span><span class="fu">select</span>( [<span class="st">'B11'</span><span class="op">,</span> <span class="st">'B12'</span>])<span class="op">;</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">///Add B11, B12 mean bands ror the region </span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>    lay_filtered_11 <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>      select_collection<span class="op">.</span><span class="fu">mean</span>()<span class="op">.</span><span class="fu">select</span>(<span class="st">'B11'</span>)<span class="op">.</span><span class="fu">clip</span>(elemet_selected)<span class="op">,</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">min</span><span class="op">:</span><span class="dv">1000</span><span class="op">,</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>      <span class="dt">max</span><span class="op">:</span><span class="dv">3000</span><span class="op">,</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>      <span class="dt">palette</span><span class="op">:</span> palette_b11<span class="op">,</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>      <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.4</span>}<span class="op">,</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>      <span class="st">'En Municipio B11'</span>)<span class="op">;</span></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>    lay_filtered_12 <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Layer</span>(</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>      select_collection<span class="op">.</span><span class="fu">select</span>(<span class="st">'B12'</span>)<span class="op">.</span><span class="fu">mean</span>()<span class="op">.</span><span class="fu">clip</span>(elemet_selected)<span class="op">,</span></span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>      {<span class="dt">min</span><span class="op">:</span><span class="dv">1000</span><span class="op">,</span></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>      <span class="dt">max</span><span class="op">:</span><span class="dv">2600</span><span class="op">,</span></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>      <span class="dt">palette</span><span class="op">:</span> palette_b12<span class="op">,</span></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>      <span class="dt">opacity</span><span class="op">:</span><span class="fl">0.4</span>}<span class="op">,</span></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>      <span class="st">'En Municipio B12'</span>)<span class="op">;</span></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">1</span><span class="op">,</span> lay_filtered_11)<span class="op">;</span></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>    <span class="bu">Map</span><span class="op">.</span><span class="fu">layers</span>()<span class="op">.</span><span class="fu">set</span>(<span class="dv">2</span><span class="op">,</span> lay_filtered_12)<span class="op">;</span></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>    <span class="co">////get the time series </span></span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>    <span class="kw">var</span> tempTimeSeries <span class="op">=</span> ui<span class="op">.</span><span class="at">Chart</span><span class="op">.</span><span class="at">image</span><span class="op">.</span><span class="fu">series</span>({</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>      <span class="dt">imageCollection</span><span class="op">:</span> select_collection<span class="op">.</span><span class="fu">select</span>( [<span class="st">'B11'</span><span class="op">,</span> <span class="st">'B12'</span>])<span class="op">,</span></span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>      <span class="dt">region</span><span class="op">:</span> elemet_selected<span class="op">,</span></span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>      <span class="dt">reducer</span><span class="op">:</span> ee<span class="op">.</span><span class="at">Reducer</span><span class="op">.</span><span class="fu">mean</span>()</span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">setChartType</span>(<span class="st">'LineChart'</span>)</span>
+<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">setOptions</span>({</span>
+<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>      <span class="dt">title</span><span class="op">:</span> <span class="st">'Bands 11 y 12'</span><span class="op">,</span></span>
+<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a>      <span class="dt">vAxis</span><span class="op">:</span> {</span>
+<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a>      <span class="dt">title</span><span class="op">:</span> <span class="st">'nm'</span></span>
+<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a>      }<span class="op">,</span></span>
+<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>      <span class="dt">lineWidth</span><span class="op">:</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>      <span class="dt">pointSize</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span></span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>      <span class="dt">series</span><span class="op">:</span> {</span>
+<span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>        <span class="dv">0</span><span class="op">:</span> {<span class="dt">color</span><span class="op">:</span> <span class="st">'red'</span>}<span class="op">,</span></span>
+<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>        <span class="dv">1</span><span class="op">:</span> {<span class="dt">color</span><span class="op">:</span> <span class="st">'blue'</span>}</span>
+<span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a>    })<span class="op">;</span></span>
+<span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>    <span class="co">///Add to panel </span></span>
+<span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a>    chartPanel<span class="op">.</span><span class="fu">widgets</span>()<span class="op">.</span><span class="fu">reset</span>([tempTimeSeries])<span class="op">;</span>    </span>
+<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb20-65"><a href="#cb20-65" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Al final la aplicación queda como se muestra en la imagen <a href="#fig-serie_tiempo" class="quarto-xref">Figure&nbsp;5</a></p>
+<div id="fig-serie_tiempo" class="quarto-figure quarto-figure-center quarto-float anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-serie_tiempo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="./time_series.png" class="img-fluid figure-img">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-serie_tiempo-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;5: Serie de tiempo con el promedio diario
+</figcaption>
+</figure>
+</div>
+<p>El código de todo lo podemos encontrar en el siguiente <a href="https://code.earthengine.google.com/fbe7b2ca825eba820a42acd57a09f3e3">link</a></p>
 
 
 </section>

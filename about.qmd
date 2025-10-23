@@ -16,4 +16,4 @@ about:
 
 ---
 
-About this blog
+Este es un compendio de ciertas cosas que he tenido el tiempo de escribir y he usado dentro de GEE

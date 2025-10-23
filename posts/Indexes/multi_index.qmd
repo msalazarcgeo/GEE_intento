@@ -1,0 +1,23 @@
+---
+title: ""
+author: "J. Miguel Salazar"
+date: "2025-06-30"
+categories: [news, course, GEE, indexes]
+Image: ""
+execute: 
+  enabled: false
+---
+Ya se ha visto, en [*Normalized Difference Vegetation Index* (NDVI)](/posts/NVDI/) podemos generar un indice que nos dice en sierta forma que tanta vegentaión se encuentra en cierto lugar, en este blog vamos a utilizar un biblioteca en la cual ya se encuentran programados muchos índices espactrales los cuales sirven para distintos objetivos. [Awesome Spectral Indices](https://github.com/awesome-spectral-indices/spectral) es la  biblioteca que ya cuenta programados múltiples índices en inluso estos pueden ser llamados desde los distintos lenguajes de programaión soportados por GEE. 
+
+Dentro de los índices espectrales se encuentran divididos por apliación de la siguiente forma:
+
+* [Vegetación](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#vegetation)
+* [Agua](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#water) 
+* [Quema](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#burn)
+* [Nieve](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#snow)
+* [Urbano](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#urban)
+* [Suelo](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#soil)
+* [Kernel](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#kernel)
+* [Radar](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#radarhttps://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#radar)
+
+Seleccionemos un par de estos y veamos como podemos extraer el valor en ciertas localizaciones de la Ciudad de México. 

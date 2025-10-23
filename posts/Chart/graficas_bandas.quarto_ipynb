@@ -1,0 +1,64 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Graficos en bandas \"\n",
+        "format: html\n",
+        "---\n",
+        "\n",
+        "\n",
+        "\n",
+        "La idea de este pequeño tutorial es hacer unos gráficos dentro junto a un  mapa donde nos muestren que es lo que pasa dentro de las imágenes satelitáles u otro tipo de imágenes que se encuentran dentro de GEE. Para empezar hacer anáslisis o mostrar diversos comportamientos dentro de las ciencias la forma más común para mostrar las relaciones entre datos es presentarlos a través de gráficas. Entonces es de nuestro interes poder mostrar resultados o la relación entre datos para mejorar lo que se muestra dentro de un mapa. \n",
+        "\n",
+        "Que es lo que vamos a hacer dentro de estye pequeño tutorial :\n",
+        "\n",
+        "\n",
+        "* Hacer un mapa que muestre los datos de sentinel 2 en todo el estado de Yucatan México. \n",
+        "* Hacer una selección de un municipio dentro de Yucatan\n",
+        "* Cuando se selecciona el municipio  en el mapa se mostrará el promedio de las imagenes de las bandas 11 y 12 de Sentinel 2 en un intervalo especifico del tiempo. \n",
+        "* Mostrar como se estan comportando las bandas 11 y 12 tomando el promedio diario en un intervalo especifico de tiempo. \n",
+        "\n",
+        "\n",
+        "Para tal motivo vamos a utilizar las colecciones de imágenes armonizádas de [Sentinel 2](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED#description). A este conjunto de imágenes vamos a seleccionar \n",
+        "\n",
+        "\n",
+        "El conjunto de imágenes se filtra primero por fecha, y haciendo uso de la metadata original nos quedamos unicamente con aquellas imágenes que tienen menos del $10\\%$ de pixeles con nubes. Y nos quedamos únicamente con las bandas de mediciones ('B1','B2','B3','B4','B5','B6','B7','B8','B8A','B9', 'B11','B12')\n",
+        "\n",
+        "El siguiente script muestra la selección del conjunto de imágenes. \n",
+        "\n",
+        "\n",
+        "```{JavaScript}\n",
+        "var s2a_cloudfree = ee.ImageCollection(\n",
+        "    'COPERNICUS/S2_SR_HARMONIZED')\n",
+        "    .filterDate('2020-01-01', '2020-12-31')\n",
+        "    .filter(\n",
+        "        ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 10)\n",
+        "    )\n",
+        "    .select(\n",
+        "        'B1','B2','B3','B4','B5','B6','B7','B8','B8A','B9', 'B11','B12'\n",
+        "    );\n",
+        "```\n",
+        "\n",
+        "Para mostrar el conjunto de imagenes en un mapa podemos añadimos la colección al mapa usando `Map.addLayer`    \n",
+        "\n",
+        "\n",
+        "```{JavaScript}\n",
+        "var visParams = {'min': 400,'max': [4000,3000,3000],   'bands':'B8,B4,B3'}; \n",
+        "```"
+      ],
+      "id": "e014e3ae"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "display_name": "Python 3",
+      "language": "python",
+      "name": "python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}

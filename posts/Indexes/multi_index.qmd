@@ -7,9 +7,9 @@ Image: ""
 execute: 
   enabled: false
 ---
-Ya se ha visto, en [*Normalized Difference Vegetation Index* (NDVI)](/posts/NVDI/) podemos generar un indice que nos dice en sierta forma que tanta vegentaión se encuentra en cierto lugar, en este blog vamos a utilizar un biblioteca en la cual ya se encuentran programados muchos índices espactrales los cuales sirven para distintos objetivos. [Awesome Spectral Indices](https://github.com/awesome-spectral-indices/spectral) es la  biblioteca que ya cuenta programados múltiples índices en inluso estos pueden ser llamados desde los distintos lenguajes de programaión soportados por GEE. 
+Ya se ha visto, en [*Normalized Difference Vegetation Index* (NDVI)](/posts/NVDI/) podemos generar un índice que nos dice en cierta forma que tanta vegetación se encuentra en cierto lugar, hay distintos índices y estos han sido uutilizados para distintas sirven para distintas cosas como el [*Normalized Difference Infrared Index Application* (NDII)] el cual sirve para mostrar los niveles de humedad. Vamos a ver algunos de estos índices en este blog y vamos a utilizar un biblioteca en la cual ya se encuentran programados distintos índices espectrales los cuales sirven para distintos objetivos. [Awesome Spectral Indices](https://github.com/awesome-spectral-indices/spectral) es la  biblioteca que ya cuenta programados múltiples índices en incluso estos pueden ser llamados desde los distintos lenguajes de programaión soportados por GEE. 
 
-Dentro de los índices espectrales se encuentran divididos por apliación de la siguiente forma:
+Dentro de los índices espectrales, estos se encuentran divididos por apliación de la siguiente forma:
 
 * [Vegetación](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#vegetation)
 * [Agua](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#water) 
@@ -18,6 +18,10 @@ Dentro de los índices espectrales se encuentran divididos por apliación de la 
 * [Urbano](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#urban)
 * [Suelo](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#soil)
 * [Kernel](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#kernel)
-* [Radar](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#radarhttps://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#radar)
+* [Radar](https://github.com/awesome-spectral-indices/awesome-spectral-indices?tab=readme-ov-file#radar)
 
-Seleccionemos un par de estos y veamos como podemos extraer el valor en ciertas localizaciones de la Ciudad de México. 
+Seleccionemos un par de estos y veamos como podemos extraer el valor en ciertas localizaciones de la Huasteca. 
+
+
+
+

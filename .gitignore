@@ -2,8 +2,9 @@
 /_site/
 .quarto/idx/posts/post-with-code/index.qmd.json
 
+
 .quarto/*
 .quarto/idx/about.qmd.json
 .quarto/idx/posts/Introduccion/index.qmd.json
 .quarto/idx/about.qmd.json
-.quarto/idx/posts/Introduccion/index.qmd.json
+

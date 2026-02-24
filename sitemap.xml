@@ -1,31 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/index.html</loc>
-    <lastmod>2024-03-11T15:00:58.223Z</lastmod>
-  </url>
-  <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Chart/graficas_bandas.html</loc>
-    <lastmod>2025-03-26T18:44:02.148Z</lastmod>
-  </url>
-  <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Modelo/Modelo.html</loc>
-    <lastmod>2025-03-25T21:06:32.868Z</lastmod>
-  </url>
-  <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Introduccion/index.html</loc>
-    <lastmod>2024-03-04T14:55:27.977Z</lastmod>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Slope/Pendiente.html</loc>
+    <lastmod>2024-06-07T16:02:49.520Z</lastmod>
   </url>
   <url>
     <loc>https://msalazarcgeo.github.io/GEE_intento/posts/NVDI/index.html</loc>
-    <lastmod>2025-03-25T18:29:53.370Z</lastmod>
+    <lastmod>2025-03-24T17:56:54.136Z</lastmod>
   </url>
   <url>
-    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Slope/Pendiente.html</loc>
-    <lastmod>2024-04-24T20:18:16.383Z</lastmod>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Map_split/split_map.html</loc>
+    <lastmod>2026-02-23T19:22:33.949Z</lastmod>
+  </url>
+  <url>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Introduccion/index.html</loc>
+    <lastmod>2024-03-01T20:28:17.660Z</lastmod>
+  </url>
+  <url>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/index.html</loc>
+    <lastmod>2025-06-13T19:53:21.714Z</lastmod>
   </url>
   <url>
     <loc>https://msalazarcgeo.github.io/GEE_intento/about.html</loc>
-    <lastmod>2024-02-28T17:58:16.387Z</lastmod>
+    <lastmod>2025-10-23T18:30:33.222Z</lastmod>
+  </url>
+  <url>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Modelo/Modelo.html</loc>
+    <lastmod>2025-03-25T23:57:57.283Z</lastmod>
+  </url>
+  <url>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Indexes/multi_index.html</loc>
+    <lastmod>2025-10-27T15:46:21.169Z</lastmod>
+  </url>
+  <url>
+    <loc>https://msalazarcgeo.github.io/GEE_intento/posts/Chart/graficas_bandas.html</loc>
+    <lastmod>2025-03-27T01:12:34.360Z</lastmod>
   </url>
 </urlset>

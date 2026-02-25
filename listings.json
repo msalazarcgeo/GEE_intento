@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/Indexes/Multiindex.html",
       "/posts/Map_split/split_map.html",
       "/posts/Indexes/multi_index.html",
       "/posts/Chart/graficas_bandas.html",

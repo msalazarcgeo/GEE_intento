@@ -6,8 +6,10 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
+<meta name="author" content="J. Miguel Salazar">
+<meta name="dcterms.date" content="2026-02-23">
 
-<title>split_map – GEE_intento</title>
+<title>Mapa Dividido – GEE_intento</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -112,7 +149,41 @@ ul.task-list li input[type="checkbox"] {
     </nav>
 </header>
 <!-- content -->
-<header id="title-block-header" class="quarto-title-block"></header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Mapa Dividido</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">news</div>
+                <div class="quarto-category">course</div>
+                <div class="quarto-category">GEE</div>
+                <div class="quarto-category">indexes</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      <div>
+      <div class="quarto-title-meta-heading">Author</div>
+      <div class="quarto-title-meta-contents">
+               <p>J. Miguel Salazar </p>
+            </div>
+    </div>
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 23, 2026</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
     
@@ -123,7 +194,207 @@ ul.task-list li input[type="checkbox"] {
 
 
 
+<section id="comparación-espacial-de-no₂-en-méxico-con-sentinel-5p-tropomi-en-google-earth-engine" class="level1">
+<h1>Comparación espacial de NO₂ en México con Sentinel-5P (TROPOMI) en Google Earth Engine</h1>
+<p>Este script en <strong>JavaScript para Google Earth Engine (GEE)</strong> construye una comparación visual del <strong>dióxido de nitrógeno (NO₂)</strong> sobre <strong>México</strong>, utilizando datos satelitales del sensor <strong>TROPOMI</strong> a bordo de Sentinel-5P para dos fechas específicas:</p>
+<ul>
+<li>1 de octubre de 2018<br>
+</li>
+<li>1 de octubre de 2019</li>
+</ul>
+<p>El resultado es una visualización comparativa tipo <em>swipe</em> (mapa dividido), que permite analizar cambios espaciales entre ambos momentos.</p>
+<hr>
+<section id="por-qué-es-importante-hacer-este-tipo-de-mapas" class="level2">
+<h2 class="anchored" data-anchor-id="por-qué-es-importante-hacer-este-tipo-de-mapas">¿Por qué es importante hacer este tipo de mapas?</h2>
+<p>El dióxido de nitrógeno (NO₂) es un contaminante atmosférico clave asociado principalmente a:</p>
+<ul>
+<li>Emisiones vehiculares.<br>
+</li>
+<li>Actividad industrial.<br>
+</li>
+<li>Generación termoeléctrica.<br>
+</li>
+<li>Procesos de combustión urbana.</li>
+</ul>
+<p>Realizar mapas comparativos espacio-temporales como este es importante porque permite:</p>
+<ol type="1">
+<li><p>Identificar patrones espaciales Los mapas revelan concentraciones más altas en zonas metropolitanas e industriales, lo que facilita entender la relación entre urbanización y contaminación.</p></li>
+<li><p>Evaluar cambios interanuales Comparar dos fechas permite detectar:</p>
+<ul>
+<li>Incrementos o reducciones de emisiones</li>
+<li>Efectos de políticas públicas</li>
+<li>Impacto de variaciones económicas o climáticas</li>
+</ul></li>
+<li><p>Apoyar toma de decisiones Estos productos pueden respaldar:</p>
+<ul>
+<li>Planeación ambiental</li>
+<li>Regulación de emisiones</li>
+<li>Evaluaciones de calidad del aire</li>
+</ul></li>
+<li><p>Integrar ciencia abierta y monitoreo satelital</p></li>
+</ol>
+<p>El uso de datos satelitales democratiza el acceso a información ambiental a escala nacional, sin depender únicamente de estaciones terrestres.</p>
+<p>En síntesis, este tipo de análisis fortalece la comprensión de dinámicas atmosféricas y su relación con procesos urbanos y territoriales.</p>
+<hr>
+</section>
+<section id="datos-utilizados" class="level2">
+<h2 class="anchored" data-anchor-id="datos-utilizados">1. Datos utilizados</h2>
+<section id="límites-administrativos" class="level3">
+<h3 class="anchored" data-anchor-id="límites-administrativos">Límites administrativos</h3>
+<p>Se emplea la colección vectorial:</p>
+<ul>
+<li><code>USDOS/LSIB_SIMPLE/2017</code></li>
+</ul>
+<p>Esta colección contiene fronteras internacionales simplificadas. Se filtra para obtener únicamente <strong>México</strong>.</p>
+</section>
+<section id="contaminante-atmosférico" class="level3">
+<h3 class="anchored" data-anchor-id="contaminante-atmosférico">Contaminante atmosférico</h3>
+<p>Se utiliza la colección:</p>
+<ul>
+<li><code>COPERNICUS/S5P/OFFL/L3_NO2</code></li>
+</ul>
+<p>Seleccionando la banda:</p>
+<ul>
+<li><code>NO2_column_number_density</code></li>
+</ul>
+<p>Este producto representa la <strong>densidad de columna troposférica de NO₂</strong>, derivada de observaciones satelitales.</p>
+<hr>
+</section>
+</section>
+<section id="filtrado-espacial-méxico" class="level2">
+<h2 class="anchored" data-anchor-id="filtrado-espacial-méxico">2. Filtrado espacial: México</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> worldcountries <span class="op">=</span> ee<span class="op">.</span><span class="fu">FeatureCollection</span>(<span class="st">'USDOS/LSIB_SIMPLE/2017'</span>)<span class="op">;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> filterCountry <span class="op">=</span> ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'country_na'</span><span class="op">,</span> <span class="st">'Mexico'</span>)<span class="op">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> country <span class="op">=</span> worldcountries<span class="op">.</span><span class="fu">filter</span>(filterCountry)<span class="op">;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(country)<span class="op">;</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">centerObject</span>(country<span class="op">,</span> <span class="dv">5</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Este bloque:</p>
+<ul>
+<li>Carga todos los países.</li>
+<li>Filtra el que tiene <code>country_na = "Mexico"</code>.</li>
+<li>Agrega la geometría al mapa.</li>
+<li>Centra la visualización en el país.</li>
+</ul>
+</section>
+<section id="cargar-los-datos-de-sentinel-y-la-banda-de-no_2" class="level2">
+<h2 class="anchored" data-anchor-id="cargar-los-datos-de-sentinel-y-la-banda-de-no_2">3. Cargar los datos de Sentinel y la banda de NO_2</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> collection  <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">'COPERNICUS/S5P/OFFL/L3_NO2'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">select</span>(<span class="st">'NO2_column_number_density'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Aquí se:</p>
+<ul>
+<li><p>Carga la colección de imágenes satelitales.</p></li>
+<li><p>Se selecciona únicamente la banda que es de nuestro interés (NO₂).</p></li>
+</ul>
+</section>
+<section id="filtrado-temporal-y-calculo-de-promedios" class="level2">
+<h2 class="anchored" data-anchor-id="filtrado-temporal-y-calculo-de-promedios">4. Filtrado temporal y calculo de promedios</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> filter18 <span class="op">=</span> ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">date</span>(<span class="st">'2018-10-01'</span><span class="op">,</span> <span class="st">'2018-10-02'</span>)<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> filter19 <span class="op">=</span> ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">date</span>(<span class="st">'2019-10-01'</span><span class="op">,</span> <span class="st">'2019-10-02'</span>)<span class="op">;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> no2_18  <span class="op">=</span> collection<span class="op">.</span><span class="fu">filter</span>(filter18)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>                        <span class="op">.</span><span class="fu">mean</span>()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>                        <span class="op">.</span><span class="fu">multiply</span>(<span class="fl">1e6</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                        <span class="op">.</span><span class="fu">clip</span>(country)<span class="op">;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> no2_19  <span class="op">=</span> collection<span class="op">.</span><span class="fu">filter</span>(filter19)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                        <span class="op">.</span><span class="fu">mean</span>()</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                        <span class="op">.</span><span class="fu">multiply</span>(<span class="fl">1e6</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                        <span class="op">.</span><span class="fu">clip</span>(country)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Aquí filtramos las colecciones de para obtener imagenes especificas</p>
+<ul>
+<li>Se define un filtro para cada fecha.</li>
+<li>Se calcula el promedio (mean()) de las imágenes en ese rango.</li>
+<li>Se multiplica por 1e6 para facilitar la visualización.</li>
+<li>Se recorta la imagen a la geometría de México.</li>
+</ul>
+</section>
+<section id="parámetro-de-visualización." class="level2">
+<h2 class="anchored" data-anchor-id="parámetro-de-visualización.">5. Parámetro de visualización.</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> vizParams <span class="op">=</span> {</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">min</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">max</span><span class="op">:</span> <span class="dv">200</span><span class="op">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">palette</span><span class="op">:</span> [<span class="st">'black'</span><span class="op">,</span> <span class="st">'purple'</span><span class="op">,</span> <span class="st">'green'</span><span class="op">,</span> <span class="st">'red'</span>]</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>La paleta representa concentraciones bajas en negro y altas en rojo.</p>
+</section>
+<section id="mapas-comparativos." class="level2">
+<h2 class="anchored" data-anchor-id="mapas-comparativos.">6. Mapas comparativos.</h2>
+<p>Hacemos un primer mapa</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(no2_18<span class="op">,</span> vizParams<span class="op">,</span> <span class="st">'NO2 2018'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Hacemos un segundo mapa</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> Map2 <span class="op">=</span> ui<span class="op">.</span><span class="fu">Map</span>()<span class="op">;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>Map2<span class="op">.</span><span class="fu">addLayer</span>(no2_19<span class="op">,</span> vizParams<span class="op">,</span> <span class="st">'NO2 2019'</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Juntamos ambos mapas.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> linker <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Linker</span>([ui<span class="op">.</span><span class="at">root</span><span class="op">.</span><span class="fu">widgets</span>()<span class="op">.</span><span class="fu">get</span>(<span class="dv">0</span>)<span class="op">,</span> Map2])<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Esto sincroniza zoom y desplazamiento entre ambos mapas, es decir, esto es lo que nos permite mover el mapa y que se muevan en conjunto</p>
+<p>Vamos a crear un panel para poder visualizar nuestros mapas dentro del mismo panel.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> splitPanel <span class="op">=</span> ui<span class="op">.</span><span class="fu">SplitPanel</span>({</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">firstPanel</span><span class="op">:</span> linker<span class="op">.</span><span class="fu">get</span>(<span class="dv">0</span>)<span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">secondPanel</span><span class="op">:</span> linker<span class="op">.</span><span class="fu">get</span>(<span class="dv">1</span>)<span class="op">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">orientation</span><span class="op">:</span> <span class="st">'horizontal'</span><span class="op">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">wipe</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> {<span class="dt">stretch</span><span class="op">:</span> <span class="st">'both'</span>}</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>ui<span class="op">.</span><span class="at">root</span><span class="op">.</span><span class="fu">widgets</span>()<span class="op">.</span><span class="fu">reset</span>([splitPanel])<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Se genera un panel partido, en el primer panel se añade al primer elemento que se encuentra en el objeto <code>linker</code>. Mientras que en el segundo panel se añade al segundo elemento que se encuentra en el objeto <code>linker</code>.</p>
+<p>Lo anterior nos permite generar una interfaz interactiva que permite deslizar el separador y comparar ambas fechas directamente.</p>
+</section>
+<section id="centrar-en-el-valle-de-mexico." class="level2">
+<h2 class="anchored" data-anchor-id="centrar-en-el-valle-de-mexico.">7. Centrar en el Valle de Mexico.</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>linker<span class="op">.</span><span class="fu">get</span>(<span class="dv">0</span>)<span class="op">.</span><span class="fu">setCenter</span>(<span class="op">-</span><span class="fl">99.221440</span><span class="op">,</span> <span class="fl">19.291990</span><span class="op">,</span> <span class="dv">6</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Se centra la visualización aproximadamente en el Valle de México, lo que nos permite el análisis de una de las regiones urbanas con mayor concentración poblacional e industrial.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> worldcountries <span class="op">=</span> ee<span class="op">.</span><span class="fu">FeatureCollection</span>(<span class="st">'USDOS/LSIB_SIMPLE/2017'</span>)<span class="op">;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> filterCountry <span class="op">=</span> ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">eq</span>(<span class="st">'country_na'</span><span class="op">,</span> <span class="st">'Mexico'</span>)<span class="op">;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> country <span class="op">=</span> worldcountries<span class="op">.</span><span class="fu">filter</span>(filterCountry)<span class="op">;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(country)<span class="op">;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">centerObject</span>(country<span class="op">,</span> <span class="dv">5</span>)<span class="op">;</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> collection  <span class="op">=</span> ee<span class="op">.</span><span class="fu">ImageCollection</span>(<span class="st">'COPERNICUS/S5P/OFFL/L3_NO2'</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">select</span>(<span class="st">'NO2_column_number_density'</span>)<span class="op">;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> filter18 <span class="op">=</span> ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">date</span>(<span class="st">'2018-10-01'</span><span class="op">,</span> <span class="st">'2018-10-02'</span>)<span class="op">;</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> filter19 <span class="op">=</span> ee<span class="op">.</span><span class="at">Filter</span><span class="op">.</span><span class="fu">date</span>(<span class="st">'2019-10-01'</span><span class="op">,</span> <span class="st">'2019-10-02'</span>)<span class="op">;</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> no2_18  <span class="op">=</span> collection<span class="op">.</span><span class="fu">filter</span>(filter18)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>                        <span class="op">.</span><span class="fu">mean</span>()</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                        <span class="op">.</span><span class="fu">multiply</span>(<span class="fl">1e6</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>                        <span class="op">.</span><span class="fu">clip</span>(country)<span class="op">;</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> no2_19  <span class="op">=</span> collection<span class="op">.</span><span class="fu">filter</span>(filter19)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>                        <span class="op">.</span><span class="fu">mean</span>()</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>                        <span class="op">.</span><span class="fu">multiply</span>(<span class="fl">1e6</span>)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>                        <span class="op">.</span><span class="fu">clip</span>(country)<span class="op">;</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> vizParams <span class="op">=</span> {</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="dt">min</span><span class="op">:</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>  <span class="dt">max</span><span class="op">:</span> <span class="dv">200</span><span class="op">,</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>  <span class="dt">palette</span><span class="op">:</span> [<span class="st">'black'</span><span class="op">,</span> <span class="st">'purple'</span><span class="op">,</span> <span class="st">'green'</span><span class="op">,</span> <span class="st">'red'</span>]</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="bu">Map</span><span class="op">.</span><span class="fu">addLayer</span>(no2_18<span class="op">,</span> vizParams<span class="op">,</span> <span class="st">'NO2 2018'</span>)<span class="op">;</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> Map2 <span class="op">=</span> ui<span class="op">.</span><span class="fu">Map</span>()<span class="op">;</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>Map2<span class="op">.</span><span class="fu">addLayer</span>(no2_19<span class="op">,</span> vizParams<span class="op">,</span> <span class="st">'NO2 2019'</span>)<span class="op">;</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> linker <span class="op">=</span> ui<span class="op">.</span><span class="at">Map</span><span class="op">.</span><span class="fu">Linker</span>([ui<span class="op">.</span><span class="at">root</span><span class="op">.</span><span class="fu">widgets</span>()<span class="op">.</span><span class="fu">get</span>(<span class="dv">0</span>)<span class="op">,</span> Map2])<span class="op">;</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a><span class="kw">var</span> splitPanel <span class="op">=</span> ui<span class="op">.</span><span class="fu">SplitPanel</span>({</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>  <span class="dt">firstPanel</span><span class="op">:</span> linker<span class="op">.</span><span class="fu">get</span>(<span class="dv">0</span>)<span class="op">,</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>  <span class="dt">secondPanel</span><span class="op">:</span> linker<span class="op">.</span><span class="fu">get</span>(<span class="dv">1</span>)<span class="op">,</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>  <span class="dt">orientation</span><span class="op">:</span> <span class="st">'horizontal'</span><span class="op">,</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>  <span class="dt">wipe</span><span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>  <span class="dt">style</span><span class="op">:</span> {<span class="dt">stretch</span><span class="op">:</span> <span class="st">'both'</span>}</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>ui<span class="op">.</span><span class="at">root</span><span class="op">.</span><span class="fu">widgets</span>()<span class="op">.</span><span class="fu">reset</span>([splitPanel])<span class="op">;</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>linker<span class="op">.</span><span class="fu">get</span>(<span class="dv">0</span>)<span class="op">.</span><span class="fu">setCenter</span>(<span class="op">-</span><span class="fl">99.221440</span><span class="op">,</span> <span class="fl">19.291990</span><span class="op">,</span> <span class="dv">6</span>)<span class="op">;</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
+
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

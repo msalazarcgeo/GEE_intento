@@ -1,0 +1,249 @@
+---
+title: "Mapa Dividido"
+author: "J. Miguel Salazar"
+date: "2026-02-23"
+categories: [news, course, GEE, indexes]
+Image: ""
+execute: 
+  enabled: false
+---
+# Comparación espacial de NO₂ en México con Sentinel-5P (TROPOMI) en Google Earth Engine
+
+
+Este script en **JavaScript para Google Earth Engine (GEE)** construye una comparación visual del **dióxido de nitrógeno (NO₂)** sobre **México**, utilizando datos satelitales del sensor **TROPOMI** a bordo de Sentinel-5P para dos fechas específicas:
+
+- 1 de octubre de 2018  
+- 1 de octubre de 2019  
+
+El resultado es una visualización comparativa tipo *swipe* (mapa dividido), que permite analizar cambios espaciales entre ambos momentos.
+
+---
+
+## ¿Por qué es importante hacer este tipo de mapas?
+
+El dióxido de nitrógeno (NO₂) es un contaminante atmosférico clave asociado principalmente a:
+
+- Emisiones vehiculares.  
+- Actividad industrial.  
+- Generación termoeléctrica.  
+- Procesos de combustión urbana.  
+
+Realizar mapas comparativos espacio-temporales como este es importante porque permite:
+
+1. Identificar patrones espaciales
+    Los mapas revelan concentraciones más altas en zonas metropolitanas e industriales, lo que facilita entender la relación entre urbanización y contaminación.
+
+2. Evaluar cambios interanuales
+Comparar dos fechas permite detectar:
+    - Incrementos o reducciones de emisiones
+    - Efectos de políticas públicas
+    - Impacto de variaciones económicas o climáticas
+
+3. Apoyar toma de decisiones
+Estos productos pueden respaldar:
+    - Planeación ambiental
+    - Regulación de emisiones
+    - Evaluaciones de calidad del aire
+
+4. Integrar ciencia abierta y monitoreo satelital
+
+El uso de datos satelitales democratiza el acceso a información ambiental a escala nacional, sin depender únicamente de estaciones terrestres.
+
+En síntesis, este tipo de análisis fortalece la comprensión de dinámicas atmosféricas y su relación con procesos urbanos y territoriales.
+
+---
+
+## 1. Datos utilizados
+
+### Límites administrativos
+
+Se emplea la colección vectorial:
+
+- `USDOS/LSIB_SIMPLE/2017`
+
+Esta colección contiene fronteras internacionales simplificadas. Se filtra para obtener únicamente **México**.
+
+### Contaminante atmosférico
+
+Se utiliza la colección:
+
+- `COPERNICUS/S5P/OFFL/L3_NO2`
+
+Seleccionando la banda:
+
+- `NO2_column_number_density`
+
+Este producto representa la **densidad de columna troposférica de NO₂**, derivada de observaciones satelitales.
+
+---
+
+## 2. Filtrado espacial: México
+
+```js
+var worldcountries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');
+
+var filterCountry = ee.Filter.eq('country_na', 'Mexico');
+var country = worldcountries.filter(filterCountry);
+
+Map.addLayer(country);
+Map.centerObject(country, 5);
+```
+
+Este bloque: 
+
+- Carga todos los países.
+- Filtra el que tiene `country_na = "Mexico"`.
+- Agrega la geometría al mapa.
+- Centra la visualización en el país.
+
+
+## 3. Cargar los datos de Sentinel y la banda de NO_2
+
+```js
+var collection  = ee.ImageCollection('COPERNICUS/S5P/OFFL/L3_NO2')
+  .select('NO2_column_number_density');
+```
+
+Aquí se:
+
+- Carga la colección de imágenes satelitales.
+
+- Se selecciona únicamente la banda que es de nuestro interés (NO₂).
+
+
+## 4. Filtrado temporal y calculo de promedios
+
+```js
+var filter18 = ee.Filter.date('2018-10-01', '2018-10-02');
+var filter19 = ee.Filter.date('2019-10-01', '2019-10-02');
+
+var no2_18  = collection.filter(filter18)
+                        .mean()
+                        .multiply(1e6)
+                        .clip(country);
+
+var no2_19  = collection.filter(filter19)
+                        .mean()
+                        .multiply(1e6)
+                        .clip(country);
+```
+
+Aquí filtramos las colecciones de para obtener imagenes especificas
+
+- Se define un filtro para cada fecha.
+- Se calcula el promedio (mean()) de las imágenes en ese rango.
+- Se multiplica por 1e6 para facilitar la visualización.
+- Se recorta la imagen a la geometría de México.
+
+## 5. Parámetro de visualización. 
+
+```js
+var vizParams = {
+  min: 0,
+  max: 200,
+  palette: ['black', 'purple', 'green', 'red']
+};
+```
+La paleta representa concentraciones bajas en negro y altas en rojo.
+
+
+
+## 6. Mapas comparativos.
+
+
+Hacemos un primer mapa
+
+```js
+Map.addLayer(no2_18, vizParams, 'NO2 2018');
+```
+
+
+Hacemos un segundo mapa 
+```js
+var Map2 = ui.Map();
+Map2.addLayer(no2_19, vizParams, 'NO2 2019');
+```
+
+
+Juntamos ambos mapas. 
+```js
+var linker = ui.Map.Linker([ui.root.widgets().get(0), Map2]);
+```
+
+Esto sincroniza zoom y desplazamiento entre ambos mapas, es decir, esto es lo que nos permite mover el mapa y que se muevan en conjunto
+
+Vamos a crear un panel para poder visualizar nuestros mapas dentro del mismo panel. 
+
+
+```js
+var splitPanel = ui.SplitPanel({
+  firstPanel: linker.get(0),
+  secondPanel: linker.get(1),
+  orientation: 'horizontal',
+  wipe: true,
+  style: {stretch: 'both'}
+});
+
+ui.root.widgets().reset([splitPanel]);
+```
+Se genera un panel partido, en el primer panel se añade al primer elemento que se encuentra en el objeto `linker`. Mientras que en el segundo panel se añade al segundo elemento que se encuentra en el objeto `linker`. 
+
+
+Lo anterior nos permite generar una interfaz interactiva que permite deslizar el separador y comparar ambas fechas directamente.
+
+## 7. Centrar en el Valle de Mexico. 
+
+```js
+linker.get(0).setCenter(-99.221440, 19.291990, 6);
+```
+
+Se centra la visualización aproximadamente en el Valle de México, lo que nos permite el análisis de una de las regiones urbanas con mayor concentración poblacional e industrial.   
+
+
+```js 
+var worldcountries = ee.FeatureCollection('USDOS/LSIB_SIMPLE/2017');
+
+var filterCountry = ee.Filter.eq('country_na', 'Mexico');
+var country = worldcountries.filter(filterCountry);
+
+Map.addLayer(country);
+Map.centerObject(country, 5);
+
+
+var collection  = ee.ImageCollection('COPERNICUS/S5P/OFFL/L3_NO2')
+  .select('NO2_column_number_density');
+
+var filter18 = ee.Filter.date('2018-10-01', '2018-10-02');
+var filter19 = ee.Filter.date('2019-10-01', '2019-10-02');
+
+var no2_18  = collection.filter(filter18)
+                        .mean()
+                        .multiply(1e6)
+                        .clip(country);
+
+var no2_19  = collection.filter(filter19)
+                        .mean()
+                        .multiply(1e6)
+                        .clip(country);
+var vizParams = {
+  min: 0,
+  max: 200,
+  palette: ['black', 'purple', 'green', 'red']
+};
+
+Map.addLayer(no2_18, vizParams, 'NO2 2018');
+var Map2 = ui.Map();
+Map2.addLayer(no2_19, vizParams, 'NO2 2019');
+var linker = ui.Map.Linker([ui.root.widgets().get(0), Map2]);
+
+var splitPanel = ui.SplitPanel({
+  firstPanel: linker.get(0),
+  secondPanel: linker.get(1),
+  orientation: 'horizontal',
+  wipe: true,
+  style: {stretch: 'both'}
+});
+
+ui.root.widgets().reset([splitPanel]);
+linker.get(0).setCenter(-99.221440, 19.291990, 6);
+```
